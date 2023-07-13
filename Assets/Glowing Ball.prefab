@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 5698561066470716507}
   - component: {fileID: 4629886861958289374}
   - component: {fileID: 182464381002892810}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glowing Ball
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,10 +117,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67dc8dc40e6002409ab8eab664a1c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 1
+  armed: 1
   impactHasForce: 1
+  isExplosive: 1
   ignorePlayer: 1
-  forceStrength: 1
+  forceStrength: 6
 --- !u!135 &4629886861958289374
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -180,7 +181,7 @@ GameObject:
   - component: {fileID: 2013543539328962809}
   - component: {fileID: 2096661785964663595}
   - component: {fileID: 5041602151497467573}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -298,7 +299,7 @@ GameObject:
   - component: {fileID: 8785225368221922870}
   - component: {fileID: 7111974799116680980}
   - component: {fileID: 4236602900612282286}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ball core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -381,7 +382,7 @@ GameObject:
   - component: {fileID: 4653719271968697842}
   - component: {fileID: 8054936648629255867}
   - component: {fileID: 4567748741261721537}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
