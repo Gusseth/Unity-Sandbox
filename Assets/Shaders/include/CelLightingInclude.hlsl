@@ -41,9 +41,14 @@ void OtherLights_float(float3 objPosition_w, float3 objNormal_w,
 #ifndef SHADERGRAPH_PREVIEW
 	int n = GetAdditionalLightsCount();
 	for (int i = 0; i < n; i++) {
-		Light light = GetAdditionalLight(i, objPosition_w);
+		// Unity bloated feature rot bs: can't directly get additional lights like wtf
+		int objectLightIndex = GetPerObjectLightIndex(i);
+		Light light = GetAdditionalPerObjectLight(objectLightIndex, objPosition_w);
+		float shadowAttenuation = AdditionalLightRealtimeShadow(objectLightIndex, objPosition_w);
+
+		// Finally...
 		float diffuse = saturate(dot(objNormal_w, light.direction));
-		float attenuation = light.distanceAttenuation * light.shadowAttenuation;
+		float attenuation = light.distanceAttenuation * shadowAttenuation;
 		diffuse *= attenuation;
 
 		Diffuse += diffuse;
