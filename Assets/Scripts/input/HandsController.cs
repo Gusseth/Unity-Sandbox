@@ -52,7 +52,7 @@ public class HandsController : MonoBehaviour
         // If you know linear algebra, we're playing with transformations and inverses:
         // the format for T_(xy) is a matrix that transfroms from x space to y space
         // T_pc = T_wc * T_wp^-1, given c and p are child and parent
-        T_pc = camera.transform.worldToLocalMatrix * transform.localToWorldMatrix;
+        T_pc = math.mul(camera.transform.worldToLocalMatrix, transform.localToWorldMatrix);
     }
 
     private Vector3 CalculateFocalVector(Hand hand)
@@ -64,6 +64,7 @@ public class HandsController : MonoBehaviour
         // Don't worry, raycasts are cheap
         focalDistance = CalculateRayDistance(focalDistance);
 
+        // Vector 3 because there's no math.mul(float3, float) function
         Vector3 handPosition = RightHand.transform.localPosition;
 
 
@@ -74,21 +75,20 @@ public class HandsController : MonoBehaviour
 
             Thank you GLSL indian man from CPSC 314
         */
-        Vector4 p_hand = new Vector4(handPosition.x, handPosition.y, handPosition.z, 1);
+        float4 p_hand = new float4(handPosition, 1);
 
         // Evil casting and matrix transformation fuckery
         // handPosition is now magically in camera space
-        handPosition = (Vector3)(T_pc * p_hand);
-
-        // Correct for forward vectors
+        handPosition = math.mul(T_pc, p_hand).xyz;
 
         // Calculate the vector from the origin to the focal point
-        Vector3 focalVector = (Vector3.forward * focalDistance - handPosition);
+        float4 focalVector = new float4(Vector3.forward * focalDistance - handPosition, 0);
 
         // Return to world space
-        focalVector = camera.transform.TransformDirection(focalVector);
+        //focalVector = camera.transform.TransformDirection(focalVector);
+        focalVector = math.mul(camera.transform.localToWorldMatrix, focalVector);
 
-        return focalVector.normalized;
+        return math.normalize(focalVector).xyz;
     }
 
     private float CalculateRayDistance(float maxDistance)
