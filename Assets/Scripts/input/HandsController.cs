@@ -32,7 +32,7 @@ public class HandsController : MonoBehaviour
     // Update is called once per frame
     void OnRightHand()
     {
-        Vector3 direction = CalculateFocalVector(Hand.Right);
+        float3 direction = CalculateFocalVector(Hand.Right);
         GameObject ball = Instantiate(Ball);
         ball.transform.position = RightHand.transform.position;
         RayMovement ballMovement = ball.GetComponent<RayMovement>();
@@ -55,17 +55,15 @@ public class HandsController : MonoBehaviour
         T_pc = math.mul(camera.transform.worldToLocalMatrix, transform.localToWorldMatrix);
     }
 
-    private Vector3 CalculateFocalVector(Hand hand)
+    private float3 CalculateFocalVector(Hand hand)
     {
-        Vector3 fowardVector = Vector3.forward;
         float focalDistance = maxRayDistance;
 
         // Find the actual convergence/focal point if it's below maxRayDistance
         // Don't worry, raycasts are cheap
         focalDistance = CalculateRayDistance(focalDistance);
 
-        // Vector 3 because there's no math.mul(float3, float) function
-        Vector3 handPosition = RightHand.transform.localPosition;
+        float3 handPosition = RightHand.transform.localPosition;
 
 
         /*  We're giving a point so w must be 1
@@ -82,7 +80,7 @@ public class HandsController : MonoBehaviour
         handPosition = math.mul(T_pc, p_hand).xyz;
 
         // Calculate the vector from the origin to the focal point
-        float4 focalVector = new float4(Vector3.forward * focalDistance - handPosition, 0);
+        float4 focalVector = new float4(math.forward() * focalDistance - handPosition, 0);
 
         // Return to world space
         //focalVector = camera.transform.TransformDirection(focalVector);
@@ -103,7 +101,7 @@ public class HandsController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Vector3 direction = CalculateFocalVector(Hand.Right);
+        float3 direction = CalculateFocalVector(Hand.Right);
         float focalDistance = CalculateRayDistance(maxRayDistance);
         float zDelta = RightHand.transform.localPosition.z - camera.transform.localPosition.z;
         Gizmos.color = Color.red;
