@@ -21,7 +21,7 @@ public class HandsController : MonoBehaviour
     [SerializeField] float ballSpeed;
 
     // TRS Matrix to transfer from Player space to Camera space
-    Matrix4x4 T_pc;
+    float4x4 T_pc;
 
     // Start is called before the first frame update
     void Awake()
