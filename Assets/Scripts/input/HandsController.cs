@@ -9,12 +9,13 @@ public class HandsController : MonoBehaviour
 {
     enum Hand
     {
-        Left,
-        Right
+        Left = 0,
+        Right = 1
     }
 
     [SerializeField] GameObject LeftHand;
     [SerializeField] GameObject RightHand;
+    //[SerializeField] List<GameObject> Hands;
     [SerializeField] GameObject Ball;
     [SerializeField] new Camera camera;
     [SerializeField] uint maxRayDistance;
@@ -40,6 +41,12 @@ public class HandsController : MonoBehaviour
         ballMovement.isMoving = true;
     }
 
+    void OnLeftHand()
+    {
+        // float3 direction = CalculateFocalVector(Hand.Left);
+        Debug.Log("Left Hand not yet implemented!!");
+    }
+
     /*  LET'S MANUALLY BUILD THAT FUCKING
         PARENT-SPACE (Player space) -> CHILD-SPACE (Camera space) matrix here
         with EVIL MATH
@@ -63,8 +70,7 @@ public class HandsController : MonoBehaviour
         // Don't worry, raycasts are cheap
         focalDistance = CalculateRayDistance(focalDistance);
 
-        float3 handPosition = RightHand.transform.localPosition;
-
+        float3 handPosition = GetHand(hand).transform.localPosition;
 
         /*  We're giving a point so w must be 1
             Recall that in a 4x4 transform matrix:
@@ -89,6 +95,18 @@ public class HandsController : MonoBehaviour
         return math.normalize(focalVector).xyz;
     }
 
+    private GameObject GetHand(Hand hand)
+    {
+        switch (hand)
+        {
+            case Hand.Left:
+                return LeftHand;
+            default:
+                return RightHand;
+        }
+        //return Hands[(int)hand];
+    }
+
     private float CalculateRayDistance(float maxDistance)
     {
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
@@ -101,14 +119,20 @@ public class HandsController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        float3 direction = CalculateFocalVector(Hand.Right);
+        float3 directionR = CalculateFocalVector(Hand.Right);
+        float3 directionL = CalculateFocalVector(Hand.Left);
         float focalDistance = CalculateRayDistance(maxRayDistance);
-        float zDelta = RightHand.transform.localPosition.z - camera.transform.localPosition.z;
+        float zDeltaR = RightHand.transform.localPosition.z - camera.transform.localPosition.z;
+        float zDeltaL = LeftHand.transform.localPosition.z - camera.transform.localPosition.z;
         Gizmos.color = Color.red;
         Gizmos.DrawRay(RightHand.transform.position,
-                        direction * (focalDistance - zDelta));
+                        directionR * (focalDistance - zDeltaR));
 
         Gizmos.color = Color.blue;
+        Gizmos.DrawRay(LeftHand.transform.position,
+                directionL * (focalDistance - zDeltaL));
+
+        Gizmos.color = Color.magenta;
         Gizmos.DrawRay(camera.transform.position, camera.transform.forward * focalDistance);
     }
 }
