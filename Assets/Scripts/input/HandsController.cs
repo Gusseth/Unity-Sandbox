@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -72,24 +72,22 @@ public class HandsController : MonoBehaviour
 
         float3 handPosition = GetHand(hand).transform.localPosition;
 
-        /*  We're giving a point so w must be 1
-            Recall that in a 4x4 transform matrix:
-                w = 0: (x, y, z) is a vector
-                w = 1: (x, y, z) is a point in a space
-
-            Thank you GLSL indian man from CPSC 314
-        */
-        float4 p_hand = new float4(handPosition, 1);
 
         // Evil casting and matrix transformation fuckery
         // handPosition is now magically in camera space
-        handPosition = math.mul(T_pc, p_hand).xyz;
+        handPosition = math.transform(T_pc, handPosition);
 
-        // Calculate the vector from the origin to the focal point
+        /*  Calculate the vector from the origin to the focal point
+         *  We're giving a VECTOR so w must be 0
+         *  Recall that in a 4x4 transform matrix:
+         *      w = 0: (x, y, z, 0), xyz is a vector
+         *      w = 1: (x, y, z, 1), xyz is a point in a space
+         *
+         *  Thank you GLSL indian man from CPSC 314. ありがとう！
+         */
         float4 focalVector = new float4(math.forward() * focalDistance - handPosition, 0);
 
         // Return to world space
-        //focalVector = camera.transform.TransformDirection(focalVector);
         focalVector = math.mul(camera.transform.localToWorldMatrix, focalVector);
 
         return math.normalize(focalVector).xyz;
