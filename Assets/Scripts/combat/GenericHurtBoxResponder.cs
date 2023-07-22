@@ -13,7 +13,7 @@ public class GenericHurtBoxResponder : MonoBehaviour, IGotHit
 
     public void Response(HitData data)
     {
-        Debug.Log($"You hit me, {gameObject.name} , with {data.damage} damage. Normal:{data.normal}, Position:{data.point}");
+        Debug.Log($"You hit me, {gameObject.name}, with {data.damage} damage. Normal:{data.normal}, Position:{data.point}");
     }
 
     // Start is called before the first frame update
