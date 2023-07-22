@@ -14,6 +14,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - ADDITIONAL_LIGHT_CALCULATE_SHADOWS
+  - XMAIN_LIGHT_CALCULATE_SHADOWS
   - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords:
@@ -55,7 +56,7 @@ Material:
     m_Floats:
     - ADDITIONAL_LIGHT_CALCULATE_SHADOWS: 1
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
-    - XMAIN_LIGHT_CALCULATE_SHADOWS: 0
+    - XMAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _ADDITIONAL_LIGHT_SHADOWS_CASCADE_1: 1
     - _Albedo: 1
@@ -64,7 +65,9 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _SHADOWS_SOFT: 1
-    m_Colors: []
+    - _Use_Given_Texture: 1
+    m_Colors:
+    - _Base_Texture: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6565578333616280301
 MonoBehaviour:

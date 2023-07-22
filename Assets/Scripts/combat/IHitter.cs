@@ -140,6 +140,9 @@ public interface IHitter : IHitCheck, IHitResponse
     public void PostAttack();
 }
 
+/// <summary>
+/// Basic interface for all melee weapons
+/// </summary>
 public interface IMeleeHitter : IHitter, IBlocker {
 
 }
