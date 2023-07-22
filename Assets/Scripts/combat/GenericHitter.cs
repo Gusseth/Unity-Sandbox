@@ -2,25 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Thank you to HamJoy Games for this system. You can find the tutorial here:
- * https://www.youtube.com/watch?v=TM9tADSh9nE
- * 
- * This is a heavily modified version of the script in the video.
- */
-public class GenericHitter : MonoBehaviour, IHitter
+public class GenericHitter : MonoBehaviour, IMeleeHitter
 {
     [SerializeField] bool isAttacking;
-    [SerializeField] int damage_100;
+    [SerializeField] bool isBlocking;
+    [SerializeField] bool isParrying;
+    [SerializeField] int rawDamage;
     [SerializeField] HitterBox hitterBox;
-    public int damage { get => damage_100; }
+    public int Damage { get => rawDamage; }
+    public bool Blocking { get => isBlocking; set => isBlocking = value; }
+    public bool Parry { get => isParrying; set => isParrying = value; }
+    public bool Attacking { get => isAttacking; set => isAttacking = value; }
 
-    public bool CheckHit(Hit data)
+    public bool CheckHit(HitData data)
     {
         return true;
     }
 
-    public void Response(Hit data)
+    public void PreAttack()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void PostAttack()
+    {
+        hitterBox.alreadyHitColliders.Clear();
+    }
+
+    public void PreBlock()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void PostBlock()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Response(HitData data)
     {
         
     }
@@ -28,7 +47,7 @@ public class GenericHitter : MonoBehaviour, IHitter
     // Start is called before the first frame update
     void Start()
     {
-        hitterBox.hitter = this;
+        hitterBox.Hitter = this;
     }
 
     // Update is called once per frame
@@ -36,7 +55,7 @@ public class GenericHitter : MonoBehaviour, IHitter
     {
         if (isAttacking)
         {
-            hitterBox.CheckHit(null);
+            hitterBox.Attack();
         }
     }
 }

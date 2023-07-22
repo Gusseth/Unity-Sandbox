@@ -8,14 +8,14 @@ public class HurtBox : MonoBehaviour, IHurtBox
 
     [SerializeField] GameObject hurtboxOwner;
 
-    public bool active { get => isActive; }
-    public GameObject owner { get => hurtboxOwner; }
+    public bool Active { get => isActive; }
+    public GameObject Owner { get => hurtboxOwner; }
 
-    public IGotHit hurtResponder { get; set; }
+    public IGotHit HurtResponder { get; set; }
 
-    public bool CheckHit(Hit data)
+    public bool CheckHit(HitData data)
     {
-        if (hurtResponder == null)
+        if (HurtResponder == null)
             Debug.Log("No responder");
         return true;
     }

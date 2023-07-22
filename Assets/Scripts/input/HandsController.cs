@@ -23,6 +23,7 @@ public class HandsController : MonoBehaviour
 
     // TRS Matrix to transfer from Player space to Camera space
     float4x4 T_pc;
+    IHitter hitter;
 
     // Start is called before the first frame update
     void Awake()
@@ -44,7 +45,11 @@ public class HandsController : MonoBehaviour
     void OnLeftHand()
     {
         // float3 direction = CalculateFocalVector(Hand.Left);
-        Debug.Log("Left Hand not yet implemented!!");
+        //Debug.Log("Left Hand not yet implemented!!");
+        hitter ??= GetHand(Hand.Left).GetComponentInChildren<IHitter>();
+        if (hitter.Attacking)
+            hitter.PostAttack();
+        hitter.Attacking = !hitter.Attacking;
     }
 
     /*  LET'S MANUALLY BUILD THAT FUCKING
@@ -71,7 +76,6 @@ public class HandsController : MonoBehaviour
         focalDistance = CalculateRayDistance(focalDistance);
 
         float3 handPosition = GetHand(hand).transform.localPosition;
-
 
         // Evil casting and matrix transformation fuckery
         // handPosition is now magically in camera space

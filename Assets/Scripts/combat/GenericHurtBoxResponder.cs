@@ -6,14 +6,14 @@ public class GenericHurtBoxResponder : MonoBehaviour, IGotHit
 {
     List<IHurtBox> hurtBoxes;
 
-    public bool CheckHit(Hit data)
+    public bool CheckHit(HitData data)
     {
         return true;
     }
 
-    public void Response(Hit data)
+    public void Response(HitData data)
     {
-        Debug.Log($"You hit me with {data.damage} damage.");
+        Debug.Log($"You hit me, {gameObject.name} , with {data.damage} damage. Normal:{data.normal}, Position:{data.point}");
     }
 
     // Start is called before the first frame update
@@ -22,7 +22,7 @@ public class GenericHurtBoxResponder : MonoBehaviour, IGotHit
         hurtBoxes = new List<IHurtBox>(GetComponentsInChildren<IHurtBox>());
         foreach (IHurtBox box in hurtBoxes)
         {
-            box.hurtResponder = this;
+            box.HurtResponder = this;
         }
     }
 
