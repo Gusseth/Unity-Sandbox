@@ -69,6 +69,16 @@ public enum HitBoxType
     NoDamage
 }
 
+public enum BasicHitDirection
+{
+    // Order is from most important/damaging to least
+    None,
+    Up,
+    Down,
+    Left,
+    Right
+}
+
 /// <summary>
 /// Used to implement hit validation
 /// </summary>
@@ -109,7 +119,7 @@ public interface IBlocker
     /// <summary>
     /// Called immediately after the hitter receives a request to block
     /// </summary>
-    public void PreBlock();
+    public void PreBlock(float3 direction);
     /// <summary>
     /// Called after the hitter returns to non-blocking state
     /// </summary>
@@ -133,7 +143,7 @@ public interface IHitter : IHitCheck, IHitResponse
     /// <summary>
     /// Called immediately after the hitter receives a request to attack
     /// </summary>
-    public void PreAttack();
+    public void PreAttack(float3 direction);
     /// <summary>
     /// Called after the hitter returns to idle state
     /// </summary>
@@ -141,21 +151,25 @@ public interface IHitter : IHitCheck, IHitResponse
 }
 
 /// <summary>
-/// Basic interface for all melee weapons
+/// Interface for the controller of all melee weapons. Use this if you want to make your own sword.
 /// </summary>
 public interface IMeleeHitter : IHitter, IBlocker {
 
 }
 
 /// <summary>
-/// Interface that must be implemented by individual hitboxes
+/// Interface that must be implemented by individual hitboxes.
+/// Yes, this includes the hitbox for your sword.
 /// </summary>
 public interface IHitterBox
 {
     /// <summary>
-    /// 
+    /// The hitter linked with this hitbox
     /// </summary>
     public IHitter Hitter { get; set; }
+    /// <summary>
+    /// Called when the hitbox receives an attack signal from the Hitter
+    /// </summary>
     public void Attack();
     //public void OnHitterBoxHit(IHitterBox hitterBox, HitData data);
     //public void OnHurtBoxHit(IHurtBox hurtBox, HitData data);
@@ -174,8 +188,20 @@ public interface IGotHit : IHitCheck, IHitResponse
 /// </summary>
 public interface IHurtBox : IHitCheck
 {
+    /// <summary>
+    /// Is this hurtbox active for detection right now
+    /// </summary>
     public bool Active { get; }
+    /// <summary>
+    /// The root entity of this hurtbox
+    /// </summary>
     public GameObject Owner { get; }
+    /// <summary>
+    /// The hurtbox's transform component
+    /// </summary>
     public Transform transform { get; } // blame unity naming scheme
+    /// <summary>
+    /// The HurtResponder linked to this hurtbox
+    /// </summary>
     public IGotHit HurtResponder { get; set; }
 }

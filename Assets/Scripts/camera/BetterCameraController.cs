@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -8,10 +9,12 @@ using UnityEngine.InputSystem;
 public class BetterCameraController : MonoBehaviour
 {
     [SerializeField] float sensitivity = 5.0f;
+    [SerializeField] float deltaSensitivity = 0.5f;
     [SerializeField] InputActionReference look;
     [SerializeField] float3 acceleration;
 
-    public float3 velocity { get; private set; }
+    public float3 deltaVelocity { get; private set; }
+    float3 velocity;
     float3 rot;
 
     const float piOverTwo = math.PI / 2;
@@ -26,11 +29,16 @@ public class BetterCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float3 input = new float3(math.radians(look.action.ReadValue<Vector2>()), 0);
+        float2 rawInput = look.action.ReadValue<Vector2>();
+        float3 input = new float3(math.radians(rawInput), 0);
+
         input.y *= -1;
         input *= sensitivity;
 
         velocity = math.lerp(velocity, input, acceleration * Time.deltaTime);
+
+        deltaVelocity += velocity * Time.deltaTime;
+        deltaVelocity = math.lerp(deltaVelocity, float3.zero, acceleration * Time.deltaTime * deltaSensitivity);
 
         rot += velocity.yxz * Time.deltaTime;
         rot.y %= twoPi;

@@ -18,6 +18,7 @@ public class HandsController : MonoBehaviour
     //[SerializeField] List<GameObject> Hands;
     [SerializeField] GameObject Ball;
     [SerializeField] new Camera camera;
+    [SerializeField] BetterCameraController cameraController;
     [SerializeField] uint maxRayDistance;
     [SerializeField] float ballSpeed;
 
@@ -29,6 +30,11 @@ public class HandsController : MonoBehaviour
     void Awake()
     {
         BuildT_pcMatrix();
+    }
+
+    void Start()
+    {
+        cameraController ??= GetComponent<BetterCameraController>();
     }
 
     // Update is called once per frame
@@ -47,9 +53,14 @@ public class HandsController : MonoBehaviour
         // float3 direction = CalculateFocalVector(Hand.Left);
         //Debug.Log("Left Hand not yet implemented!!");
         hitter ??= GetHand(Hand.Left).GetComponentInChildren<IHitter>();
+        float3 attackDirection = GetAttackDirection();
+
         if (hitter.Attacking)
-            hitter.PostAttack();
-        hitter.Attacking = !hitter.Attacking;
+            hitter.PostAttack();    // temporary branch, will do it automatically in the future
+        else
+        {
+            hitter.PreAttack(attackDirection);
+        }
     }
 
     /*  LET'S MANUALLY BUILD THAT FUCKING
@@ -119,6 +130,12 @@ public class HandsController : MonoBehaviour
 
         return maxDistance;
     }
+
+    private float3 GetAttackDirection()
+    {
+        return cameraController.deltaVelocity;
+    }
+
     private void OnDrawGizmos()
     {
         float3 directionR = CalculateFocalVector(Hand.Right);
