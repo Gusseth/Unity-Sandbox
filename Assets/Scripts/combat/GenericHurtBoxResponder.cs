@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GenericHurtBoxResponder : MonoBehaviour, IGotHit
 {
+    [SerializeField] ActorBase actor;
     List<IHurtBox> hurtBoxes;
 
     public bool CheckHit(HitData data)
@@ -13,7 +14,10 @@ public class GenericHurtBoxResponder : MonoBehaviour, IGotHit
 
     public void Response(HitData data)
     {
-        Debug.Log($"You hit me, {gameObject.name}, with {data.damage} damage. Normal:{data.normal}, Position:{data.point}");
+        if (actor != null) {
+            actor.AddDamage(data);
+        }
+        Debug.Log($"You hit me, {gameObject.name}! My health is now {actor.Health}/{actor.MaxHealth}!");
     }
 
     // Start is called before the first frame update
@@ -24,6 +28,7 @@ public class GenericHurtBoxResponder : MonoBehaviour, IGotHit
         {
             box.HurtResponder = this;
         }
+        actor ??= GetComponent<ActorBase>();
     }
 
     // Update is called once per frame
