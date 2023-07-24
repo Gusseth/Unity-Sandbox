@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class HitterBox : MonoBehaviour, IHitterBox
 {
+    [SerializeField] GameObject owner;
     [SerializeField] new BoxCollider collider;   //TODO: refactor to use generic colliders
     [SerializeField] LayerMask layerMask;
     [SerializeField] int verticalSubdivisions = 1;  // Works best with powers of 2
@@ -15,6 +16,8 @@ public class HitterBox : MonoBehaviour, IHitterBox
     private float thickness = 0.025f;           // Arbitrary tbh
 
     public IHitter Hitter { get; set; }
+
+    public GameObject Owner => owner;
 
     float distance_gizmo = 0;
     float3 size_gizmo;

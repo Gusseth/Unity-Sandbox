@@ -161,7 +161,7 @@ public interface IMeleeHitter : IHitter, IBlocker {
 /// Interface that must be implemented by individual hitboxes.
 /// Yes, this includes the hitbox for your sword.
 /// </summary>
-public interface IHitterBox
+public interface IHitterBox : IGiveOwnerMetadata
 {
     /// <summary>
     /// The hitter linked with this hitbox
@@ -186,12 +186,20 @@ public interface IGotHit : IHitCheck, IHitResponse
 /// <summary>
 /// Interface that must be implemented by individual hurtboxes
 /// </summary>
-public interface IHurtBox : IHitCheck
+public interface IHurtBox : IHitCheck, IGiveOwnerMetadata
 {
     /// <summary>
     /// Is this hurtbox active for detection right now
     /// </summary>
     public bool Active { get; }
+    /// <summary>
+    /// The HurtResponder linked to this hurtbox
+    /// </summary>
+    public IGotHit HurtResponder { get; set; }
+}
+
+public interface IGiveOwnerMetadata
+{
     /// <summary>
     /// The root entity of this hurtbox
     /// </summary>
@@ -200,8 +208,4 @@ public interface IHurtBox : IHitCheck
     /// The hurtbox's transform component
     /// </summary>
     public Transform transform { get; } // blame unity naming scheme
-    /// <summary>
-    /// The HurtResponder linked to this hurtbox
-    /// </summary>
-    public IGotHit HurtResponder { get; set; }
 }
