@@ -7,7 +7,7 @@
 	I excluded specular lighting here as I like the flatter shading more.
 */
 void GetMainLightColour_float(out float3 Color) {
-#if SHADERGRAPH_PREVIEW
+#ifdef SHADERGRAPH_PREVIEW
 	Color = 1;
 #else
 	Color = GetMainLight(0).color;
@@ -16,11 +16,11 @@ void GetMainLightColour_float(out float3 Color) {
 
 void CalculateShadows_float(float3 objPosition_w,
 	out float DistanceAttenuation, out float ShadowAttenuation) {
-#if SHADERGRAPH_PREVIEW
+#ifdef SHADERGRAPH_PREVIEW
 	DistanceAttenuation = 1;
 	ShadowAttenuation = 1;
 #else
-	#if SHADOWS_SCREEN
+	#ifdef SHADOWS_SCREEN
 		float4 shadowPos = TransformWorldToHClip(objPosition_w);
 		shadowPos = ComputeScreenPos(shadowPos);
 	#else
@@ -34,6 +34,7 @@ void CalculateShadows_float(float3 objPosition_w,
 
 void OtherLights_float(float3 objPosition_w, float3 objNormal_w,
 	float mainLightDiffuse, float3 mainLightColor,
+	float albedo,
 	out float Diffuse, out float3 Color) {
 	Diffuse = mainLightDiffuse;
 	Color = mainLightColor * mainLightDiffuse;
@@ -47,7 +48,7 @@ void OtherLights_float(float3 objPosition_w, float3 objNormal_w,
 		float shadowAttenuation = AdditionalLightRealtimeShadow(objectLightIndex, objPosition_w);
 
 		// Finally...
-		float diffuse = saturate(dot(objNormal_w, light.direction));
+		float diffuse = saturate(dot(objNormal_w, light.direction)) * albedo;
 		float attenuation = light.distanceAttenuation * shadowAttenuation;
 		diffuse *= attenuation;
 
