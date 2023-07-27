@@ -24,6 +24,9 @@ public class DeathData
     public string deathMessage;
 }
 
+/// <summary>
+/// Represents everything that can be alive
+/// </summary>
 public interface IActor
 {
     public string Name { get; }
@@ -45,7 +48,10 @@ public interface IHaveHKS
     public int Stamina { get; set; }
     public int MaxStamina { get; set; }
     public bool InfiniteStamina { get; set; }
+}
 
+public interface IDamagableActor
+{
     public void AddDamage(HitData data);
     public void Kill();
 }
