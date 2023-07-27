@@ -16,7 +16,7 @@ public abstract class HitData
     public int damage;
     public float3 point;
     public float3 normal;
-    public GameObject agressor;
+    public GameObject aggressor;
     public GameObject victim;
 
     public abstract bool IsValid();
@@ -34,7 +34,7 @@ public class Hit : HitData
         this.normal = normal;
         this.hurtBox = hurtBox;
         this.hitterBox = hitterBox;
-        agressor = hitterBox.Owner;
+        aggressor = hitterBox.Owner;
         victim = hurtBox.Owner;
     }
 
@@ -71,7 +71,7 @@ public class Block : HitData
         this.force = force;
         this.attacker = attacker;
         this.blocker = blocker;
-        agressor = attacker.Owner;
+        aggressor = attacker.Owner;
         victim = blocker.Owner;
     }
 
