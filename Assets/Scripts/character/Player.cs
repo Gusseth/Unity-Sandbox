@@ -7,6 +7,9 @@ public class Player : ActorBase, IFactionable, IHaveInventory
     [SerializeField] IInventoryController inventoryController;
     [SerializeField] ISet<WorldFaction> factions;
 
+    // You WILL only be the player whether you like it or not
+    public override ActorFaction ActorFaction { get => ActorFaction.Player; set => actorFaction = ActorFaction.Player; }
+
     public ISet<WorldFaction> Factions { get => factions; }
     public IInventoryController InventoryController => inventoryController;
 

@@ -3,56 +3,54 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class ActorBase : MonoBehaviour, IActor, IHaveHKS
+/// <summary>
+/// Basic implementation of AbstractActorBase
+/// </summary>
+public class ActorBase : AbstractActorBase
 {
-    [SerializeField] protected string actorName = "Actor";
-    [SerializeField] protected bool alive = true;
-    [SerializeField] protected int health;
-    [SerializeField] protected int maxHealth;
-    [SerializeField] protected bool invulnerable = false;
-    [SerializeField] protected int ke;
-    [SerializeField] protected int maxKe;
-    [SerializeField] protected bool kamiMode = false;
-    [SerializeField] protected int stamina;
-    [SerializeField] protected int maxStamina;
-    [SerializeField] protected bool infiniteStamina = false;
-    [SerializeField] protected ActorFaction actorFaction;
+    public override string Name { get => actorName; set => actorName = value; }
+    public override bool Alive { get => alive; set => alive = value; }
 
-    public string Name { get => actorName; }
-    public bool Alive { get => alive; set => alive = value; }
-    public bool Invulnerable { get => invulnerable; set => invulnerable = value; }
-    public int Health { get => health; set => AddDamage(health - value); }
-    public int MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public override int Health { get => health; set => AddDamage(health - value); }
+    public override int MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public override bool Invulnerable { get => invulnerable; set => invulnerable = value; }
 
     // Recall that Ke = mana
-    public int Ke { get => ke; set => ke = value; }
-    public int MaxKe { get => maxKe; set => maxKe = value; }
-    public bool KamiMode { get => kamiMode; set => kamiMode = value; }
+    public override int Ke { get => ke; set => ke = value; }
+    public override int MaxKe { get => maxKe; set => maxKe = value; }
+    public override bool KamiMode { get => kamiMode; set => kamiMode = value; }  // unlimited mana
 
-    public int Stamina { get => stamina; set => stamina = value; }
-    public int MaxStamina { get => maxStamina; set => maxStamina = value; }
-    public bool InfiniteStamina { get => infiniteStamina; set => infiniteStamina = value; }
+    public override int Stamina { get => stamina; set => stamina = value; }
+    public override int MaxStamina { get => maxStamina; set => maxStamina = value; }
+    public override bool InfiniteStamina { get => infiniteStamina; set => infiniteStamina = value; }
 
-    // You cannot be anything else but the player!!
-    public ActorFaction ActorFaction { get => actorFaction; set => actorFaction = value; }
+    public override ActorFaction ActorFaction { get => actorFaction; set => actorFaction = value; }
 
-    protected void AddDamage(int damage)
+    HealthBarScript healthBar;
+
+    protected override void AddDamage(int damage)
     {
         HitData data = new Hit(damage);
         AddDamage(data);
     }
 
-    public void AddDamage(HitData data)
+    public override void AddDamage(HitData data)
     {
         int damage = data.damage;
 
-        if (alive)
+        if (invulnerable)
+        {
+
+        }
+        else if (alive)
         {
             if (damage > health)
             {
+                health = 0;
+
                 IActor killer = null;
-                if (data.agressor != null)
-                    data.agressor.GetComponent<IActor>();
+                if (data.aggressor != null)
+                    data.aggressor.GetComponent<IActor>();
 
                 DeathData deathData = new DeathData
                 {
@@ -69,27 +67,29 @@ public class ActorBase : MonoBehaviour, IActor, IHaveHKS
                 health = math.min(health - damage, maxHealth);
             }
         }
+
+        if (healthBar != null)
+        {
+            healthBar.UpdateTarget(health, maxHealth);
+        }
     }
 
-    public void Kill()
+    public override void Kill()
     {
         AddDamage(health + 1);
     }
 
-    public void OnDeath(DeathData data)
+    public override void OnDeath(DeathData data)
     {
         alive = false;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        healthBar = GetComponentInChildren<HealthBarScript>();
+        if (healthBar != null)
+        {
+            healthBar.UpdateTarget(health, maxHealth);
+        }
     }
 }
