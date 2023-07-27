@@ -62,8 +62,14 @@ public class HitterBox : MonoBehaviour, IHitterBox
 
             alreadyHitColliders.Add(hit.collider);
 
-            hit_points_gizmo.Add(new Tuple<float3, float3>(hit.point, hit.normal));
-            float3 point = hit.point.Equals(Vector3.zero) ? collider.center : hit.point;
+            float3 point = hit.point;
+            if (point.Equals(float3.zero))
+            {
+                point = math.transform(transform.localToWorldMatrix, collider.center);
+            }
+
+            hit_points_gizmo.Add(new Tuple<float3, float3>(point, hit.normal));
+            
 
             // If it touches another hitterbox (you got blocked lmao)
             if (hit.collider.TryGetComponent(out IHitterBox hitterBox))
