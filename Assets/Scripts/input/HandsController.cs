@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.XR;
 
 public class HandsController : MonoBehaviour
 {
-    enum Hand
-    {
-        Left = 0,
-        Right = 1
-    }
-
     [SerializeField] GameObject LeftHand;
     [SerializeField] GameObject RightHand;
     //[SerializeField] List<GameObject> Hands;
@@ -21,6 +16,9 @@ public class HandsController : MonoBehaviour
     [SerializeField] BetterCameraController cameraController;
     [SerializeField] uint maxRayDistance;
     [SerializeField] float ballSpeed;
+    [SerializeField] IEquipMetadata equipped;
+    IInventoryController inventoryController;
+    AbstractActorBase actor;
 
     // TRS Matrix to transfer from Player space to Camera space
     float4x4 T_pc;
@@ -35,32 +33,71 @@ public class HandsController : MonoBehaviour
     void Start()
     {
         cameraController ??= GetComponent<BetterCameraController>();
+        inventoryController ??= GetComponent<IInventoryController>();
+        actor ??= GetComponent<AbstractActorBase>();
+
+        GameObject temp = inventoryController.GetEquipped(Hand.Right, RightHand.transform);
+        temp.transform.parent = RightHand.transform;
+        hitter = temp.GetComponent<IHitter>();
+        equipped = temp.GetComponent<IEquipMetadata>();
+        equipped.OnEquip(inventoryController, actor);
     }
 
     // Update is called once per frame
-    void OnRightHand()
+    public void OnRightHand(InputAction.CallbackContext context)
     {
-        float3 direction = CalculateFocalVector(Hand.Right);
-        GameObject ball = Instantiate(Ball);
-        ball.transform.position = RightHand.transform.position;
-        RayMovement ballMovement = ball.GetComponent<RayMovement>();
-        ballMovement.velocity = direction * ballSpeed;
-        ballMovement.isMoving = true;
-    }
+        if (!context.performed) return; // ignore other actions for now, temporarily one shot 
 
-    void OnLeftHand()
-    {
-        // float3 direction = CalculateFocalVector(Hand.Left);
-        //Debug.Log("Left Hand not yet implemented!!");
-        hitter ??= GetHand(Hand.Left).GetComponentInChildren<IHitter>();
-        float3 attackDirection = GetAttackDirection();
-
-        if (hitter.Attacking)
-            hitter.PostAttack();    // temporary branch, will do it automatically in the future
+        if (equipped.EquippableType == EquippableType.weaponMagic)
+        {
+            float3 direction = CalculateFocalVector(Hand.Right);
+            GameObject ball = Instantiate(Ball);
+            ball.transform.position = RightHand.transform.position;
+            RayMovement ballMovement = ball.GetComponent<RayMovement>();
+            ballMovement.velocity = direction * ballSpeed;
+            ballMovement.isMoving = true;
+        } 
         else
         {
-            hitter.PreAttack(attackDirection);
+            // float3 direction = CalculateFocalVector(Hand.Left);
+            //hitter ??= GetHand(Hand.Right).GetComponentInChildren<IHitter>();
+            float3 attackDirection = GetAttackDirection();
+
+            if (hitter.Attacking)
+                hitter.PostAttack();    // temporary branch, will do it automatically in the future
+            else
+            {
+                hitter.PreAttack(attackDirection);
+            }
         }
+    }
+
+    public void OnLeftHand(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnSwitchEquipped(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        float delta = context.ReadValue<Vector2>().y;
+        equipped.OnUnequip(inventoryController, actor);
+
+        GameObject temp;
+
+        if (delta > 0)
+        {
+            temp = inventoryController.GetNextEquipped(Hand.Right, RightHand.transform);
+        } 
+        else
+        {
+            temp = inventoryController.GetPrevEquipped(Hand.Right, RightHand.transform);
+        }
+        hitter = temp.GetComponent<IHitter>();
+
+        equipped = temp.GetComponent<IEquipMetadata>();
+        equipped.OnEquip(inventoryController, actor);
     }
 
     /*  LET'S MANUALLY BUILD THAT FUCKING
