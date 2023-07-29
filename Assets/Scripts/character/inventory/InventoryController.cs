@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class InventoryController : MonoBehaviour, IInventoryController
 {
     [SerializeField] GameObject[] quickEquip;
     [SerializeField] int i = 0;
-    IInventory inventory;
+    [SerializeField] IInventory inventory;
 
     public IInventory Inventory => inventory;
 
@@ -23,12 +23,24 @@ public class InventoryController : MonoBehaviour, IInventoryController
 
     public Item[] FindItemsWithAttributes(ItemData data)
     {
-        return inventory.FindItemsWithAttributes(data);
+        InventoryEntry[] entries = inventory.FindItemsWithAttributes(data);
+        return ExtractEntries(entries);
+    }
+
+    private Item[] ExtractEntries(InventoryEntry[] entries)
+    {
+        Item[] items = new Item[entries.Length];
+        for (int i = 0; i < entries.Length; i++)
+        {
+            items[i] = entries[i].item;
+        }
+        return items;
     }
 
     public Item[] FindItemsWithID(ItemID id)
     {
-        return inventory.FindItemsWithID(id);
+        InventoryEntry[] entries = inventory.FindItemsWithID(id);
+        return ExtractEntries(entries);
     }
 
     public GameObject GetEquipped(Hand hand, Transform parent)
