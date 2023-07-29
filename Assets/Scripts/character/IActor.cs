@@ -39,14 +39,20 @@ public interface IHaveHKS
 {
     public int Health { get; set; }
     public int MaxHealth { get; set; }
+    public int HealthBaseRegen { get; set; }
+    public float HealthRegenMult { get; set; }
     public bool Invulnerable { get; set; }
 
     public int Ke { get; set; }
     public int MaxKe { get; set; }
+    public int Harae { get; set; }
+    public float HaraeMult { get; set; }
     public bool KamiMode { get; set; }
 
     public int Stamina { get; set; }
     public int MaxStamina { get; set; }
+    public int StaminaBaseRegen { get; set; }
+    public float StaminaRegenMult { get; set; }
     public bool InfiniteStamina { get; set; }
 }
 
@@ -54,6 +60,13 @@ public interface IDamagableActor
 {
     public void AddDamage(HitData data);
     public void Kill();
+}
+
+public interface IKegareAbleActor
+{
+    public bool Kegare { get; set; }
+    public void OnKegare();
+    public void RemoveKegare(bool purification);
 }
 
 public interface IFactionable
