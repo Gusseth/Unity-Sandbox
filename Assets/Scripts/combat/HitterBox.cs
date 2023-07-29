@@ -9,11 +9,11 @@ public class HitterBox : MonoBehaviour, IHitterBox
     [SerializeField] GameObject owner;
     [SerializeField] new BoxCollider collider;   //TODO: refactor to use generic colliders
     [SerializeField] LayerMask layerMask;
-    [SerializeField] int verticalSubdivisions = 1;  // Works best with powers of 2
+    [SerializeField] int verticalSubdivisions = 8;  // Works best with powers of 2
     [SerializeField] GameObject spark;
-    public HashSet<Collider> alreadyHitColliders { get; private set; }
+    public ISet<Collider> alreadyHitColliders { get; private set; }
 
-    private float thickness = 0.025f;           // Arbitrary tbh
+    private float thickness = 0.025f;   // internal var, do not touch
 
     public IHitter Hitter { get; set; }
 
