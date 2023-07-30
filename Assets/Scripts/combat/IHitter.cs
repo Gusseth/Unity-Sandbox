@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /*
  * Thank you to HamJoy Games for this system. You can find the tutorial here:
@@ -15,6 +16,8 @@ public abstract class HitData
     public int damage;
     public float3 point;
     public float3 normal;
+    public GameObject aggressor;
+    public GameObject victim;
 
     public abstract bool IsValid();
 }
@@ -23,6 +26,25 @@ public class Hit : HitData
 {
     public IHurtBox hurtBox;
     public IHitterBox hitterBox;
+
+    public Hit(int damage, float3 point, float3 normal, IHurtBox hurtBox, IHitterBox hitterBox)
+    {
+        this.damage = damage;
+        this.point = point;
+        this.normal = normal;
+        this.hurtBox = hurtBox;
+        this.hitterBox = hitterBox;
+        aggressor = hitterBox.Owner;
+        victim = hurtBox.Owner;
+    }
+
+    /*
+     *  Do not use this: only for debugging purposes!
+     */
+    public Hit(int damage)
+    {
+        this.damage = damage;
+    }
 
     public override bool IsValid()
     {
@@ -37,12 +59,25 @@ public class Block : HitData
 {
     public bool parry;
     public float force;
-    public IHitterBox weaponBlocked;
+    public IHitterBox attacker;
     public IHitterBox blocker;
+
+    public Block(int damage, float3 point, float3 normal, bool parry, float force, IHitterBox attacker, IHitterBox blocker)
+    {
+        this.damage = damage;
+        this.point = point;
+        this.normal = normal;
+        this.parry = parry;
+        this.force = force;
+        this.attacker = attacker;
+        this.blocker = blocker;
+        aggressor = attacker.Owner;
+        victim = blocker.Owner;
+    }
 
     public override bool IsValid()
     {
-        if (weaponBlocked != null)
+        if (attacker != null)
                 return true;
         return false;
     }

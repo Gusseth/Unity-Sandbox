@@ -9,11 +9,11 @@ public class HitterBox : MonoBehaviour, IHitterBox
     [SerializeField] GameObject owner;
     [SerializeField] new BoxCollider collider;   //TODO: refactor to use generic colliders
     [SerializeField] LayerMask layerMask;
-    [SerializeField] int verticalSubdivisions = 1;  // Works best with powers of 2
+    [SerializeField] int verticalSubdivisions = 8;  // Works best with powers of 2
     [SerializeField] GameObject spark;
-    public HashSet<Collider> alreadyHitColliders { get; private set; }
+    public ISet<Collider> alreadyHitColliders { get; private set; }
 
-    private float thickness = 0.025f;           // Arbitrary tbh
+    private float thickness = 0.025f;   // internal var, do not touch
 
     public IHitter Hitter { get; set; }
 
@@ -62,7 +62,14 @@ public class HitterBox : MonoBehaviour, IHitterBox
 
             alreadyHitColliders.Add(hit.collider);
 
-            hit_points_gizmo.Add(new Tuple<float3, float3>(hit.point, hit.normal));
+            float3 point = hit.point;
+            if (point.Equals(float3.zero))
+            {
+                point = math.transform(transform.localToWorldMatrix, collider.center);
+            }
+
+            hit_points_gizmo.Add(new Tuple<float3, float3>(point, hit.normal));
+            
 
             // If it touches another hitterbox (you got blocked lmao)
             if (hit.collider.TryGetComponent(out IHitterBox hitterBox))
@@ -70,15 +77,16 @@ public class HitterBox : MonoBehaviour, IHitterBox
                 IBlocker blocker = hitterBox.Hitter as IBlocker;
                 if (blocker == null) continue;
 
-                Block data = new Block
-                {
-                    damage = Hitter.Damage,
-                    point = hit.point == Vector3.zero ? collider.center : hit.point,
-                    normal = hit.normal,
-                    weaponBlocked = this,
-                    blocker = hitterBox,
-                    parry = blocker.Parry
-                };
+                Block data = new Block(
+                    Hitter.Damage,
+                    point,
+                    hit.normal,
+                    blocker.Parry,
+                    0,
+                    this,
+                    hitterBox
+                    );
+
 
                 if (blocker.Blocking)
                 {
@@ -95,14 +103,14 @@ public class HitterBox : MonoBehaviour, IHitterBox
             {
                 if (!hurtBox.Active) continue;
 
-                HitData data = new Hit
-                {
-                    damage = Hitter.Damage,
-                    point = hit.point == Vector3.zero ? collider.center : hit.point,
-                    normal = hit.normal,
-                    hurtBox = hurtBox,
-                    hitterBox = this
-                };
+                HitData data = new Hit(
+                    Hitter.Damage,
+                    point,
+                    hit.normal,
+                    hurtBox,
+                    this
+                    );
+
 
                 OnHurtBoxHit(hurtBox, data);
             }
