@@ -2,45 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryController : MonoBehaviour, IInventoryController
 {
     [SerializeField] GameObject[] quickEquip;
     [SerializeField] int i = 0;
-    [SerializeField] IInventory inventory;
+    [SerializeField] SimpleInventory inventory;
 
     public IInventory Inventory => inventory;
 
-    public bool AddItem(Item item)
+    public bool AddItem(ItemBase itemBase)
     {
-        return inventory.AddItem(item, 1);
+        return inventory.AddItem(itemBase, 1);
     }
 
-    public bool AddItem(Item item, uint amount)
+    public bool AddItem(ItemBase itemBase, uint amount)
     {
-        return inventory.AddItem(item, amount);
+        return inventory.AddItem(itemBase, amount);
+    }
+    public bool AddItem(ItemStack item)
+    {
+        return inventory.AddItem(item);
     }
 
-    public Item[] FindItemsWithAttributes(ItemData data)
+    public ItemStack[] FindItems(ItemBase itemBase)
     {
-        InventoryEntry[] entries = inventory.FindItemsWithAttributes(data);
-        return ExtractEntries(entries);
+        return inventory.FindItems(itemBase);
     }
 
-    private Item[] ExtractEntries(InventoryEntry[] entries)
+    public ItemStack[] FindItems(ItemID id, ItemData data = null)
     {
-        Item[] items = new Item[entries.Length];
-        for (int i = 0; i < entries.Length; i++)
-        {
-            items[i] = entries[i].item;
-        }
-        return items;
-    }
-
-    public Item[] FindItemsWithID(ItemID id)
-    {
-        InventoryEntry[] entries = inventory.FindItemsWithID(id);
-        return ExtractEntries(entries);
+        return inventory.FindItems(id, data);
     }
 
     public GameObject GetEquipped(Hand hand, Transform parent)
@@ -66,19 +59,29 @@ public class InventoryController : MonoBehaviour, IInventoryController
         return Instantiate(quickEquip[i], parent);
     }
 
-    public bool RemoveItem(Item item)
+    public bool RemoveItem(ItemBase itemBase)
     {
-        return inventory.RemoveItem(item, 1);
+        return inventory.RemoveItem(itemBase, 1);
     }
 
-    public bool RemoveItem(Item item, uint amount)
+    public bool RemoveItem(ItemBase itemBase, uint amount)
     {
-        return inventory.RemoveItem(item, amount);
+        return inventory.RemoveItem(itemBase, amount);
     }
 
     public void TickInventory(Time deltaTime, IActor actor)
     {
         throw new System.NotImplementedException();
+    }
+
+    private ItemBase[] ExtractEntries(ItemStack[] items)
+    {
+        ItemBase[] itemBases = new ItemBase[items.Length];
+        for (int i = 0; i < items.Length; i++)
+        {
+            itemBases[i] = items[i].itemBase;
+        }
+        return itemBases;
     }
 
     // Start is called before the first frame update

@@ -32,6 +32,8 @@ public class ActorBase : AbstractActorBase
 
     public override ActorFaction ActorFaction { get => actorFaction; set => actorFaction = value; }
 
+    public override float Reach { get => reach; set => reach = value; }
+
     HealthBarScript healthBar;
 
     protected override void AddDamage(int damage)

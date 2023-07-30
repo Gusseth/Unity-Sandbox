@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Represents ALL NPCs, enemies, players, anything alive that has Health, Ke and Stamina
 /// </summary>
+[Serializable]
 public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDamagableActor
 {
     [SerializeField] protected string actorName = "Actor";
@@ -27,6 +29,8 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
     [SerializeField] protected float staminaRegenMult;
     [SerializeField] protected bool infiniteStamina = false;
     [SerializeField] protected ActorFaction actorFaction;
+
+    [SerializeField] protected float reach = 2;
 
     public abstract string Name { get; set; }
     public abstract bool Alive { get; set; }
@@ -51,6 +55,8 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
     public abstract bool InfiniteStamina { get; set; }
 
     public abstract ActorFaction ActorFaction { get; set; }
+
+    public abstract float Reach { get; set; }
 
     protected abstract void AddDamage(int damage);
     public abstract void AddDamage(HitData data);
