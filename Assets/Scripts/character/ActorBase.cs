@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -34,7 +35,8 @@ public class ActorBase : AbstractActorBase
 
     public override float Reach { get => reach; set => reach = value; }
 
-    HealthBarScript healthBar;
+    [DoNotSerialize]
+    private UIBarScript barHealth;
 
     protected override void AddDamage(int damage)
     {
@@ -76,9 +78,14 @@ public class ActorBase : AbstractActorBase
             }
         }
 
-        if (healthBar != null)
+        UpdateHKSBars();
+    }
+
+    protected override void UpdateHKSBars()
+    {
+        if (barHealth != null)
         {
-            healthBar.UpdateTarget(health, maxHealth);
+            barHealth.UpdateTarget(health, maxHealth);
         }
     }
 
@@ -94,10 +101,10 @@ public class ActorBase : AbstractActorBase
 
     private void Start()
     {
-        healthBar = GetComponentInChildren<HealthBarScript>();
-        if (healthBar != null)
+        barHealth = GetComponentInChildren<UIBarScript>();
+        if (barHealth != null)
         {
-            healthBar.UpdateTarget(health, maxHealth);
+            barHealth.UpdateTarget(health, maxHealth);
         }
     }
 }

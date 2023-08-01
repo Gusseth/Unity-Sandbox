@@ -60,8 +60,7 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
 
     protected abstract void AddDamage(int damage);
     public abstract void AddDamage(HitData data);
-
     public abstract void Kill();
-
+    protected abstract void UpdateHKSBars();
     public abstract void OnDeath(DeathData data);
 }
