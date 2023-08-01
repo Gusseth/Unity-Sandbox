@@ -176,6 +176,10 @@ public interface IHitter : IHitCheck, IHitResponse
     /// </summary>
     public bool Attacking { get; set; }
     /// <summary>
+    /// Returns true if the weapon has directional attacks
+    /// </summary>
+    public bool IsDirectional { get; set; }
+    /// <summary>
     /// Called immediately after the hitter receives a request to attack
     /// </summary>
     public void PreAttack(float3 direction);
@@ -183,6 +187,13 @@ public interface IHitter : IHitCheck, IHitResponse
     /// Called after the hitter returns to idle state
     /// </summary>
     public void PostAttack();
+
+    /// <summary>
+    /// Updates attack direction indicators given the direction
+    /// </summary>
+    /// <param name="deltaVelocity">Direction of recent movement ie. 'direction' from PreAttack</param>
+    /// <param name="indicator">The indicator to be modified</param>
+    public void UpdateDirectionalIndicator(float3 deltaVelocity, IAttackDirectionalUI indicator);
 }
 
 /// <summary>
