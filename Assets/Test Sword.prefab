@@ -123,9 +123,11 @@ MonoBehaviour:
   isAttacking: 1
   isBlocking: 0
   isParrying: 0
+  isDirectional: 1
   rawDamage: 35
   hitterBox: {fileID: 3628233028402725924}
   lookThreshold: 0.0125
+  testMode: 0
 --- !u!114 &3628233028402725924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +147,7 @@ MonoBehaviour:
     m_Bits: 64
   verticalSubdivisions: 8
   spark: {fileID: 4310323674851973908, guid: 6c528c4175b67e44c9fb047af8cfb129, type: 3}
+  allowMultipleHits: 0
 --- !u!114 &2705891912838945515
 MonoBehaviour:
   m_ObjectHideFlags: 0

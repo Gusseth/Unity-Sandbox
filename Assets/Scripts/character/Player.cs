@@ -7,6 +7,9 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
     [SerializeField] IInventoryController inventoryController;
     [SerializeField] ISet<WorldFaction> factions;
     [SerializeField] bool kegare;
+    [SerializeField] UIBarScript healthBar;
+    [SerializeField] UIBarScript keBar;
+    [SerializeField] UIBarScript staminaBar;
     float actualHarae;
     int kegareStack;
 
@@ -20,6 +23,13 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
     public void AddFaction(WorldFaction faction)
     {
         Factions.Add(faction);
+    }
+
+    protected override void UpdateHKSBars()
+    {
+        healthBar.UpdateTarget(health, maxHealth);
+        keBar.UpdateTarget(ke, maxKe);
+        staminaBar.UpdateTarget(stamina, maxStamina);
     }
 
     public void RemoveFaction(WorldFaction faction)
@@ -56,6 +66,7 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
         factions = new HashSet<WorldFaction>();
         actorFaction = ActorFaction.Player;
         actorName = "Player";
+        UpdateHKSBars();
     }
 
     // Update is called once per frame

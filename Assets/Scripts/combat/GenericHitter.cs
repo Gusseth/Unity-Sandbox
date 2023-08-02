@@ -8,13 +8,16 @@ public class GenericHitter : MonoBehaviour, IMeleeHitter
     [SerializeField] bool isAttacking;
     [SerializeField] bool isBlocking;
     [SerializeField] bool isParrying;
+    [SerializeField] bool isDirectional;
     [SerializeField] int rawDamage;
     [SerializeField] HitterBox hitterBox;
     [SerializeField] float lookThreshold = 0.0125f;
+    [SerializeField] bool testMode;
     public int Damage { get => rawDamage; }
     public bool Blocking { get => isBlocking; set => isBlocking = value; }
     public bool Parry { get => isParrying; set => isParrying = value; }
     public bool Attacking { get => isAttacking; set => isAttacking = value; }
+    public bool IsDirectional { get => isDirectional; set => isDirectional = value; }
 
     BasicHitDirection lastAttackDirection = BasicHitDirection.Right;
 
@@ -25,7 +28,7 @@ public class GenericHitter : MonoBehaviour, IMeleeHitter
 
     public void PreAttack(float3 direction)
     {
-        BasicHitDirection attackDirection = ProcessDirection(direction);
+        BasicHitDirection attackDirection = GetAttackDirection(direction);
         Debug.Log($"Attacking from: {attackDirection}");
         Attacking = true;
     }
@@ -48,41 +51,29 @@ public class GenericHitter : MonoBehaviour, IMeleeHitter
 
     public void Response(HitData data)
     {
-        
+        if (testMode && Attacking && data is Hit)
+        {
+            PostAttack();
+            TimeHelpers.InvokeCoroutine(this, () => PreAttack(Vector3.zero), 1);
+        }
     }
 
-    BasicHitDirection ProcessDirection(float3 direction)
+    BasicHitDirection GetAttackDirection(float3 direction)
     {
-        BasicHitDirection attackDirection = lastAttackDirection;
-        float3 abs_direction = math.abs(direction);
-        float highest = math.cmax(abs_direction);
+        BasicHitDirection attackDirection = FilterThreshold(direction, lastAttackDirection);
+        lastAttackDirection = attackDirection;
+
+        return attackDirection;
+    }
+
+    private BasicHitDirection FilterThreshold(float3 direction, BasicHitDirection fallback)
+    {
         if (math.length(direction) > lookThreshold)
         {
-            int i = 0;
-            BasicHitDirection positive = 0, negative = 0;
-            for (; i < 3; i++)
-            {
-                if (abs_direction[i] == highest)
-                {
-                    highest = direction[i];
-                    break;
-                }
-            }
-            switch (i)
-            {
-                case 0:
-                    positive = BasicHitDirection.Right;
-                    negative = BasicHitDirection.Left;
-                    break;
-                case 1:
-                    positive = BasicHitDirection.Down;
-                    negative = BasicHitDirection.Up;
-                    break;
-            }
-            attackDirection = (BasicHitDirection)MathHelpers.FloatDirection(highest, positive, negative);
-            lastAttackDirection = attackDirection;
+            Vector3 cardDirection = MathHelpers.CardinalizeDirection(direction);
+            fallback = EnumHelpers.ToBasicHitDirection(cardDirection);
         }
-        return attackDirection;
+        return fallback;
     }
 
     // Start is called before the first frame update
@@ -98,5 +89,10 @@ public class GenericHitter : MonoBehaviour, IMeleeHitter
         {
             hitterBox.Attack();
         }
+    }
+
+    public void UpdateDirectionalIndicator(float3 direction, IAttackDirectionalUI indicator)
+    {
+        indicator.UpdateTarget(FilterThreshold(direction, BasicHitDirection.None));
     }
 }

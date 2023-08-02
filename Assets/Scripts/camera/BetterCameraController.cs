@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class BetterCameraController : MonoBehaviour
 {
     [SerializeField] float sensitivity = 5.0f;
-    [SerializeField] float deltaSensitivity = 0.5f;
+    [SerializeField] float deltaSensitivity = 0.125f;
     [SerializeField] InputActionReference look;
     [SerializeField] float3 acceleration;
 
@@ -37,7 +37,10 @@ public class BetterCameraController : MonoBehaviour
 
         velocity = math.lerp(velocity, input, acceleration * Time.deltaTime);
 
-        deltaVelocity += velocity * Time.deltaTime;
+        float3 correctedVelocity = velocity;
+        correctedVelocity.y *= -1;
+
+        deltaVelocity += correctedVelocity * Time.deltaTime;
         deltaVelocity = math.lerp(deltaVelocity, float3.zero, acceleration * Time.deltaTime * deltaSensitivity);
 
         rot += velocity.yxz * Time.deltaTime;

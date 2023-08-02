@@ -17,6 +17,7 @@ public class HandsController : MonoBehaviour
     [SerializeField] uint maxRayDistance;
     [SerializeField] float ballSpeed;
     [SerializeField] IEquipMetadata equipped;
+    [SerializeField] AttackDirectionUI directionIndicator;
     IInventoryController inventoryController;
     AbstractActorBase actor;
 
@@ -43,7 +44,14 @@ public class HandsController : MonoBehaviour
         equipped.OnEquip(inventoryController, actor);
     }
 
-    // Update is called once per frame
+    private void Update()
+    {
+        if (hitter != null && hitter.IsDirectional)
+        {
+            hitter.UpdateDirectionalIndicator(GetAttackDirection(), directionIndicator);
+        }
+    }
+
     public void OnRightHand(InputAction.CallbackContext context)
     {
         if (!context.performed) return; // ignore other actions for now, temporarily one shot 
@@ -95,6 +103,10 @@ public class HandsController : MonoBehaviour
             temp = inventoryController.GetPrevEquipped(Hand.Right, RightHand.transform);
         }
         hitter = temp.GetComponent<IHitter>();
+        if (hitter == null || !hitter.IsDirectional)
+        {
+            directionIndicator.UpdateTarget(BasicHitDirection.None);
+        }
 
         equipped = temp.GetComponent<IEquipMetadata>();
         equipped.OnEquip(inventoryController, actor);
