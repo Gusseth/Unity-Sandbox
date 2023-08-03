@@ -182,7 +182,7 @@ public interface IHitter : IHitCheck, IHitResponse
     /// <summary>
     /// Called immediately after the hitter receives a request to attack
     /// </summary>
-    public void PreAttack(float3 direction);
+    public bool PreAttack(float3 direction, AbstractActorBase actor);
     /// <summary>
     /// Called after the hitter returns to idle state
     /// </summary>

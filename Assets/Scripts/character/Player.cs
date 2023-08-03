@@ -25,6 +25,30 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
         Factions.Add(faction);
     }
 
+    public override void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false)
+    {
+        if (ke > 0)
+        {
+            if (!kegare || bypassKegare)
+            {
+                base.AddKe(ke, showDecrease);
+            }
+        } 
+        else
+        {
+            base.AddKe(ke, showDecrease);
+        }
+
+        keBar.UpdateTarget(this.ke, maxKe, showDecrease);
+    }
+
+    public override void AddStamina(int stamina, bool showDecrease = true)
+    {
+        base.AddStamina(stamina, showDecrease);
+
+        staminaBar.UpdateTarget(this.stamina, maxStamina, showDecrease);
+    }
+
     protected override void UpdateHKSBars()
     {
         healthBar.UpdateTarget(health, maxHealth);
