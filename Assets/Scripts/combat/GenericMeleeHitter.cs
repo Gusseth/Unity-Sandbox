@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-public class GenericHitter : MonoBehaviour, IMeleeHitter
+public class GenericMeleeHitter : MonoBehaviour, IMeleeHitter
 {
     [SerializeField] bool isAttacking;
     [SerializeField] bool isBlocking;
     [SerializeField] bool isParrying;
     [SerializeField] bool isDirectional;
     [SerializeField] int rawDamage;
-    [SerializeField] HitterBox hitterBox;
+    [SerializeField] MeleeHitterBox hitterBox;
     [SerializeField] float lookThreshold = 0.0125f;
     [SerializeField] bool testMode;
     public int Damage { get => rawDamage; }
@@ -26,11 +27,12 @@ public class GenericHitter : MonoBehaviour, IMeleeHitter
         return true;
     }
 
-    public void PreAttack(float3 direction)
+    public bool PreAttack(float3 direction, AbstractActorBase actor)
     {
         BasicHitDirection attackDirection = GetAttackDirection(direction);
         Debug.Log($"Attacking from: {attackDirection}");
         Attacking = true;
+        return true;
     }
 
     public void PostAttack()
@@ -54,7 +56,7 @@ public class GenericHitter : MonoBehaviour, IMeleeHitter
         if (testMode && Attacking && data is Hit)
         {
             PostAttack();
-            TimeHelpers.InvokeCoroutine(this, () => PreAttack(Vector3.zero), 1);
+            TimeHelpers.InvokeCoroutine(this, () => PreAttack(Vector3.zero, null), 1);
         }
     }
 

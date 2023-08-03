@@ -59,6 +59,8 @@ public interface IHaveHKS
 public interface IDamagableActor
 {
     public void AddDamage(HitData data);
+    public void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false);
+    public void AddStamina(int stamina, bool showDecrease = true);
     public void Kill();
 }
 

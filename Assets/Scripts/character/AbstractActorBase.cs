@@ -60,6 +60,10 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
 
     protected abstract void AddDamage(int damage);
     public abstract void AddDamage(HitData data);
+
+    public abstract void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false);
+    public abstract void AddStamina(int stamina, bool showDecrease = true);
+
     public abstract void Kill();
     protected abstract void UpdateHKSBars();
     public abstract void OnDeath(DeathData data);

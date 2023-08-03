@@ -19,13 +19,13 @@ public class ActorBase : AbstractActorBase
     public override bool Invulnerable { get => invulnerable; set => invulnerable = value; }
 
     // Recall that Ke = mana
-    public override int Ke { get => ke; set => ke = value; }
+    public override int Ke { get => ke; set => AddKe(ke + value); }
     public override int MaxKe { get => maxKe; set => maxKe = value; }
     public override int Harae { get => harae; set => harae = value; }
     public override float HaraeMult { get => haraeMult; set => haraeMult = value; }
     public override bool KamiMode { get => kamiMode; set => kamiMode = value; }  // unlimited mana
 
-    public override int Stamina { get => stamina; set => stamina = value; }
+    public override int Stamina { get => stamina; set => AddStamina(stamina + value); }
     public override int MaxStamina { get => maxStamina; set => maxStamina = value; }
     public override int StaminaBaseRegen { get => staminaBaseRegen; set => staminaBaseRegen = value; }
     public override float StaminaRegenMult { get => staminaRegenMult; set => staminaRegenMult = value; }
@@ -81,6 +81,16 @@ public class ActorBase : AbstractActorBase
         UpdateHKSBars();
     }
 
+    public override void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false)
+    {
+        this.ke = math.clamp(this.ke + ke, 0, maxKe);
+    }
+
+    public override void AddStamina(int stamina, bool showDecrease = true)
+    {
+        this.stamina = math.clamp(this.stamina + stamina, 0, maxStamina);
+    }
+
     protected override void UpdateHKSBars()
     {
         if (barHealth != null)
@@ -88,6 +98,7 @@ public class ActorBase : AbstractActorBase
             barHealth.UpdateTarget(health, maxHealth);
         }
     }
+
 
     public override void Kill()
     {

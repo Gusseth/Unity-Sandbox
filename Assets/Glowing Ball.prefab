@@ -12,12 +12,14 @@ GameObject:
   - component: {fileID: 6751384746324689357}
   - component: {fileID: 2269077883373021996}
   - component: {fileID: -716266745813811963}
-  - component: {fileID: 5698561066470716507}
+  - component: {fileID: 5609309695307399983}
+  - component: {fileID: 1257791468040692980}
   - component: {fileID: 4629886861958289374}
+  - component: {fileID: -7341430013551631519}
   - component: {fileID: 182464381002892810}
   m_Layer: 6
   m_Name: Glowing Ball
-  m_TagString: Projectile
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,7 +107,7 @@ MonoBehaviour:
   lifetimeInSeconds: 10
   velocity: {x: 0, y: 0, z: 0}
   acceleration: {x: 0, y: 0, z: 0}
---- !u!114 &5698561066470716507
+--- !u!114 &5609309695307399983
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,14 +116,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1269550995656528655}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a67dc8dc40e6002409ab8eab664a1c06, type: 3}
+  m_Script: {fileID: 11500000, guid: 42846d59d082b3a42bd6cace8c34abed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  armed: 1
-  impactHasForce: 1
-  isExplosive: 1
-  ignorePlayer: 1
-  forceStrength: 6
+  damage: 10
+  keCost: 10
+  isAttacking: 1
+  isDirectional: 0
+  hitterBox: {fileID: 1257791468040692980}
+--- !u!114 &1257791468040692980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269550995656528655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bd435d7f9c1114479074f17e962eeed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 1269550995656528655}
+  gokuOwner: {fileID: 0}
+  actualCollider: {fileID: 4629886861958289374}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 65
+  forceStrength: 1
 --- !u!135 &4629886861958289374
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -137,12 +158,25 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-7341430013551631519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269550995656528655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ceb3a1fd40d5db44b28a53f4eaeb89d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equippableType: 1
 --- !u!54 &182464381002892810
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -181,7 +215,7 @@ GameObject:
   - component: {fileID: 2013543539328962809}
   - component: {fileID: 2096661785964663595}
   - component: {fileID: 5041602151497467573}
-  m_Layer: 6
+  m_Layer: 2
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -382,7 +416,7 @@ GameObject:
   - component: {fileID: 4653719271968697842}
   - component: {fileID: 8054936648629255867}
   - component: {fileID: 4567748741261721537}
-  m_Layer: 6
+  m_Layer: 2
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}

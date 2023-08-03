@@ -19,10 +19,16 @@ public class UIBarScript : MonoBehaviour
     float frontElapsed = 0;
     float backElapsed = 0;
 
-    public void UpdateTarget(int currentValue, int maxValue)
+    public void UpdateTarget(int currentValue, int maxValue, bool showDecrease = true)
     {
         target = currentValue / (float)maxValue;
         frontElapsed = backElapsed = 0;
+
+        if (!showDecrease)
+        {
+            backElapsed = 1;
+            backgroundIndicator.fillAmount = target;
+        }
     }
 
     private void Start()
