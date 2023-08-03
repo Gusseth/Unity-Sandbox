@@ -56,10 +56,20 @@ public class HandsController : MonoBehaviour
     {
         if (!context.performed) return; // ignore other actions for now, temporarily one shot 
 
+        float3 attackDirection = GetAttackDirection();
+
         if (equipped.EquippableType == EquippableType.weaponMagic)
         {
             float3 direction = CalculateFocalVector(Hand.Right);
-            GameObject ball = Instantiate(Ball);
+            GameObject ball = Instantiate(Ball, null);
+
+            IHitter h = ball.GetComponent<IHitter>();
+            if (!h.PreAttack(attackDirection, actor))
+            {
+                Destroy(ball);
+                return;
+            }
+
             ball.transform.position = RightHand.transform.position;
             RayMovement ballMovement = ball.GetComponent<RayMovement>();
             ballMovement.velocity = direction * ballSpeed;
@@ -67,16 +77,10 @@ public class HandsController : MonoBehaviour
         } 
         else
         {
-            // float3 direction = CalculateFocalVector(Hand.Left);
-            //hitter ??= GetHand(Hand.Right).GetComponentInChildren<IHitter>();
-            float3 attackDirection = GetAttackDirection();
-
             if (hitter.Attacking)
                 hitter.PostAttack();    // temporary branch, will do it automatically in the future
             else
-            {
-                hitter.PreAttack(attackDirection);
-            }
+                hitter.PreAttack(attackDirection, actor);
         }
     }
 
