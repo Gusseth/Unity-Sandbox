@@ -3272,7 +3272,6 @@ MonoBehaviour:
     m_Bits: 64
   verticalSubdivisions: 8
   spark: {fileID: 4310323674851973908, guid: 6c528c4175b67e44c9fb047af8cfb129, type: 3}
-  allowMultipleHits: 0
 --- !u!65 &1247619270
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3442,7 +3441,7 @@ GameObject:
   - component: {fileID: 1280358087}
   m_Layer: 6
   m_Name: HurtBox
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4153,7 +4152,6 @@ MonoBehaviour:
     m_Bits: 64
   verticalSubdivisions: 8
   spark: {fileID: 4310323674851973908, guid: 6c528c4175b67e44c9fb047af8cfb129, type: 3}
-  allowMultipleHits: 0
 --- !u!65 &1501483126
 BoxCollider:
   m_ObjectHideFlags: 0
