@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Progress;
 
-public class InventoryController : MonoBehaviour, IInventoryController
+public class InventoryController : MonoBehaviour, IInventoryController, INoritoInventoryController
 {
     [SerializeField] List<ItemStack> equippedHotbar;
+    [SerializeReference, SubclassSelector] List<ICastable> tempNoritoHotbar = new List<ICastable>();
     [SerializeField] int i = 0;
-    [SerializeField] SimpleInventory inventory;
+    [SerializeField] SimpleItemInventory inventory;
+    [SerializeField] SimpleNoritoInventory noritoInventory;
     [SerializeField] HotbarUI hotbarUI;
     [SerializeField] TextMeshProUGUI hotbarNameIndicator;
 
-    public IInventory Inventory => inventory;
+    public IItemInventory Inventory => inventory;
+
+    public INoritoInventory NoritoInventory => noritoInventory;
 
     public bool AddItem(ItemBase itemBase)
     {
@@ -107,5 +110,10 @@ public class InventoryController : MonoBehaviour, IInventoryController
     void Update()
     {
         
+    }
+
+    public bool OnCast(CastingData castData)
+    {
+        return tempNoritoHotbar[0].OnCast(castData, this);
     }
 }

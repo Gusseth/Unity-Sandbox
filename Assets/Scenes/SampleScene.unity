@@ -1602,6 +1602,7 @@ GameObject:
   - component: {fileID: 726651664}
   - component: {fileID: 726651665}
   - component: {fileID: 726651666}
+  - component: {fileID: 726651667}
   m_Layer: 0
   m_Name: root
   m_TagString: Untagged
@@ -1650,6 +1651,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   x: 55
+--- !u!114 &726651667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726651662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a89f3cdd870386946b94dc5916ea6adc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &770583917
 GameObject:
   m_ObjectHideFlags: 0
@@ -3050,6 +3063,8 @@ MonoBehaviour:
     amountTotal: 1
     stackName: Glowing Ballz
     stackDescription: magic. fucking magic.
+  tempNoritoHotbar:
+  - rid: 4372000271071444995
   i: 0
   inventory:
     inventory:
@@ -3062,8 +3077,98 @@ MonoBehaviour:
       amountTotal: 0
       stackName: 
       stackDescription: 
+  noritoInventory:
+    inventory:
+    - rid: 4372000271071444993
   hotbarUI: {fileID: 892626260}
   hotbarNameIndicator: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 4372000271071444993
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: -2
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: 
+        noritoDescription: 
+        autoCast: 1
+        casting: 0
+    - rid: 4372000271071444995
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000271071444999
+        - rid: 4372000271071444996
+        - rid: 4372000271071444997
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: 
+        noritoDescription: 
+        autoCast: 1
+        casting: 0
+    - rid: 4372000271071444996
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: lol
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0.2
+    - rid: 4372000271071444997
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: lmao even
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
+    - rid: 4372000271071444999
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000271071445000
+        - rid: 4372000271071445001
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: 
+        noritoDescription: 
+        autoCast: 1
+        casting: 0
+    - rid: 4372000271071445000
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: 
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0.25
+    - rid: 4372000271071445001
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: 
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 1
 --- !u!114 &1124450686
 MonoBehaviour:
   m_ObjectHideFlags: 0

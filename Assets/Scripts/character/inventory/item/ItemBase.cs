@@ -12,7 +12,6 @@ public class ItemBase
     public bool Stackable { get; set; }
     public string BaseName { get; set; }
     public string BaseDescription { get; set; }
-
 }
 
 [Serializable]

@@ -12,7 +12,7 @@ public enum Hand
 
 public interface IInventoryController
 {
-    public IInventory Inventory { get; }
+    public IItemInventory Inventory { get; }
     public bool AddItem(ItemBase itemBase);
     public bool AddItem(ItemBase itemBase, uint amount);
     public bool AddItem(ItemStack item);
@@ -24,16 +24,4 @@ public interface IInventoryController
     public GameObject GetPrevEquipped(Hand hand, Transform parent);
     public ItemStack[] FindItems(ItemBase itemBase);
     public ItemStack[] FindItems(ItemID id, ItemData data = null);
-}
-
-public interface IInventory
-{
-    public bool AddItem(ItemBase itemBase, uint amount);
-    public bool AddItem(ItemStack item);
-    public bool RemoveItem(ItemBase item, uint amount);
-    public ItemStack[] FindItems(ItemBase itemBase);
-    public ItemStack[] FindItems(ItemID id, ItemData data = null);
-    public ItemStack[] FindItems(System.Func<ItemStack, bool> filter);
-    public ItemStack[] GetAllItems();
-    public void RemoveAllItems(bool exceptImportant = true);
 }
