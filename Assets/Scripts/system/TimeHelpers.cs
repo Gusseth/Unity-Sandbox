@@ -73,25 +73,77 @@ public static class TimeHelpers
     /// <param name="delayFunction">A function that extracts the initial and end delay times from each element of the collection</param>
     /// <param name="body">The main function that is called on the element</param>
     /// <param name="collection">The collection to enumerate through</param>
+    /// <param name="callback">Function called after execution is done</param>
+    /// <param name="sequentially">True if the enumeration ensures sequential operation, False if parallel operations are fine</param>
     /// <returns></returns>
     public static Coroutine StaggeredEnumerationCoroutine<T>(this MonoBehaviour monoBehaviour, Func<T, (float, float)> delayFunction,
-        Action<T> body, ICollection<T> collection)
+        Action<T> body, ICollection<T> collection, Action callback = null, bool sequentially = true)
     {
-        return monoBehaviour.StartCoroutine(StaggeredEnumerationHelper(body, delayFunction, collection));
+        return monoBehaviour.StartCoroutine(
+            StaggeredEnumerationHelper(body, delayFunction, collection, callback, monoBehaviour, sequentially)
+            );
     }
 
     private static IEnumerator StaggeredEnumerationHelper<T>(Action<T> function, Func<T, (float, float)> delayFunction, 
-        ICollection<T> collection)
+        ICollection<T> collection, Action callback, MonoBehaviour mono, bool sequentially)
     {
-        foreach (T x in collection)
+        if (sequentially)
         {
-            (float initialDelay, float endDelay) = delayFunction(x);
-
-            if (initialDelay > 0)
-                yield return new WaitForSeconds(initialDelay);
-            function(x);
-            if (endDelay > 0)
-                yield return new WaitForSeconds(endDelay);
+            foreach (T x in collection)
+            {
+                // We wait for each routine to finish before proceeding
+                yield return StaggeredCoroutineHelper(function, delayFunction, x);
+            }
+        } 
+        else
+        {
+            foreach (T x in collection)
+            {
+                StaggeredCoroutineHelper(function, delayFunction, x);
+            }
         }
+        if (callback != null)
+            callback();
+    }
+
+    public static Coroutine StaggeredCoroutine<T>(this MonoBehaviour monoBehaviour, Action<T> function, Func<T, 
+        (float, float)> delayFunction, T x, Action callback = null)
+    {
+        return monoBehaviour.StartCoroutine(
+            StaggeredCoroutineHelper(function, delayFunction, x, callback)
+            );
+    }
+
+    public static Coroutine StaggeredCoroutine(this MonoBehaviour monoBehaviour, Action function,
+        float initialDelay = 0, float endDelay = 0, Action callback = null)
+    {
+        return monoBehaviour.StartCoroutine(
+            StaggeredCoroutineHelper(function, initialDelay, endDelay, callback)
+            );
+    }
+
+    private static IEnumerator StaggeredCoroutineHelper<T>(Action<T> function, Func<T, (float, float)> delayFunction,
+        T x, Action callback = null)
+    {
+        (float initialDelay, float endDelay) = delayFunction(x);
+
+        if (initialDelay > 0)
+            yield return new WaitForSeconds(initialDelay);
+        function(x);
+        if (endDelay > 0)
+            yield return new WaitForSeconds(endDelay);
+        if (callback != null)
+            callback();
+    }
+
+    private static IEnumerator StaggeredCoroutineHelper(Action function, float initialDelay, float endDelay, Action callback)
+    {
+        if (initialDelay > 0)
+            yield return new WaitForSeconds(initialDelay);
+        function();
+        if (endDelay > 0)
+            yield return new WaitForSeconds(endDelay);
+        if (callback != null)
+            callback();
     }
 }
