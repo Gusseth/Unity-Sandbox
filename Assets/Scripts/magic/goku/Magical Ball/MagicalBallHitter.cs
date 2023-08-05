@@ -27,12 +27,7 @@ public class MagicalBallHitter : MonoBehaviour, IHitter
 
     public bool PreAttack(float3 direction, AbstractActorBase actor)
     {
-        if (actor.Ke >= keCost)
-        {
-            actor.AddKe(-keCost);
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public void Response(HitData data)
