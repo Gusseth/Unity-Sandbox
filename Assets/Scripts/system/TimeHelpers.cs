@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Jobs;
 using UnityEngine;
 
@@ -145,5 +146,15 @@ public static class TimeHelpers
             yield return new WaitForSeconds(endDelay);
         if (callback != null)
             callback();
+    }
+
+    public static async Task AsyncWait(float time, bool useScaledTime = true)
+    {
+        float elapsed = 0;
+        while (elapsed < time)
+        {
+            elapsed += useScaledTime ? Time.deltaTime : Time.unscaledDeltaTime;
+            await Task.Yield();
+        }
     }
 }
