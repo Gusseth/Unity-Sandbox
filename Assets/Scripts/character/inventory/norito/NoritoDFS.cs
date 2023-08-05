@@ -13,6 +13,17 @@ public interface ICastableDFS
     public void OnOrder(IList orderedList, INorito parent, bool first = false, bool last = false);
 }
 
+/*
+ * TODO: Match the DFS-based solution's features with the other tree-based solution
+ *       It should improve performance over the current implementation, 
+ *       but my brain is too small to think of an algorithm.
+ *       
+ *       FEATURES:
+ *          Dynamically switch between autoCast and sequential modes depending on the Norito's autoCast
+ *          ie.:    AutoCast-ing Norito should automatically cast its children while
+ *                  Sequential Norito must call OnCast() again to move to the next spell
+ */
+
 [Serializable]
 public class NoritoDFS : ICastable, INorito
 {
@@ -25,7 +36,6 @@ public class NoritoDFS : ICastable, INorito
     public string noritoName;
     public string noritoDescription;
     public bool autoCast = true;
-    [SerializeField] bool cycleComplete = true;
 
 
     [SerializeField] bool casting = false;
@@ -40,7 +50,7 @@ public class NoritoDFS : ICastable, INorito
     public float ActualEndDelay => endDelay + orderedCastables.Last().EndDelay;
     public GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
     public bool AutoCast { get => autoCast; set => autoCast = value; }
-    public bool CycleComplete => cycleComplete;
+    public bool CycleComplete => autoCast ? casting : i == 0;
 
     public bool OnCast(CastingData castData, MonoBehaviour mono)
     {

@@ -1136,7 +1136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &515970288
@@ -3018,7 +3018,7 @@ MonoBehaviour:
   harae: 0
   haraeMult: 0
   maxKe: 100
-  kamiMode: 0
+  kamiMode: 1
   stamina: 100
   maxStamina: 100
   staminaBaseRegen: 0
@@ -3064,7 +3064,8 @@ MonoBehaviour:
     stackName: Glowing Ballz
     stackDescription: magic. fucking magic.
   tempNoritoHotbar:
-  - rid: 4372000271071444995
+  - rid: 4372000290658844679
+  - rid: 4372000290658844672
   i: 0
   inventory:
     inventory:
@@ -3100,56 +3101,135 @@ MonoBehaviour:
         noritoDescription: 
         autoCast: 1
         casting: 0
-    - rid: 4372000271071444995
-      type: {class: Norito, ns: , asm: Assembly-CSharp}
+        cycleComplete: 1
+        i: 0
+    - rid: 4372000290658844672
+      type: {class: NoritoDFS, ns: , asm: Assembly-CSharp}
       data:
-        castables:
-        - rid: 4372000271071444999
-        - rid: 4372000271071444996
-        - rid: 4372000271071444997
+        children:
+        - rid: 4372000290658844675
+        - rid: 4372000290658844673
+        - rid: 4372000290658844674
+        orderedCastables: []
         worldModelPrefab: {fileID: 0}
         totalKeCost: 0
         initialDelay: 0
         endDelay: 0
         noritoName: 
         noritoDescription: 
-        autoCast: 1
+        autoCast: 0
+        cycleComplete: 1
         casting: 0
-    - rid: 4372000271071444996
+        ordered: 0
+        i: 0
+    - rid: 4372000290658844673
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
         prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
           type: 3}
-        gokuName: lol
+        gokuName: kek
         gokuDescription: 
-        keCost: 0
+        keCost: 5
         initialDelay: 0
-        endDelay: 0.2
-    - rid: 4372000271071444997
+        endDelay: 0.5
+    - rid: 4372000290658844674
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
         prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
           type: 3}
-        gokuName: lmao even
+        gokuName: 2
         gokuDescription: 
-        keCost: 0
+        keCost: 5
+        initialDelay: 0
+        endDelay: 0.5
+    - rid: 4372000290658844675
+      type: {class: NoritoDFSNode, ns: , asm: Assembly-CSharp}
+      data:
+        children:
+        - rid: 4372000290658844676
+        - rid: 4372000290658844678
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 2
+        noritoName: 
+        noritoDescription: 
+        autoCast: 1
+        cycleComplete: 1
+    - rid: 4372000290658844676
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: 
+        gokuDescription: 
+        keCost: 5
+        initialDelay: 0
+        endDelay: 0.25
+    - rid: 4372000290658844678
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: 
+        gokuDescription: 
+        keCost: 5
         initialDelay: 0
         endDelay: 0
-    - rid: 4372000271071444999
+    - rid: 4372000290658844679
       type: {class: Norito, ns: , asm: Assembly-CSharp}
       data:
         castables:
-        - rid: 4372000271071445000
-        - rid: 4372000271071445001
+        - rid: 4372000290658844684
+        - rid: 4372000290658844680
+        - rid: 4372000290658844683
         worldModelPrefab: {fileID: 0}
         totalKeCost: 0
         initialDelay: 0
         endDelay: 0
         noritoName: 
         noritoDescription: 
-        autoCast: 1
+        autoCast: 0
         casting: 0
-    - rid: 4372000271071445000
+        cycleComplete: 1
+        i: 0
+    - rid: 4372000290658844680
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: 
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0.5
+    - rid: 4372000290658844683
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        gokuName: 
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0.5
+    - rid: 4372000290658844684
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000290658844685
+        - rid: 4372000290658844688
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: 
+        noritoDescription: 
+        autoCast: 0
+        casting: 0
+        cycleComplete: 1
+        i: 0
+    - rid: 4372000290658844685
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
         prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
@@ -3159,7 +3239,7 @@ MonoBehaviour:
         keCost: 0
         initialDelay: 0
         endDelay: 0.25
-    - rid: 4372000271071445001
+    - rid: 4372000290658844688
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
         prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
@@ -3314,7 +3394,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 5, y: 5}
+  m_AnchoredPosition: {x: 5, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1247619267
