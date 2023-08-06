@@ -81,11 +81,7 @@ public class Goku : ICastable, ICastableDFS
             GameObject casted = UnityEngine.Object.Instantiate(prefab);
             IMagicController magicController = casted.GetComponent<IMagicController>();
             magicController.Init();
-            if (!magicController.OnCast(castData))
-            {
-                return false;
-            }
-            else
+            if (magicController.OnCast(castData))
             {
                 await TimeHelpers.WaitAsync(endDelay);
                 return true;
