@@ -20,7 +20,8 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
     public virtual bool OnCast(CastingData data)
     {
         gameObject.transform.position = data.origin.position;
-        data.ownerActor.AddKe(-keCost);
+        if (!data.ownerActor.KamiMode)
+            data.ownerActor.AddKe(-keCost);
         return true;
     }
 
