@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,7 +119,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public bool OnCast(CastingData castData)
     {
-        tempNoritoHotbar[0].OnCastAsync(castData, null);
+        tempNoritoHotbar[0].OnCastAsync(castData, null, this.GetCancellationTokenOnDestroy());
         return true;
     }
 }

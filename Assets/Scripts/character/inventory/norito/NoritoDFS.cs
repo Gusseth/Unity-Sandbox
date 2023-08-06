@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -31,8 +33,8 @@ public class NoritoDFS : ICastable, INorito
     [SerializeReference, SubclassSelector] public List<ICastable> orderedCastables = new List<ICastable>();
     public GameObject worldModelPrefab;
     public int totalKeCost = 0;
-    public float initialDelay = 0;
-    public float endDelay = 0;
+    public int initialDelay = 0;
+    public int endDelay = 0;
     public string noritoName;
     public string noritoDescription;
     public bool autoCast = true;
@@ -45,9 +47,9 @@ public class NoritoDFS : ICastable, INorito
     public string Name => noritoName;
     public string Description => noritoDescription;
     public int KeCost => totalKeCost;
-    public float InitialDelay => initialDelay;
-    public float EndDelay => endDelay;
-    public float ActualEndDelay => endDelay + orderedCastables.Last().EndDelay;
+    public int InitialDelay => initialDelay;
+    public int EndDelay => endDelay;
+    public int ActualEndDelay => endDelay + orderedCastables.Last().EndDelay;
     public GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
     public bool Casting => casting;
     public bool AutoCast { get => autoCast; set => autoCast = value; }
@@ -85,10 +87,10 @@ public class NoritoDFS : ICastable, INorito
         return true;
     }
 
-    public Task<bool> OnCastAsync(CastingData castData, ICastable parent)
+    public UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
         // TODO: Feature match with the tree implementation
-        return Task.FromResult(true);
+        return UniTask.FromResult(true);
     }
 
     private void OnSequentialCast(CastingData castData, MonoBehaviour mono)
@@ -145,22 +147,22 @@ public class NoritoDFSNode : ICastableDFS, ICastableData, INorito
     [SerializeReference, SubclassSelector] public List<ICastableDFS> children = new List<ICastableDFS>();
     public GameObject worldModelPrefab;
     public int totalKeCost = 0;
-    public float initialDelay = 0;
-    public float endDelay = 0;
+    public int initialDelay = 0;
+    public int endDelay = 0;
     public string noritoName;
     public string noritoDescription;
     public bool autoCast = true;
     [SerializeField] bool cycleComplete = true;
 
-    float accumulatedEndDelay = 0;
-    float accumulatedInitialDelay = 0;
+    int accumulatedEndDelay = 0;
+    int accumulatedInitialDelay = 0;
 
     public string Name => noritoName;
     public string Description => noritoDescription;
     public int KeCost => totalKeCost;
-    public float InitialDelay => initialDelay + accumulatedInitialDelay;
-    public float EndDelay => endDelay;
-    public float ActualEndDelay => endDelay + accumulatedEndDelay;
+    public int InitialDelay => initialDelay + accumulatedInitialDelay;
+    public int EndDelay => endDelay;
+    public int ActualEndDelay => endDelay + accumulatedEndDelay;
     public GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
     public bool Casting => false;
     public bool AutoCast { get => autoCast; set => autoCast = value; }
