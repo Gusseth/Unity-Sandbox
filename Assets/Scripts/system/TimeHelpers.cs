@@ -148,7 +148,7 @@ public static class TimeHelpers
             callback();
     }
 
-    public static async Task AsyncWait(float time, bool useScaledTime = true)
+    public static async Task WaitAsync(float time, bool useScaledTime = true)
     {
         float elapsed = 0;
         while (elapsed < time)
