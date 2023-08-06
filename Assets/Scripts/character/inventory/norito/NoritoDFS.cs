@@ -30,7 +30,7 @@ public class NoritoDFS : ICastable, INorito
     [SerializeReference, SubclassSelector] public List<ICastableDFS> children = new List<ICastableDFS>();
     [SerializeReference, SubclassSelector] public List<ICastable> orderedCastables = new List<ICastable>();
     public GameObject worldModelPrefab;
-    public uint totalKeCost = 0;
+    public int totalKeCost = 0;
     public float initialDelay = 0;
     public float endDelay = 0;
     public string noritoName;
@@ -44,13 +44,15 @@ public class NoritoDFS : ICastable, INorito
 
     public string Name => noritoName;
     public string Description => noritoDescription;
-    public uint KeCost => totalKeCost;
+    public int KeCost => totalKeCost;
     public float InitialDelay => initialDelay;
     public float EndDelay => endDelay;
     public float ActualEndDelay => endDelay + orderedCastables.Last().EndDelay;
     public GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
+    public bool Casting => casting;
     public bool AutoCast { get => autoCast; set => autoCast = value; }
     public bool CycleComplete => autoCast ? casting : i == 0;
+    public bool OnLastCastable => i == children.Count - 1;
 
     public bool OnCast(CastingData castData, MonoBehaviour mono)
     {
@@ -68,7 +70,7 @@ public class NoritoDFS : ICastable, INorito
         casting = true;
         void BodyFunction(ICastable castable)
         {
-            castable.OnCast(castData, mono);
+            //castable.OnCast(castData, mono);
         };
 
         if (autoCast)
@@ -83,13 +85,19 @@ public class NoritoDFS : ICastable, INorito
         return true;
     }
 
+    public Task<bool> OnCastAsync(CastingData castData, ICastable parent)
+    {
+        // TODO: Feature match with the tree implementation
+        return Task.FromResult(true);
+    }
+
     private void OnSequentialCast(CastingData castData, MonoBehaviour mono)
     {
         ICastable castable = orderedCastables[i];
 
         void cast()
         {
-            castable.OnCast(castData, mono);
+            //castable.OnCast(castData, mono);
         }
 
         TimeHelpers.StaggeredCoroutine(mono, cast, castable.InitialDelay, castable.ActualEndDelay, PostCast);
@@ -105,7 +113,7 @@ public class NoritoDFS : ICastable, INorito
         return (castable.InitialDelay, castable.ActualEndDelay);
     }
 
-    private void PostCast()
+    public void PostCast()
     {
         casting = false;
     }
@@ -121,7 +129,7 @@ public class NoritoDFS : ICastable, INorito
         CalculateKeCost();
     }
 
-    private void CalculateKeCost()
+    public void CalculateKeCost()
     {
         totalKeCost = 0;
         foreach (ICastableData node in orderedCastables)
@@ -136,7 +144,7 @@ public class NoritoDFSNode : ICastableDFS, ICastableData, INorito
 {
     [SerializeReference, SubclassSelector] public List<ICastableDFS> children = new List<ICastableDFS>();
     public GameObject worldModelPrefab;
-    public uint totalKeCost = 0;
+    public int totalKeCost = 0;
     public float initialDelay = 0;
     public float endDelay = 0;
     public string noritoName;
@@ -149,14 +157,15 @@ public class NoritoDFSNode : ICastableDFS, ICastableData, INorito
 
     public string Name => noritoName;
     public string Description => noritoDescription;
-    public uint KeCost => totalKeCost;
+    public int KeCost => totalKeCost;
     public float InitialDelay => initialDelay + accumulatedInitialDelay;
     public float EndDelay => endDelay;
     public float ActualEndDelay => endDelay + accumulatedEndDelay;
     public GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
+    public bool Casting => false;
     public bool AutoCast { get => autoCast; set => autoCast = value; }
-
     public bool CycleComplete => cycleComplete;
+    public bool OnLastCastable => cycleComplete;
 
     public void OnOrder(IList orderedList, INorito parent, bool first = false, bool last = false)
     {
@@ -187,7 +196,7 @@ public class NoritoDFSNode : ICastableDFS, ICastableData, INorito
         }
     }
 
-    private void CalculateKeCost()
+    public void CalculateKeCost()
     {
         totalKeCost = 0;
         foreach (ICastableData node in children)

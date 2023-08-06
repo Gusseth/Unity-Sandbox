@@ -104,6 +104,10 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
     void Awake()
     {
         hotbarUI.SetHotbar(equippedHotbar);
+        foreach(ICastable castable in tempNoritoHotbar)
+        {
+            castable.CalculateKeCost();
+        }
     }
 
     // Update is called once per frame
@@ -114,6 +118,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public bool OnCast(CastingData castData)
     {
-        return tempNoritoHotbar[0].OnCast(castData, this);
+        tempNoritoHotbar[0].OnCastAsync(castData, null);
+        return true;
     }
 }
