@@ -105,9 +105,10 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
     void Awake()
     {
         hotbarUI.SetHotbar(equippedHotbar);
-        foreach(ICastable castable in tempNoritoHotbar)
+        foreach(IHotbarDisplayable displayable in equippedHotbar)
         {
-            castable.CalculateKeCost();
+            if (displayable is ICastable castable)
+                castable.CalculateKeCost();
         }
     }
 
