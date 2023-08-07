@@ -6,10 +6,10 @@ using UnityEngine;
 public interface IHotbarUI
 {
     public ICollection<IHotbarSlot> Slots { get; }
-    public void SetHotbar(ICollection<ItemStack> equippedItems);
-    public void UpdateSlot(ItemStack item, int slotIndex);
+    public void SetHotbar(ICollection<IHotbarDisplayable> equippedItems);
+    public void UpdateSlot(IHotbarDisplayable displayables, int slotIndex);
     public void SelectSlot(int slotIndex);
-    public void AddSlot(ItemStack item);
+    public void AddSlot(IHotbarDisplayable displayable);
     public void RemoveSlot(int slotIndex);
     public void OnNoEquippable();
 }
@@ -37,7 +37,7 @@ public class HotbarUI : MonoBehaviour, IHotbarUI
         slots[i].OnSelect(itemNameIndicator);
     }
 
-    public void SetHotbar(ICollection<ItemStack> equippedItems)
+    public void SetHotbar(ICollection<IHotbarDisplayable> equippedItems)
     {
         if (slots.Count != 0)
         {
@@ -49,23 +49,23 @@ public class HotbarUI : MonoBehaviour, IHotbarUI
             slots.Clear();
         }
 
-        foreach (ItemStack item in equippedItems)
+        foreach (IHotbarDisplayable displayable in equippedItems)
         {
-            AddSlot(item);
+            AddSlot(displayable);
         }
     }
 
-    public void UpdateSlot(ItemStack item, int slotIndex)
+    public void UpdateSlot(IHotbarDisplayable item, int slotIndex)
     {
         throw new System.NotImplementedException();
     }
 
-    public void AddSlot(ItemStack item)
+    public void AddSlot(IHotbarDisplayable displayable)
     {
         GameObject newSlot = Instantiate(slotPrefab, hotbarSlots);
         IHotbarSlot slot = newSlot.GetComponent<IHotbarSlot>();
         slots.Add(slot);
-        slot.OnEquip(item);
+        slot.OnEquip(displayable);
     }
 
     public void RemoveSlot(int slotIndex)

@@ -7,7 +7,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [Serializable]
-public class CastingData
+public record CastingData
 {
     public Transform origin;
     public GameObject owner;

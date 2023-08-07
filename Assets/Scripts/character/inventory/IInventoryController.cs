@@ -10,6 +10,13 @@ public enum Hand
     Right = 1
 }
 
+public interface IHotbarDisplayable
+{
+    public string HotbarName { get; }
+    public string HotbarDescription { get; }
+    public GameObject WorldModel { get; }
+}
+
 public interface IInventoryController
 {
     public IItemInventory Inventory { get; }

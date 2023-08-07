@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class InventoryController : MonoBehaviour, IInventoryController, INoritoInventoryController
 {
-    [SerializeField] List<ItemStack> equippedHotbar;
+    [SerializeReference, SubclassSelector] List<IHotbarDisplayable> equippedHotbar = new List<IHotbarDisplayable>();
     [SerializeReference, SubclassSelector] List<ICastable> tempNoritoHotbar = new List<ICastable>();
     [SerializeField] int i = 0;
     [SerializeField] SimpleItemInventory inventory;
@@ -55,7 +55,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
             hotbarUI.SetHotbar(equippedHotbar);
         }
         hotbarUI.SelectSlot(i);
-        return Instantiate(equippedHotbar[i].worldModelPrefab, parent);
+        return Instantiate(equippedHotbar[i].WorldModel, parent);
     }
 
     public GameObject GetNextEquipped(Hand hand, Transform parent)
@@ -119,7 +119,11 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public bool OnCast(CastingData castData)
     {
-        tempNoritoHotbar[0].OnCastAsync(castData, null, this.GetCancellationTokenOnDestroy());
-        return true;
+        if (equippedHotbar[i] is ICastable castable)
+        {
+            castable.OnCastAsync(castData, null, this.GetCancellationTokenOnDestroy());
+            return true;
+        }
+        return false;
     }
 }

@@ -73,9 +73,10 @@ public interface INorito : ICastableData
 }
 
 [Serializable]
-public class Goku : ICastable, ICastableDFS
+public class Goku : ICastable, ICastableDFS, IHotbarDisplayable
 {
     public GameObject prefab;
+    public GameObject worldModel;
     public string gokuName;
     public string gokuDescription;
     public int keCost = 0;
@@ -95,7 +96,9 @@ public class Goku : ICastable, ICastableDFS
     public int ActualEndDelay => endDelay + accumulatedEndDelay;  // deprecated
     public GameObject Model { get => prefab; set => prefab = value; }
     public bool Casting => casting;
-
+    public string HotbarName => Name;
+    public string HotbarDescription => Description;
+    public GameObject WorldModel => worldModel;
 
     public bool OnCast(CastingData castData, MonoBehaviour mono)
     {
@@ -175,10 +178,8 @@ public class Goku : ICastable, ICastableDFS
  */
 
 [Serializable]
-public class Norito : ICastable, INorito
+public class Norito : ICastable, INorito, IHotbarDisplayable
 {
-    public static readonly float hardcodedDelay = 0.15f;
-
     [SerializeReference, SubclassSelector] public List<ICastable> castables = new List<ICastable>();
     public GameObject worldModelPrefab;
     public int totalKeCost = 0;
@@ -205,7 +206,9 @@ public class Norito : ICastable, INorito
     public bool AutoCast { get => autoCast; set => autoCast = value; }
     public bool CycleComplete => cycleComplete();
     public bool OnLastCastable => false;
-
+    public string HotbarName => Name;
+    public string HotbarDescription => Description;
+    public GameObject WorldModel => worldModelPrefab;
 
     private bool cycleComplete()
     {

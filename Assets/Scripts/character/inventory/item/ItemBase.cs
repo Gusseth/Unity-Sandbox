@@ -27,7 +27,7 @@ public class ItemID
 }
 
 [Serializable]
-public class ItemStack : IInteractableData
+public class ItemStack : IInteractableData, IHotbarDisplayable
 {
     public ItemBase itemBase;
     public GameObject worldModelPrefab;
@@ -38,4 +38,7 @@ public class ItemStack : IInteractableData
     public string Name => stackName;
     public string Description => stackDescription;
     public uint Amount => amountTotal;
+    public string HotbarName => Name;
+    public string HotbarDescription => Description;
+    public GameObject WorldModel => worldModelPrefab;
 }
