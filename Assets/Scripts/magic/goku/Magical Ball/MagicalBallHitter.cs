@@ -6,7 +6,6 @@ using UnityEngine;
 public class MagicalBallHitter : MonoBehaviour, IHitter
 {
     [SerializeField] int damage;
-    [SerializeField] int keCost;
     [SerializeField] bool isAttacking = true;
     [SerializeField] bool isDirectional = false;
     [SerializeField] MagicalBallHitterBox hitterBox;
