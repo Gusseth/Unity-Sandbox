@@ -13,7 +13,11 @@ public record CastingData
     public GameObject owner;
     public AbstractActorBase ownerActor;
     public GameObject target;
-    public AbstractActorBase targetActor;
+
+    public float3 point;
+    public float3 distance;
+    public float3 normal;
+
     public float speed;
     public float3 direction;
     public float3 acceleration;
