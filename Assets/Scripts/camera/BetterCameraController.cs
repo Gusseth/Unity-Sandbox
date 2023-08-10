@@ -17,9 +17,6 @@ public class BetterCameraController : MonoBehaviour
     float3 velocity;
     float3 rot;
 
-    const float piOverTwo = math.PI / 2;
-    const float twoPi = math.PI * 2;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -44,8 +41,8 @@ public class BetterCameraController : MonoBehaviour
         deltaVelocity = math.lerp(deltaVelocity, float3.zero, acceleration * Time.deltaTime * deltaSensitivity);
 
         rot += velocity.yxz * Time.deltaTime;
-        rot.y %= twoPi;
-        rot.x = math.clamp(rot.x, -piOverTwo, piOverTwo);
+        rot.y %= MathHelpers.twoPi;
+        rot.x = math.clamp(rot.x, -MathHelpers.piOverTwo, MathHelpers.piOverTwo);
 
         transform.rotation = quaternion.Euler(rot);
     }

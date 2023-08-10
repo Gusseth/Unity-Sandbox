@@ -5,6 +5,13 @@ using UnityEngine;
 
 public static class MathHelpers
 {
+    public static readonly float piOverTwo = math.PI / 2;
+    public static readonly float twoPi = math.PI * 2;
+
+    public static readonly float2 NaN2 = new float2(math.NAN);
+    public static readonly float3 NaN3 = new float3(math.NAN);
+    public static readonly float4 NaN4 = new float4(math.NAN);
+
     public static Enum FloatDirection(float x, Enum positiveDirection, Enum negativeDirection)
     {
         if (x < 0)
