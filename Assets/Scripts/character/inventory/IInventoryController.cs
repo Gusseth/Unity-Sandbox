@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum Hand
 {
@@ -26,9 +22,10 @@ public interface IInventoryController
     public bool RemoveItem(ItemBase itemBase);
     public bool RemoveItem(ItemBase itemBase, uint amount);
     public void TickInventory(Time deltaTime, IActor actor);
-    public GameObject GetEquipped(Hand hand, Transform parent);
-    public GameObject GetNextEquipped(Hand hand, Transform parent);
-    public GameObject GetPrevEquipped(Hand hand, Transform parent);
+    public GameObject GetCurrentEquipped(Transform parent);
+    public GameObject SetEquipped(int i, Transform parent);
+    public GameObject GetNextEquipped(Transform parent);
+    public GameObject GetPrevEquipped(Transform parent);
     public ItemStack[] FindItems(ItemBase itemBase);
     public ItemStack[] FindItems(ItemID id, ItemData data = null);
 }

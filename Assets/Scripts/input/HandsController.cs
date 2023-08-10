@@ -20,6 +20,7 @@ public class HandsController : MonoBehaviour
     [SerializeField] IEquipMetadata equipped;
     [SerializeField] AttackDirectionUI directionIndicator;
     IInventoryController inventoryController;
+    INoritoInventoryController noritoController;
     AbstractActorBase actor;
     LayerMask rayLayer;
 
@@ -40,11 +41,15 @@ public class HandsController : MonoBehaviour
         inventoryController ??= GetComponent<IInventoryController>();
         actor ??= GetComponent<AbstractActorBase>();
 
-        GameObject temp = inventoryController.GetEquipped(Hand.Right, RightHand.transform);
-        temp.transform.parent = RightHand.transform;
+        if (inventoryController is INoritoInventoryController nic)
+            noritoController = nic;
+        else
+            noritoController ??= GetComponent<INoritoInventoryController>();
+
+        GameObject temp = inventoryController.SetEquipped(0, GetHand(Hand.Right).transform);
         hitter = temp.GetComponent<IHitter>();
         equipped = temp.GetComponent<IEquipMetadata>();
-        equipped.OnEquip(inventoryController, actor);
+        equipped.OnEquip(inventoryController, noritoController, actor);
     }
 
     private void Update()
@@ -63,22 +68,8 @@ public class HandsController : MonoBehaviour
 
         if (equipped.EquippableType == EquippableType.weaponMagic)
         {
-            float3 direction = CalculateFocalVector(GetHand(Hand.Right).transform);
-
-            CastingData data = new CastingData
-            {
-                owner = actor.gameObject,
-                ownerActor = actor,
-                origin = RightHand.transform,
-                speed = ballSpeed,
-                direction = direction,
-                directionFunction = CalculateFocalVector
-            };
-
-            INoritoInventoryController nic = inventoryController as INoritoInventoryController;
-            nic.OnCast(data);
-
-        } 
+            CastMagic();
+        }
         else
         {
             if (hitter.Attacking)
@@ -86,6 +77,35 @@ public class HandsController : MonoBehaviour
             else
                 hitter.PreAttack(attackDirection, actor);
         }
+    }
+
+    private void CastMagic()
+    {
+        float3 direction = CalculateFocalVector(GetHand(Hand.Right).transform);
+        RaycastHit hit = RaycastFromCamera(maxRayDistance);
+        CastingData data = new CastingData
+        {
+            owner = actor.gameObject,
+            ownerActor = actor,
+
+            point = hit.point,
+            distance = hit.distance,
+            normal = hit.normal,
+
+            
+
+            origin = RightHand.transform,
+            speed = ballSpeed,
+            direction = direction,
+            directionFunction = CalculateFocalVector
+        };
+
+        if (!float.IsInfinity(hit.distance))
+        {
+            data.target = hit.collider.gameObject;
+        }
+
+        noritoController.OnCast(data);
     }
 
     public void OnLeftHand(InputAction.CallbackContext context)
@@ -98,17 +118,17 @@ public class HandsController : MonoBehaviour
         if (!context.performed) return;
 
         float delta = context.ReadValue<Vector2>().y;
-        equipped.OnUnequip(inventoryController, actor);
+        equipped.OnUnequip(inventoryController, noritoController, actor);
 
         GameObject temp;
 
         if (delta > 0)
         {
-            temp = inventoryController.GetNextEquipped(Hand.Right, RightHand.transform);
+            temp = inventoryController.GetNextEquipped(RightHand.transform);
         } 
         else
         {
-            temp = inventoryController.GetPrevEquipped(Hand.Right, RightHand.transform);
+            temp = inventoryController.GetPrevEquipped(RightHand.transform);
         }
         hitter = temp.GetComponent<IHitter>();
         if (hitter == null || !hitter.IsDirectional)
@@ -117,7 +137,7 @@ public class HandsController : MonoBehaviour
         }
 
         equipped = temp.GetComponent<IEquipMetadata>();
-        equipped.OnEquip(inventoryController, actor);
+        equipped.OnEquip(inventoryController, noritoController, actor);
     }
 
     /*  LET'S MANUALLY BUILD THAT FUCKING
@@ -179,13 +199,22 @@ public class HandsController : MonoBehaviour
 
     private float CalculateRayDistance(float maxDistance)
     {
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, maxRayDistance, rayLayer))
-        {
-            maxDistance = hit.distance;
-        }
+        float rayDistance = RaycastFromCamera(maxRayDistance).distance;
+        return math.min(maxDistance, rayDistance);
+    }
 
-        return maxDistance;
+    private RaycastHit RaycastFromCamera(uint maxDistance = 500)
+    {
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, rayLayer))
+        {
+            return hit;
+        }
+        RaycastHit hitData = default;
+        hitData.point = MathHelpers.NaN3;
+        hitData.normal = MathHelpers.NaN3;
+        hitData.distance = math.INFINITY;
+        return hitData;
     }
 
     private float3 GetAttackDirection()

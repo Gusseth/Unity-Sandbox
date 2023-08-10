@@ -8,7 +8,6 @@ using UnityEngine;
 public class InventoryController : MonoBehaviour, IInventoryController, INoritoInventoryController
 {
     [SerializeReference, SubclassSelector] List<IHotbarDisplayable> equippedHotbar = new List<IHotbarDisplayable>();
-    [SerializeReference, SubclassSelector] List<ICastable> tempNoritoHotbar = new List<ICastable>();
     [SerializeField] int i = 0;
     [SerializeField] SimpleItemInventory inventory;
     [SerializeField] SimpleNoritoInventory noritoInventory;
@@ -43,7 +42,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
         return inventory.FindItems(id, data);
     }
 
-    public GameObject GetEquipped(Hand hand, Transform parent)
+    public GameObject GetCurrentEquipped(Transform parent)
     {
         return GetEquippedModel(parent);
     }
@@ -58,7 +57,15 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
         return Instantiate(equippedHotbar[i].WorldModel, parent);
     }
 
-    public GameObject GetNextEquipped(Hand hand, Transform parent)
+    public GameObject SetEquipped(int i, Transform parent)
+    {
+        if (i >= equippedHotbar.Count || i < 0)
+            return null;
+        this.i = i;
+        return GetEquippedModel(parent);
+    }
+
+    public GameObject GetNextEquipped(Transform parent)
     {
         if (i == equippedHotbar.Count - 1)
             i = 0;
@@ -67,7 +74,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
         return GetEquippedModel(parent);
     }
 
-    public GameObject GetPrevEquipped(Hand hand, Transform parent)
+    public GameObject GetPrevEquipped(Transform parent)
     {
         if (i == 0)
             i = equippedHotbar.Count - 1;
