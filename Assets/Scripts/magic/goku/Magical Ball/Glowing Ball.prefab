@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4118597797227258813}
   - component: {fileID: 6751384746324689357}
   - component: {fileID: 2269077883373021996}
+  - component: {fileID: -2813242032815950426}
   - component: {fileID: -716266745813811963}
   - component: {fileID: 5609309695307399983}
   - component: {fileID: 1257791468040692980}
@@ -19,7 +20,7 @@ GameObject:
   - component: {fileID: 182464381002892810}
   m_Layer: 6
   m_Name: Glowing Ball
-  m_TagString: Untagged
+  m_TagString: Magical Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91,6 +92,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-2813242032815950426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269550995656528655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4617d0c8f048c444f94f162e884b2cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keCost: 10
+  movement: {fileID: 0}
+  hitter: {fileID: 5609309695307399983}
 --- !u!114 &-716266745813811963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  keCost: 10
+  keCost: 0
   isAttacking: 1
   isDirectional: 0
   hitterBox: {fileID: 1257791468040692980}

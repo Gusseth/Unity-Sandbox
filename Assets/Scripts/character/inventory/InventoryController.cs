@@ -1,19 +1,22 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Progress;
 
-public class InventoryController : MonoBehaviour, IInventoryController
+public class InventoryController : MonoBehaviour, IInventoryController, INoritoInventoryController
 {
-    [SerializeField] List<ItemStack> equippedHotbar;
+    [SerializeReference, SubclassSelector] List<IHotbarDisplayable> equippedHotbar = new List<IHotbarDisplayable>();
     [SerializeField] int i = 0;
-    [SerializeField] SimpleInventory inventory;
+    [SerializeField] SimpleItemInventory inventory;
+    [SerializeField] SimpleNoritoInventory noritoInventory;
     [SerializeField] HotbarUI hotbarUI;
     [SerializeField] TextMeshProUGUI hotbarNameIndicator;
 
-    public IInventory Inventory => inventory;
+    public IItemInventory Inventory => inventory;
+
+    public INoritoInventory NoritoInventory => noritoInventory;
 
     public bool AddItem(ItemBase itemBase)
     {
@@ -39,7 +42,7 @@ public class InventoryController : MonoBehaviour, IInventoryController
         return inventory.FindItems(id, data);
     }
 
-    public GameObject GetEquipped(Hand hand, Transform parent)
+    public GameObject GetCurrentEquipped(Transform parent)
     {
         return GetEquippedModel(parent);
     }
@@ -51,10 +54,18 @@ public class InventoryController : MonoBehaviour, IInventoryController
             hotbarUI.SetHotbar(equippedHotbar);
         }
         hotbarUI.SelectSlot(i);
-        return Instantiate(equippedHotbar[i].worldModelPrefab, parent);
+        return Instantiate(equippedHotbar[i].WorldModel, parent);
     }
 
-    public GameObject GetNextEquipped(Hand hand, Transform parent)
+    public GameObject SetEquipped(int i, Transform parent)
+    {
+        if (i >= equippedHotbar.Count || i < 0)
+            return null;
+        this.i = i;
+        return GetEquippedModel(parent);
+    }
+
+    public GameObject GetNextEquipped(Transform parent)
     {
         if (i == equippedHotbar.Count - 1)
             i = 0;
@@ -63,7 +74,7 @@ public class InventoryController : MonoBehaviour, IInventoryController
         return GetEquippedModel(parent);
     }
 
-    public GameObject GetPrevEquipped(Hand hand, Transform parent)
+    public GameObject GetPrevEquipped(Transform parent)
     {
         if (i == 0)
             i = equippedHotbar.Count - 1;
@@ -101,11 +112,26 @@ public class InventoryController : MonoBehaviour, IInventoryController
     void Awake()
     {
         hotbarUI.SetHotbar(equippedHotbar);
+        foreach(IHotbarDisplayable displayable in equippedHotbar)
+        {
+            if (displayable is ICastable castable)
+                castable.CalculateKeCost();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public bool OnCast(CastingData castData)
+    {
+        if (equippedHotbar[i] is ICastable castable)
+        {
+            castable.OnCastAsync(castData, null, this.GetCancellationTokenOnDestroy());
+            return true;
+        }
+        return false;
     }
 }

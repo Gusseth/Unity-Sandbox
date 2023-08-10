@@ -1601,7 +1601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 726651664}
   - component: {fileID: 726651665}
-  - component: {fileID: 726651666}
+  - component: {fileID: 726651667}
   m_Layer: 0
   m_Name: root
   m_TagString: Untagged
@@ -1637,19 +1637,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pause: {fileID: -229304300004974497, guid: c34e79e8a04a57c4d8b4c83ec7f40aff, type: 3}
---- !u!114 &726651666
+--- !u!114 &726651667
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726651662}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e9f6744b91d9c347b827d63fe2daaef, type: 3}
+  m_Script: {fileID: 11500000, guid: a89f3cdd870386946b94dc5916ea6adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  x: 55
 --- !u!1 &770583917
 GameObject:
   m_ObjectHideFlags: 0
@@ -3005,7 +3004,7 @@ MonoBehaviour:
   harae: 0
   haraeMult: 0
   maxKe: 100
-  kamiMode: 0
+  kamiMode: 1
   stamina: 100
   maxStamina: 100
   staminaBaseRegen: 0
@@ -3030,26 +3029,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equippedHotbar:
-  - itemBase:
-      Id:
-        value: Test Sword
-      Data:
-        important: 0
-    worldModelPrefab: {fileID: 4956219157749515013, guid: d59e3703e1298544fbed4c6e92d72f95,
-      type: 3}
-    amountTotal: 1
-    stackName: Test Sword
-    stackDescription: hi
-  - itemBase:
-      Id:
-        value: glowing ballz
-      Data:
-        important: 0
-    worldModelPrefab: {fileID: 2414007672209313845, guid: f0737957fe445e0449932a0c9c930c52,
-      type: 3}
-    amountTotal: 1
-    stackName: Glowing Ballz
-    stackDescription: magic. fucking magic.
+  - rid: 4372000348050030592
+  - rid: 4372000348050030593
+  - rid: 4372000348050030597
+  - rid: 4372000348050030613
   i: 0
   inventory:
     inventory:
@@ -3062,8 +3045,260 @@ MonoBehaviour:
       amountTotal: 0
       stackName: 
       stackDescription: 
+  noritoInventory:
+    inventory:
+    - rid: 4372000271071444993
   hotbarUI: {fileID: 892626260}
   hotbarNameIndicator: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 4372000271071444993
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: -2
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: 
+        noritoDescription: 
+        autoCast: 1
+        casting: 0
+        finishedAtLeastOnce: 0
+        i: 0
+    - rid: 4372000348050030592
+      type: {class: ItemStack, ns: , asm: Assembly-CSharp}
+      data:
+        itemBase:
+          Id:
+            value: Test sword
+          Data:
+            important: 0
+        worldModelPrefab: {fileID: 4956219157749515013, guid: d59e3703e1298544fbed4c6e92d72f95,
+          type: 3}
+        amountTotal: 0
+        stackName: Test Sword
+        stackDescription: hi this is a sword
+    - rid: 4372000348050030593
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000348050030594
+        - rid: 4372000348050030595
+        - rid: 4372000348050030596
+        worldModelPrefab: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
+          type: 3}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: Three Balls
+        noritoDescription: This casts three balls automatically.
+        autoCast: 1
+        casting: 0
+        finishedAtLeastOnce: 0
+        i: 0
+    - rid: 4372000348050030594
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 1
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 250
+    - rid: 4372000348050030595
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 2
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 250
+    - rid: 4372000348050030596
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 3
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 250
+    - rid: 4372000348050030597
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000348050030598
+        - rid: 4372000348050030599
+        - rid: 4372000348050030600
+        - rid: 4372000348050030611
+        - rid: 4372000348050030612
+        worldModelPrefab: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
+          type: 3}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: Complex Norito
+        noritoDescription: Auto-cast and sequential Norito are interoperable
+        autoCast: 1
+        casting: 0
+        finishedAtLeastOnce: 0
+        i: 0
+    - rid: 4372000348050030598
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 1
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 250
+    - rid: 4372000348050030599
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 2
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 500
+    - rid: 4372000348050030600
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000348050030601
+        - rid: 4372000348050030602
+        - rid: 4372000348050030604
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 1000
+        noritoName: Sequential Norito
+        noritoDescription: You must click through this Norito
+        autoCast: 0
+        casting: 0
+        finishedAtLeastOnce: 0
+        i: 0
+    - rid: 4372000348050030601
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 3
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 250
+    - rid: 4372000348050030602
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 4
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 250
+    - rid: 4372000348050030604
+      type: {class: Norito, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000348050030605
+        - rid: 4372000348050030606
+        - rid: 4372000348050030607
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: Three Balls
+        noritoDescription: This is also spawns three balls automatically
+        autoCast: 1
+        casting: 0
+        finishedAtLeastOnce: 0
+        i: 0
+    - rid: 4372000348050030605
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 5
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 125
+    - rid: 4372000348050030606
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 5
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 125
+    - rid: 4372000348050030607
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 5
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
+    - rid: 4372000348050030611
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 6
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 250
+    - rid: 4372000348050030612
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 0}
+        gokuName: 7
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
+    - rid: 4372000348050030613
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
+          type: 3}
+        gokuName: One Ball
+        gokuDescription: This is a lone, primitive spell. You can also cast it.
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
 --- !u!114 &1124450686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3209,7 +3444,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 5, y: 5}
+  m_AnchoredPosition: {x: 5, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1247619267

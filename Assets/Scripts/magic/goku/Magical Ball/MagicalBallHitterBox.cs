@@ -15,7 +15,6 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
     IHitter hitter;
     bool hasHit = false;
     ISet<Collider> alreadyHitColliders; // don't need to clear because this will get destroyed anyways
-    List<Tuple<float3, float3>> hit_points_gizmo;
 
     public IHitter Hitter { get => hitter; set => hitter = value; }
 
@@ -68,16 +67,15 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
                 hasHit = true;
             }
 
-            if (hit.collider.TryGetComponent(out Rigidbody rb))
-            {
-                Vector3 explosiveForce = -normal * forceStrength;
-
-                rb.AddForceAtPosition(explosiveForce, point, ForceMode.Impulse);
-                hasHit = true;
-            }
-
             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Hitbox"))
             {
+                if (hit.collider.TryGetComponent(out Rigidbody rb))
+                {
+                    Vector3 explosiveForce = -normal * forceStrength;
+
+                    rb.AddForceAtPosition(explosiveForce, point, ForceMode.Impulse);
+                }
+
                 hasHit = true;
             }
 
@@ -102,7 +100,6 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
     void Awake()
     {
         alreadyHitColliders = new HashSet<Collider>();
-        hit_points_gizmo ??= new List<Tuple<float3, float3>>();
     }
 
     // Update is called once per frame

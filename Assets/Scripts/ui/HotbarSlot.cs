@@ -7,10 +7,10 @@ using UnityEngine;
 public interface IHotbarSlot
 {
     public GameObject gameObject { get; }
-    public ItemStack Item { get; }
+    public IHotbarDisplayable Displayable { get; }
     public void OnSelect(TextMeshProUGUI itemNameIndicator);
     public void OnDeselect();
-    public void OnEquip(ItemStack item);
+    public void OnEquip(IHotbarDisplayable item);
     public void OnUnequip();
 }
 
@@ -19,14 +19,14 @@ public class HotbarSlot : MonoBehaviour, IHotbarSlot
     [SerializeField] RectTransform rTransform;
     [SerializeField] float2 sizeSelected;
     [SerializeField] float2 sizeUnSelected;
-    [SerializeField] ItemStack item;
+    [SerializeField] IHotbarDisplayable displayable;
 
-    public ItemStack Item => item;
+    public IHotbarDisplayable Displayable => displayable;
 
     public void OnSelect(TextMeshProUGUI itemNameIndicator)
     {
         rTransform.sizeDelta = sizeSelected;
-        itemNameIndicator.text = item.Name;
+        itemNameIndicator.text = displayable.HotbarName;
     }
 
     public void OnDeselect()
@@ -34,9 +34,9 @@ public class HotbarSlot : MonoBehaviour, IHotbarSlot
         rTransform.sizeDelta = sizeUnSelected;
     }
 
-    public void OnEquip(ItemStack item)
+    public void OnEquip(IHotbarDisplayable displayable)
     {
-        this.item = item;
+        this.displayable = displayable;
     }
 
     public void OnUnequip()
