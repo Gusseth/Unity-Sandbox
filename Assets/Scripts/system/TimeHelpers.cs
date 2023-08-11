@@ -1,6 +1,8 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using UnityEngine;
@@ -148,13 +150,25 @@ public static class TimeHelpers
             callback();
     }
 
-    public static async Task WaitAsync(float time, bool useScaledTime = true)
+    /// <summary>
+    /// Invokes a function after a set amount of time in milliseconds
+    /// </summary>
+    /// <param name="invoked">The function to be called after a delay</param>
+    /// <param name="milliseconds">The time of the delay in milliseconds</param>
+    /// <param name="token">Optional cancellation token, thread is stopped if triggered</param>
+    /// <param name="useScaledTime">The time waited should respect the timescale</param>
+    /// <returns></returns>
+    public static async void InvokeAsync(Action invoked, int milliseconds, CancellationToken token = default, bool useScaledTime = true)
     {
-        float elapsed = 0;
-        while (elapsed < time)
+        try
         {
-            elapsed += useScaledTime ? Time.deltaTime : Time.unscaledDeltaTime;
-            await Task.Yield();
+            await UniTask.Delay(milliseconds, useScaledTime, cancellationToken: token);
         }
+        catch (OperationCanceledException)
+        {
+            // We need this or else an error occurs
+            return;
+        }
+        invoked();
     }
 }

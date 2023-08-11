@@ -1,5 +1,7 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
@@ -7,6 +9,8 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
     [SerializeField] IInventoryController inventoryController;
     [SerializeField] ISet<WorldFaction> factions;
     [SerializeField] bool kegare;
+    [SerializeField] int kegareTimeout;
+    [SerializeField] uint regenFrameInterval = 2;
     [SerializeField] UIBarScript healthBar;
     [SerializeField] UIBarScript keBar;
     [SerializeField] UIBarScript staminaBar;
@@ -27,7 +31,7 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
 
     public override void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false)
     {
-        if (ke > 0)
+        if (ke >= 0)
         {
             if (!kegare || bypassKegare)
             {
@@ -37,6 +41,15 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
         else
         {
             base.AddKe(ke, showDecrease);
+            if (kegare)
+            {
+                Debug.Log("Step it up.");
+                Kill();
+            }
+            else if (this.ke == 0)
+            {
+                OnKegare();
+            }
         }
 
         keBar.UpdateTarget(this.ke, maxKe, showDecrease);
@@ -63,10 +76,21 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
 
     public void OnKegare()
     {
+        kegare = true;
         Debug.Log("Your soul has been tainted by impurity.");
-        actualHarae = haraeMult;
+        if (kegareStack == 0)
+            actualHarae = haraeMult;
         haraeMult = 0;
         kegareStack++;
+        TimeHelpers.InvokeAsync(KegareTimeout, kegareTimeout, this.GetCancellationTokenOnDestroy());
+    }
+
+    private void KegareTimeout()
+    {
+        if (Alive)
+        {
+            RemoveKegare(false);
+        }
     }
 
     public void RemoveKegare(bool purification)
@@ -80,8 +104,9 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
         else
         {
             Debug.Log("Your soul still remains weak but your will lets you fight.");
-            haraeMult = actualHarae / (1 + kegareStack);
+            haraeMult = actualHarae / (1 << math.min(kegareStack, 31));
         }
+        kegare = false;
     }
 
     // Start is called before the first frame update
@@ -94,8 +119,10 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        if (Time.frameCount % regenFrameInterval == 0)
+            if (!kegare)
+                AddKe(math.max((int)math.round(harae * haraeMult), 1));
     }
 }

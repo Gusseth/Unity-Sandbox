@@ -42,8 +42,16 @@ public class UIBarScript : MonoBehaviour
         {
             frontElapsed += Time.deltaTime / foregroundTime;
             float foregroundFill = foregroundIndicator.fillAmount;
-            foregroundIndicator.fillAmount = math.lerp(foregroundFill, target, frontElapsed);
-            
+            foregroundFill = foregroundIndicator.fillAmount = math.lerp(foregroundFill, target, frontElapsed);
+
+            float backgroundFill = backgroundIndicator.fillAmount;
+            if (foregroundFill >= backgroundFill)
+            {
+                backElapsed = 1;
+                backgroundIndicator.fillAmount = foregroundFill;
+            }
+
+
         }
         if (backElapsed < 1)
         {

@@ -1472,7 +1472,7 @@ GameObject:
   - component: {fileID: 706954627}
   m_Layer: 0
   m_Name: Object
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2995,24 +2995,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorName: Player
   alive: 1
-  health: 100
+  health: 1000
   healthBaseRegen: 0
   healthRegenMult: 0
-  maxHealth: 100
+  maxHealth: 1000
   invulnerable: 0
-  ke: 100
-  harae: 0
-  haraeMult: 0
-  maxKe: 100
-  kamiMode: 1
-  stamina: 100
-  maxStamina: 100
+  ke: 1000
+  harae: 10
+  haraeMult: 1
+  maxKe: 1000
+  kamiMode: 0
+  stamina: 1000
+  maxStamina: 1000
   staminaBaseRegen: 0
   staminaRegenMult: 0
   infiniteStamina: 0
   actorFaction: 1
   reach: 4
   kegare: 0
+  kegareTimeout: 5000
+  regenFrameInterval: 2
   healthBar: {fileID: 1054424152}
   keBar: {fileID: 1755463313}
   staminaBar: {fileID: 1070247429}
@@ -3484,7 +3486,7 @@ MonoBehaviour:
   isBlocking: 0
   isParrying: 0
   isDirectional: 1
-  rawDamage: 50
+  rawDamage: 500
   hitterBox: {fileID: 1247619269}
   lookThreshold: 0.7853982
   testMode: 1
