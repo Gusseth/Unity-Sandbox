@@ -24,6 +24,7 @@ public class MagicalBallController : AbstractMagicController
         return true;
     }
 
+
     // Start is called before the first frame update
     void Awake()
     {
