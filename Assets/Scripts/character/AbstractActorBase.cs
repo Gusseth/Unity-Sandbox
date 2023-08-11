@@ -13,20 +13,20 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
     [SerializeField] protected bool alive = true;
     [SerializeField] protected int health;
     [SerializeField] protected int healthBaseRegen;
-    [SerializeField] protected float healthRegenMult;
+    [SerializeField] protected float healthRegenMult = 1;
     [SerializeField] protected int maxHealth;
     [SerializeField] protected bool invulnerable = false;
 
     [SerializeField] protected int ke;
     [SerializeField] protected int harae;
-    [SerializeField] protected float haraeMult;
+    [SerializeField] protected float haraeMult = 1;
     [SerializeField] protected int maxKe;
     [SerializeField] protected bool kamiMode = false;
 
     [SerializeField] protected int stamina;
     [SerializeField] protected int maxStamina;
     [SerializeField] protected int staminaBaseRegen;
-    [SerializeField] protected float staminaRegenMult;
+    [SerializeField] protected float staminaRegenMult = 1;
     [SerializeField] protected bool infiniteStamina = false;
     [SerializeField] protected ActorFaction actorFaction;
 
