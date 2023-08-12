@@ -7,15 +7,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_UkiyoSkybox
-  m_Shader: {fileID: -6465566751694194690, guid: c51137b0258a74047a239258068d189d,
+  m_Name: Sun Test Skybox
+  m_Shader: {fileID: -6465566751694194690, guid: 37db762464ca4314aa5c932fe5294c7c,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -38,30 +38,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Corona_Exponent: 70.03
-    - _Horizon_Exponent: 0.75
-    - _Horizon_Height: 0.45
-    - _Intensity: 2
-    - _Nadir_Exponent: 2
-    - _Noise: 1
-    - _Noise_Scale: 3500
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Sun_Radius: 0.05
-    - _ZenithThreshold: 2
-    - _Zenith_Exponent: 2
-    - _test: 333.22
+    - _Sun_Exponent: 0
+    - _Sun_RadiusA: 0
+    - _Sun_RadiusB: 0
     m_Colors:
-    - _Corona_Colour: {r: 1.6603774, g: 0.59899336, b: 0.46208617, a: 0}
-    - _Horizon_Colour: {r: 0.9339623, g: 0.45027137, b: 0.4008989, a: 0}
-    - _Nadir_Colour: {r: 0.12901106, g: 0.12855998, b: 0.25471696, a: 0}
-    - _Noise_Range: {r: 0.8, g: 1, b: 0, a: 0}
-    - _Sky_Colour: {r: 0.6774653, g: 0.7263368, b: 0.8301887, a: 0}
-    - _Sun_Colour: {r: 1.4980392, g: 0.029643487, b: 0, a: 1}
-    - _Sun_Direction: {r: 0, g: -0.5, b: -2.68, a: 0}
-    - _Zenith_Colour: {r: 0.16107772, g: 0.113474555, b: 0.2830189, a: 0}
+    - _Sun_Colour: {r: 0.8784314, g: 0.3333333, b: 0.1764706, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &3316345585321881946
+--- !u!114 &407331213547257856
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
