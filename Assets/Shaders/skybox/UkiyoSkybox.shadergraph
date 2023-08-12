@@ -49,9 +49,6 @@
             "m_Id": "b5534551906545d484af855139c51af5"
         },
         {
-            "m_Id": "33701e98154f4cf98e1c6cbe0f16e902"
-        },
-        {
             "m_Id": "1a85ef127027420b95b25fabdb16cfc9"
         }
     ],
@@ -1504,9 +1501,6 @@
         },
         {
             "m_Id": "b5534551906545d484af855139c51af5"
-        },
-        {
-            "m_Id": "33701e98154f4cf98e1c6cbe0f16e902"
         }
     ]
 }
@@ -2025,7 +2019,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "11d74c4a0968459191b627ab27e0f4b9",
     "m_Id": 0,
-    "m_DisplayName": "Corona Exponent",
+    "m_DisplayName": "Sun Exponent",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -3231,36 +3225,6 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
-}
-
-{
-    "m_SGVersion": 3,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
-    "m_ObjectId": "33701e98154f4cf98e1c6cbe0f16e902",
-    "m_Guid": {
-        "m_GuidSerialized": "bc551c5b-861d-49ed-aadf-74a3dcd81cef"
-    },
-    "m_Name": "Corona Colour",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Corona Colour",
-    "m_DefaultReferenceName": "_Corona_Colour",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": {
-        "r": 2.0,
-        "g": 1.7283941507339478,
-        "b": 1.4056603908538819,
-        "a": 0.0
-    },
-    "isMainColor": false,
-    "m_ColorMode": 1
 }
 
 {
@@ -6717,10 +6681,10 @@
     "m_Guid": {
         "m_GuidSerialized": "7e314509-4194-4e26-b37b-f05fda887229"
     },
-    "m_Name": "Corona Exponent",
+    "m_Name": "Sun Exponent",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Corona Exponent",
-    "m_DefaultReferenceName": "_Corona_Exponent",
+    "m_RefNameGeneratedByDisplayName": "Sun Exponent",
+    "m_DefaultReferenceName": "_Sun_Exponent",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
