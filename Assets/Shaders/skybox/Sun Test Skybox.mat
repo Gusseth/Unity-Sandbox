@@ -40,9 +40,9 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Sun_Exponent: 0
-    - _Sun_RadiusA: 0
-    - _Sun_RadiusB: 0
+    - _Sun_Exponent: 8
+    - _Sun_RadiusA: -0.05
+    - _Sun_RadiusB: -0.04
     m_Colors:
     - _Sun_Colour: {r: 0.8784314, g: 0.3333333, b: 0.1764706, a: 0}
   m_BuildTextureStacks: []

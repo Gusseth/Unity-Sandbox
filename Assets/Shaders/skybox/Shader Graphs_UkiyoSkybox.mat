@@ -38,7 +38,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Corona_Exponent: 70.03
+    - _Corona_Exponent: 8
     - _Horizon_Exponent: 0.75
     - _Horizon_Height: 0.45
     - _Intensity: 2
@@ -47,7 +47,10 @@ Material:
     - _Noise_Scale: 3500
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Sun_Exponent: 6
     - _Sun_Radius: 0.05
+    - _Sun_Radius_A: 0.05
+    - _Sun_Radius_B: 0.0425
     - _ZenithThreshold: 2
     - _Zenith_Exponent: 2
     - _test: 333.22
@@ -57,7 +60,7 @@ Material:
     - _Nadir_Colour: {r: 0.12901106, g: 0.12855998, b: 0.25471696, a: 0}
     - _Noise_Range: {r: 0.8, g: 1, b: 0, a: 0}
     - _Sky_Colour: {r: 0.6774653, g: 0.7263368, b: 0.8301887, a: 0}
-    - _Sun_Colour: {r: 1.4980392, g: 0.029643487, b: 0, a: 1}
+    - _Sun_Colour: {r: 1.9245284, g: 0.104696736, b: 0.027233845, a: 1}
     - _Sun_Direction: {r: 0, g: -0.5, b: -2.68, a: 0}
     - _Zenith_Colour: {r: 0.16107772, g: 0.113474555, b: 0.2830189, a: 0}
   m_BuildTextureStacks: []
