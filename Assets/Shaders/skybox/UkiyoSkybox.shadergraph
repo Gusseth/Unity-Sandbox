@@ -1518,13 +1518,13 @@
             "m_Id": "dbf2c25c93eb4bc28019c5fef1b978b1"
         },
         {
-            "m_Id": "25dbcccb93534fd3b0f228c4e9c37ae8"
-        },
-        {
             "m_Id": "130d689219c7430190bcd83242f4ef01"
         },
         {
             "m_Id": "86210f7b230c46ac87a47b34542a82f6"
+        },
+        {
+            "m_Id": "25dbcccb93534fd3b0f228c4e9c37ae8"
         },
         {
             "m_Id": "b9d770aa4638454ba695e639c385b6e3"
@@ -1534,9 +1534,6 @@
         },
         {
             "m_Id": "2d106deb08434285bd02b68874887d81"
-        },
-        {
-            "m_Id": "2b11487766974390a2ac15b695107bf8"
         },
         {
             "m_Id": "44430eea888a42ffba5fa7b60093f97f"
@@ -1549,6 +1546,9 @@
         },
         {
             "m_Id": "b5534551906545d484af855139c51af5"
+        },
+        {
+            "m_Id": "2b11487766974390a2ac15b695107bf8"
         }
     ]
 }
@@ -2122,9 +2122,9 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.9150943160057068,
-        "g": 0.1942417472600937,
-        "b": 0.1942417472600937,
+        "r": 0.9333333373069763,
+        "g": 0.45098039507865908,
+        "b": 0.4000000059604645,
         "a": 0.0
     },
     "isMainColor": false,
@@ -2151,7 +2151,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 0.25,
+    "m_Value": 0.75,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
@@ -2297,7 +2297,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "178e6fce1dc6435ea530d863c4c616bc",
     "m_Id": 0,
-    "m_DisplayName": "Sun Taper Radius Offset",
+    "m_DisplayName": "Sun Taper Offset Radius",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -2393,10 +2393,10 @@
     "m_Guid": {
         "m_GuidSerialized": "071f9a3c-8c9d-4d3a-b9e7-80a56355356c"
     },
-    "m_Name": "Sun Taper Radius Offset",
+    "m_Name": "Sun Taper Offset Radius",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Sun Taper Radius Offset",
-    "m_DefaultReferenceName": "_Sun_Taper_Radius_Offset",
+    "m_RefNameGeneratedByDisplayName": "Sun Taper Offset Radius",
+    "m_DefaultReferenceName": "_Sun_Taper_Offset_Radius",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -2758,7 +2758,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 1.0,
+    "m_Value": 0.699999988079071,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
@@ -3100,9 +3100,9 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "x": 1.0,
-        "y": -1.0,
-        "z": 0.0,
+        "x": 0.0,
+        "y": -0.5,
+        "z": -2.680000066757202,
         "w": 0.0
     }
 }
@@ -3578,10 +3578,10 @@
     "m_Guid": {
         "m_GuidSerialized": "69d9a93d-10b8-4a51-b022-f9a76581d694"
     },
-    "m_Name": "Sun Radius A",
+    "m_Name": "Sun Radius",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Sun Radius A",
-    "m_DefaultReferenceName": "_Sun_Radius_A",
+    "m_RefNameGeneratedByDisplayName": "Sun Radius",
+    "m_DefaultReferenceName": "_Sun_Radius",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -3962,9 +3962,9 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.8584905862808228,
-        "g": 0.8584905862808228,
-        "b": 0.781550407409668,
+        "r": 0.6784313917160034,
+        "g": 0.7254902124404907,
+        "b": 0.8313725590705872,
         "a": 0.0
     },
     "isMainColor": false,
@@ -5554,7 +5554,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 0.5,
+    "m_Value": 0.44999998807907107,
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,
@@ -5923,10 +5923,10 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.1290111094713211,
-        "g": 0.12855999171733857,
-        "b": 0.25471699237823489,
-        "a": 0.0
+        "r": 0.12941177189350129,
+        "g": 0.12941177189350129,
+        "b": 0.2549019753932953,
+        "a": 1.0
     },
     "isMainColor": false,
     "m_ColorMode": 0
@@ -6942,7 +6942,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 6.0,
+    "m_Value": 8.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
@@ -7013,7 +7013,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "b68e740261154ffa8ea073d7a2c36ad3",
     "m_Id": 0,
-    "m_DisplayName": "Sun Radius A",
+    "m_DisplayName": "Sun Radius",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -8026,10 +8026,10 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.8773584961891174,
-        "g": 0.33300885558128359,
-        "b": 0.16140086948871613,
-        "a": 0.0
+        "r": 1.9245290756225587,
+        "g": 0.11083675920963288,
+        "b": 0.030228205025196077,
+        "a": 1.0
     },
     "isMainColor": false,
     "m_ColorMode": 1
@@ -8055,7 +8055,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 1.0,
+    "m_Value": 2.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
@@ -8888,9 +8888,9 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.09531860798597336,
-        "g": 0.09531860798597336,
-        "b": 0.3962264060974121,
+        "r": 0.16078431904315949,
+        "g": 0.11372549086809159,
+        "b": 0.2823529541492462,
         "a": 0.0
     },
     "isMainColor": false,
