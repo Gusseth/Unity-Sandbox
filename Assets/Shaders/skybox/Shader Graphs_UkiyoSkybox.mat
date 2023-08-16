@@ -42,15 +42,17 @@ Material:
     - _Horizon_Exponent: 0.75
     - _Horizon_Height: 0.45
     - _Intensity: 2
-    - _Nadir_Exponent: 2
+    - _Nadir_Exponent: 0.7
     - _Noise: 1
     - _Noise_Scale: 3500
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Sky_Cutoff: 0.85
     - _Sun_Exponent: 8
     - _Sun_Radius: 0.05
     - _Sun_Radius_A: 0.05
     - _Sun_Radius_B: 0.0075
+    - _Sun_Taper_Offset_Radius: 0.0075
     - _Sun_Taper_Radius_Offset: 0.0075
     - _ZenithThreshold: 2
     - _Zenith_Exponent: 2

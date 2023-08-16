@@ -50,6 +50,9 @@
         },
         {
             "m_Id": "1a85ef127027420b95b25fabdb16cfc9"
+        },
+        {
+            "m_Id": "61016c8fc8d3474ab65936dabcd1a7ac"
         }
     ],
     "m_Keywords": [],
@@ -275,6 +278,9 @@
         },
         {
             "m_Id": "99d92325482045c5b1238e8e77cacfeb"
+        },
+        {
+            "m_Id": "689c991265174e279d659e0e8f14c9a8"
         }
     ],
     "m_GroupDatas": [
@@ -787,6 +793,20 @@
                     "m_Id": "ffe25f79b5d54ef989093ecf85e457a5"
                 },
                 "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "689c991265174e279d659e0e8f14c9a8"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "06fdb6f5681d4628ab68acce50db14ab"
+                },
+                "m_SlotId": 0
             }
         },
         {
@@ -1513,6 +1533,9 @@
         },
         {
             "m_Id": "992937af4d2e4586a195078d1769eb92"
+        },
+        {
+            "m_Id": "61016c8fc8d3474ab65936dabcd1a7ac"
         },
         {
             "m_Id": "dbf2c25c93eb4bc28019c5fef1b978b1"
@@ -4363,6 +4386,34 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "61016c8fc8d3474ab65936dabcd1a7ac",
+    "m_Guid": {
+        "m_GuidSerialized": "a5de9ad9-3da1-4e95-8b01-ddec63b9c27a"
+    },
+    "m_Name": "Sky Cutoff",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Sky Cutoff",
+    "m_DefaultReferenceName": "_Sky_Cutoff",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.8500000238418579,
+    "m_FloatType": 1,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
     "m_ObjectId": "6242b57683764d2c864a445c9c095838",
@@ -4613,6 +4664,42 @@
         "y": 0.0,
         "z": 0.0,
         "w": 0.0
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "689c991265174e279d659e0e8f14c9a8",
+    "m_Group": {
+        "m_Id": "ef51b372e05f4dacbbb3060a7a282125"
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -555.0,
+            "y": 233.0,
+            "width": 131.0,
+            "height": 34.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "c88ca4ac5a5c4910a591f418ae023217"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "61016c8fc8d3474ab65936dabcd1a7ac"
     }
 }
 
@@ -7525,6 +7612,21 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "c88ca4ac5a5c4910a591f418ae023217",
+    "m_Id": 0,
+    "m_DisplayName": "Sky Cutoff",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
 }
 
 {
