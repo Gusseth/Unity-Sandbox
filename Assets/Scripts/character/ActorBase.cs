@@ -86,9 +86,19 @@ public class ActorBase : AbstractActorBase
         this.ke = math.clamp(this.ke + ke, 0, maxKe);
     }
 
+    public override void AddKe(float ke, bool showDecrease = true, bool bypassKegare = false)
+    {
+        AddKe((int)math.round(ke), showDecrease, bypassKegare);
+    }
+
     public override void AddStamina(int stamina, bool showDecrease = true)
     {
         this.stamina = math.clamp(this.stamina + stamina, 0, maxStamina);
+    }
+
+    public override void AddStamina(float stamina, bool showDecrease = true)
+    {
+        AddStamina((int)math.round(stamina), showDecrease);
     }
 
     protected override void UpdateHKSBars()

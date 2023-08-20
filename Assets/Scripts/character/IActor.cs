@@ -60,7 +60,9 @@ public interface IDamagableActor
 {
     public void AddDamage(HitData data);
     public void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false);
+    public void AddKe(float ke, bool showDecrease = true, bool bypassKegare = false);
     public void AddStamina(int stamina, bool showDecrease = true);
+    public void AddStamina(float stamina, bool showDecrease = true);
     public void Kill();
 }
 

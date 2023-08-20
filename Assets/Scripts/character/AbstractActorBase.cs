@@ -62,7 +62,9 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
     public abstract void AddDamage(HitData data);
 
     public abstract void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false);
+    public abstract void AddKe(float ke, bool showDecrease = true, bool bypassKegare = false);
     public abstract void AddStamina(int stamina, bool showDecrease = true);
+    public abstract void AddStamina(float stamina, bool showDecrease = true);
 
     public abstract void Kill();
     protected abstract void UpdateHKSBars();
