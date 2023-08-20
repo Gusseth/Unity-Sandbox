@@ -1343,6 +1343,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463f80d2584e66545b3c2c2a9b38b75b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!2083052967 &624143326 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+    type: 3}
+  m_PrefabInstance: {fileID: 5719957244425207117}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &656438739
 GameObject:
   m_ObjectHideFlags: 0
@@ -3053,6 +3059,7 @@ MonoBehaviour:
   - rid: 4372000348050030593
   - rid: 4372000348050030597
   - rid: 4372000348050030613
+  - rid: 4372000633980190720
   i: 0
   inventory:
     inventory:
@@ -3086,10 +3093,9 @@ MonoBehaviour:
         endDelay: 0
         noritoName: 
         noritoDescription: 
-        autoCast: 1
         casting: 0
-        finishedAtLeastOnce: 0
         i: 0
+        autoCast: 1
     - rid: 4372000348050030592
       type: {class: ItemStack, ns: , asm: Assembly-CSharp}
       data:
@@ -3117,10 +3123,9 @@ MonoBehaviour:
         endDelay: 0
         noritoName: Three Balls
         noritoDescription: This casts three balls automatically.
-        autoCast: 1
         casting: 0
-        finishedAtLeastOnce: 0
         i: 0
+        autoCast: 1
     - rid: 4372000348050030594
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
@@ -3170,10 +3175,9 @@ MonoBehaviour:
         endDelay: 0
         noritoName: Complex Norito
         noritoDescription: Auto-cast and sequential Norito are interoperable
-        autoCast: 1
         casting: 0
-        finishedAtLeastOnce: 0
         i: 0
+        autoCast: 1
     - rid: 4372000348050030598
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
@@ -3209,10 +3213,9 @@ MonoBehaviour:
         endDelay: 1000
         noritoName: Sequential Norito
         noritoDescription: You must click through this Norito
-        autoCast: 0
         casting: 0
-        finishedAtLeastOnce: 0
         i: 0
+        autoCast: 0
     - rid: 4372000348050030601
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
@@ -3248,10 +3251,9 @@ MonoBehaviour:
         endDelay: 0
         noritoName: Three Balls
         noritoDescription: This is also spawns three balls automatically
-        autoCast: 1
         casting: 0
-        finishedAtLeastOnce: 0
         i: 0
+        autoCast: 1
     - rid: 4372000348050030605
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
@@ -3316,6 +3318,18 @@ MonoBehaviour:
           type: 3}
         gokuName: One Ball
         gokuDescription: This is a lone, primitive spell. You can also cast it.
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
+    - rid: 4372000633980190720
+      type: {class: GokuChargable, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 4648921838101146168, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+          type: 3}
+        worldModel: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
+          type: 3}
+        gokuName: Magical Shield
+        gokuDescription: a shield lol
         keCost: 0
         initialDelay: 0
         endDelay: 0
@@ -5846,3 +5860,281 @@ MonoBehaviour:
     amountTotal: 2
     stackName: Spherical Ball
     stackDescription: hi
+--- !u!1001 &5719957244425207117
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -6606769320672361735, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: vfx
+      value: 
+      objectReference: {fileID: 624143326}
+    - target: {fileID: -6606769320672361735, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: active
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6606769320672361735, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: keCost
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: -6606769320672361735, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: timeoutInMilliseconds
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 479983512660513606, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Name
+      value: Spawn Rate
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Value
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Name
+      value: Particle Colour Progression
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Name
+      value: Turbulence Center
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Name
+      value: Size
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Value.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Value.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.z
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.atime1
+      value: 28334
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.atime2
+      value: 58982
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.atime3
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.ctime0
+      value: 28527
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.ctime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.key0.b
+      value: 12.88921
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.key0.g
+      value: 15.999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.key0.r
+      value: 7.773585
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.key1.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.key1.b
+      value: 0.05795148
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.key1.g
+      value: 0.084905654
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.key2.a
+      value: 0.9689054
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.m_ColorSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.m_NumAlphaKeys
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399760007724561412, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Value.m_NumColorKeys
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648921838101146168, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: m_Name
+      value: Magical Shield
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d3ad19bc0b7ab7740bb841fb8a6f4693, type: 3}
