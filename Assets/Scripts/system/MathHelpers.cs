@@ -12,6 +12,50 @@ public static class MathHelpers
     public static readonly float3 NaN3 = new float3(math.NAN);
     public static readonly float4 NaN4 = new float4(math.NAN);
 
+    public static byte BoolToFlag8(bool bit7 = false, bool bit6 = false, bool bit5 = false, bool bit4 = false, bool bit3 = false, bool bit2 = false, bool bit1 = false, bool bit0 = false)
+    {
+        byte x = (byte)(bit0 ? 0b1 : 0b0);
+        if (bit1)
+            x |= 0b0010;
+        if (bit2)
+            x |= 0b0100;
+        if (bit3)
+            x |= 0b1000;
+        if (bit4)
+            x |= 0b00010000;
+        if (bit5)
+            x |= 0b00100000;
+        if (bit6)
+            x |= 0b01000000;
+        if (bit7)
+            x |= 0b10000000;
+        return x;
+    }
+
+    public static byte ChangeFlag4(byte flag, int index, bool value) 
+    {
+        byte x = (byte)(value ? 0b1 : 0b0);
+        return (byte)(flag & (x << index));
+    }
+
+    public static Int16 ChangeFlag16(Int16 flag, int index, bool value)
+    {
+        byte x = (byte)(value ? 0b1 : 0b0);
+        return (Int16)(flag & (x << index));
+    }
+
+    public static Int32 ChangeFlag32(Int32 flag, int index, bool value)
+    {
+        byte x = (byte)(value ? 0b1 : 0b0);
+        return (Int32)(flag & (x << index));
+    }
+
+    public static Int64 ChangeFlag64(Int64 flag, int index, bool value)
+    {
+        byte x = (byte)(value ? 0b1 : 0b0);
+        return (Int64)(flag & (x << index));
+    }
+
     public static Enum FloatDirection(float x, Enum positiveDirection, Enum negativeDirection)
     {
         if (x < 0)
