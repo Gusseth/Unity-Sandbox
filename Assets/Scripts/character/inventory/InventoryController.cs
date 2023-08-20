@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
     public IItemInventory Inventory => inventory;
 
     public INoritoInventory NoritoInventory => noritoInventory;
+
+    public IHotbarDisplayable CurrentEquipped => equippedHotbar[i];
 
     public bool AddItem(ItemBase itemBase)
     {
@@ -127,11 +130,19 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public bool OnCast(CastingData castData)
     {
-        if (equippedHotbar[i] is ICastable castable)
+        var equipped = equippedHotbar[i];
+
+        CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+        if (equipped is ICastable castable)
         {
-            castable.OnCastAsync(castData, null, this.GetCancellationTokenOnDestroy());
+            castable.OnCastAsync(castData, null, source.Token);
             return true;
         }
         return false;
+    }
+
+    void OnDestroy()
+    {
+
     }
 }
