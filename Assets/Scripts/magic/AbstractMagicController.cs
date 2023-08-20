@@ -7,8 +7,12 @@ public interface IMagicController
 {
     public int KeCost { get; }
     public int Timeout { get; }
+    public GameObject gameObject { get; }   // expose Unity's MonoBehaviour.gameObject
     public void Init();
+    public IMagicController Instantiate(CastingData data);
+    public bool OnCastStart(CastingData data);
     public bool OnCast(CastingData data);
+    public bool OnCastEnd();
     public bool CheckRequirements(CastingData data);
 }
 
@@ -21,6 +25,18 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
 
     public abstract void Init();
 
+    public virtual IMagicController Instantiate(CastingData data)
+    {
+        IMagicController instance = Instantiate(gameObject).GetComponent<IMagicController>();
+        PostInstantiate(instance, data);
+        return instance;
+    }
+
+    public virtual bool OnCastStart(CastingData data)
+    {
+        return false;
+    }
+
     public virtual bool OnCast(CastingData data)
     {
         if (Timeout >= 0)
@@ -29,6 +45,11 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
         if (!data.ownerActor.KamiMode)
             data.ownerActor.AddKe(-keCost);
         return true;
+    }
+
+    public virtual bool OnCastEnd()
+    {
+        return false;
     }
 
     public virtual void DestroyCastable()
@@ -40,5 +61,10 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
     {
         AbstractActorBase caster = data.ownerActor;
         return data.ownerActor.Ke != 0 || caster.KamiMode;
+    }
+
+    protected virtual void PostInstantiate(IMagicController instance, CastingData data)
+    {
+        instance.Init();
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [Serializable]
 public record CastingData
@@ -22,5 +23,5 @@ public record CastingData
     public float3 direction;
     public float3 acceleration;
     public Func<Transform, float3> directionFunction;
-    public Hand hand;
+    public InputAction.CallbackContext inputContext;
 }

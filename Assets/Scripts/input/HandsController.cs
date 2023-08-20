@@ -62,24 +62,38 @@ public class HandsController : MonoBehaviour
 
     public void OnRightHand(InputAction.CallbackContext context)
     {
-        if (!context.performed) return; // ignore other actions for now, temporarily one shot 
-
-        float3 attackDirection = GetAttackDirection();
-
-        if (equipped.EquippableType == EquippableType.weaponMagic)
+        if (context.started)
         {
-            CastMagic();
+            if (equipped.EquippableType == EquippableType.weaponMagic)
+            {
+                CastMagic(context);
+            }
         }
-        else
+        else if (context.canceled)
         {
-            if (hitter.Attacking)
-                hitter.PostAttack();    // temporary branch, will do it automatically in the future
+            float3 attackDirection = GetAttackDirection();
+
+            if (equipped.EquippableType == EquippableType.weaponMagic)
+            {
+                CastMagic(context);
+            }
             else
-                hitter.PreAttack(attackDirection, actor);
+            {
+                if (hitter.Attacking)
+                    hitter.PostAttack();    // temporary branch, will do it automatically in the future
+                else
+                    hitter.PreAttack(attackDirection, actor);
+            }
         }
     }
 
-    private void CastMagic()
+    private void CastMagic(InputAction.CallbackContext inputContext)
+    {
+        CastingData data = ConstructCastingData(inputContext);
+        noritoController.OnCast(data);
+    }
+
+    private CastingData ConstructCastingData(InputAction.CallbackContext inputContext)
     {
         float3 direction = CalculateFocalVector(GetHand(Hand.Right).transform);
         RaycastHit hit = RaycastFromCamera(maxRayDistance);
@@ -92,12 +106,12 @@ public class HandsController : MonoBehaviour
             distance = hit.distance,
             normal = hit.normal,
 
-            
-
             origin = RightHand.transform,
             speed = ballSpeed,
             direction = direction,
-            directionFunction = CalculateFocalVector
+            directionFunction = CalculateFocalVector,
+
+            inputContext = inputContext
         };
 
         if (!float.IsInfinity(hit.distance))
@@ -105,7 +119,7 @@ public class HandsController : MonoBehaviour
             data.target = hit.collider.gameObject;
         }
 
-        noritoController.OnCast(data);
+        return data;
     }
 
     public void OnLeftHand(InputAction.CallbackContext context)

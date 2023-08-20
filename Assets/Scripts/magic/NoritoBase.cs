@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using Unity.Mathematics;
 
 public interface ICastableData
 {
@@ -60,6 +61,12 @@ public interface ICastable : ICastableData
     public UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
 }
 
+public interface ICastableChargable : ICastable
+{
+    public UniTask<bool> OnCastStart(CastingData castData, CancellationToken token);
+    public UniTask<bool> OnCastEnd(CancellationToken token);
+}
+
 public interface INorito : ICastableData
 {
     /// <summary>
@@ -73,34 +80,83 @@ public interface INorito : ICastableData
 }
 
 [Serializable]
-public class Goku : ICastable, ICastableDFS, IHotbarDisplayable
+public abstract class GokuBase : ICastable, ICastableDFS, IHotbarDisplayable
 {
-    public GameObject prefab;
-    public GameObject worldModel;
-    public string gokuName;
-    public string gokuDescription;
-    public int keCost = 0;
-    public int initialDelay = 0;
-    public int endDelay = 0;
-    int accumulatedInitialDelay;
-    int accumulatedEndDelay;
-    bool casting;
+    [SerializeField] protected GameObject prefab;
+    [SerializeField] protected GameObject worldModel;
+    [SerializeField] protected string gokuName;
+    [SerializeField] protected string gokuDescription;
+    [SerializeField] protected int keCost = 0;
+    [SerializeField] protected int initialDelay = 0;
+    [SerializeField] protected int endDelay = 0;
+    protected int accumulatedInitialDelay;
+    protected int accumulatedEndDelay;
+    protected bool casting;
 
-    IMagicController prefabMagicController;
+    protected IMagicController prefabMagicController;
 
-    public string Name => gokuName;
-    public string Description => gokuDescription;
-    public int KeCost => keCost;
-    public int InitialDelay => initialDelay + accumulatedInitialDelay;
-    public int EndDelay => endDelay + accumulatedEndDelay;
-    public int ActualEndDelay => endDelay + accumulatedEndDelay;  // deprecated
-    public GameObject Model { get => prefab; set => prefab = value; }
-    public bool Casting => casting;
-    public string HotbarName => Name;
-    public string HotbarDescription => Description;
-    public GameObject WorldModel => worldModel;
+    public virtual string Name => gokuName;
+    public virtual string Description => gokuDescription;
+    public virtual int KeCost => keCost;
+    public virtual int InitialDelay => initialDelay + accumulatedInitialDelay;
+    public virtual int EndDelay => endDelay + accumulatedEndDelay;
+    public virtual int ActualEndDelay => endDelay + accumulatedEndDelay;  // deprecated
+    public virtual GameObject Model { get => prefab; set => prefab = value; }
+    public virtual bool Casting => casting;
+    public virtual string HotbarName => Name;
+    public virtual string HotbarDescription => Description;
+    public virtual GameObject WorldModel => worldModel;
 
-    public bool OnCast(CastingData castData, MonoBehaviour mono)
+    public abstract bool OnCast(CastingData castData, MonoBehaviour mono);
+
+    public abstract UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
+
+    public virtual void OnOrder(IList orderedList, INorito parent, bool first = false, bool last = false)
+    {
+        if (first || last)
+            SetDelays(parent, first);
+        orderedList.Add(this);
+        Initialize();
+    }
+
+    protected virtual void SetDelays(INorito parent, bool first)
+    {
+        if (first)
+        {
+            accumulatedInitialDelay = parent.InitialDelay;
+        }
+        else
+        {
+            accumulatedEndDelay = parent.EndDelay;
+        }
+    }
+
+    protected virtual void PreCast()
+    {
+        casting = true;
+    }
+
+    protected virtual void PostCast()
+    {
+        casting = false;
+    }
+
+    protected virtual void Initialize()
+    {
+        prefabMagicController ??= prefab.GetComponent<IMagicController>();
+    }
+
+    public virtual void CalculateKeCost()
+    {
+        Initialize();
+        keCost = prefabMagicController.KeCost;
+    }
+}
+
+[Serializable]
+public class Goku : GokuBase
+{
+    public override bool OnCast(CastingData castData, MonoBehaviour mono)
     {
         Debug.Log(Name);
         Initialize();
@@ -114,17 +170,16 @@ public class Goku : ICastable, ICastableDFS, IHotbarDisplayable
         return false;
     }
 
-    public async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
+    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
+        if (!castData.inputContext.canceled) return false;
         await UniTask.Delay(initialDelay, cancellationToken: token);
         Debug.Log(Name);
         Initialize();
         if (prefabMagicController.CheckRequirements(castData) && !token.IsCancellationRequested)
         {
             casting = true;
-            GameObject casted = UnityEngine.Object.Instantiate(prefab);
-            IMagicController magicController = casted.GetComponent<IMagicController>();
-            magicController.Init();
+            IMagicController magicController = prefabMagicController.Instantiate(castData);
             if (magicController.OnCast(castData))
             {
                 await UniTask.Delay(endDelay, cancellationToken: token);
@@ -134,41 +189,59 @@ public class Goku : ICastable, ICastableDFS, IHotbarDisplayable
         }
         return false;
     }
+}
 
-    public void PostCast()
+[Serializable]
+public class GokuChargable : GokuBase, ICastableChargable
+{
+    GameObject instance;
+    IMagicController magicController;
+    public override bool OnCast(CastingData castData, MonoBehaviour mono)
     {
-
+        throw new NotImplementedException();
     }
 
-    public void OnOrder(IList orderedList, INorito parent, bool first = false, bool last = false)
+    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
-        if (first || last)
-            SetDelays(parent, first);
-        orderedList.Add(this);
-        Initialize();
-    }
-
-    private void SetDelays(INorito parent, bool first)
-    {
-        if (first)
+        if (!casting && castData.inputContext.started)
         {
-            accumulatedInitialDelay = parent.InitialDelay;
+            return await OnCastStart(castData, token);
         }
-        else
+        else if (castData.inputContext.canceled)
         {
-            accumulatedEndDelay = parent.EndDelay;
+            return await OnCastEnd(token);
         }
+        else 
+            return false;
     }
 
-    private void Initialize()
+    public async UniTask<bool> OnCastStart(CastingData castData, CancellationToken token)
     {
-        prefabMagicController ??= prefab.GetComponent<IMagicController>();
-    }
-
-    public void CalculateKeCost()
-    {
+        Debug.Log(Name);
         Initialize();
-        keCost = prefabMagicController.KeCost;
+        if (prefabMagicController.CheckRequirements(castData) && !token.IsCancellationRequested)
+        {
+            casting = true;
+
+            await UniTask.Delay(InitialDelay, cancellationToken: token);
+
+            GameObject casted = UnityEngine.Object.Instantiate(prefab, castData.owner.transform);
+            magicController = casted.GetComponent<IMagicController>();
+            magicController.Init();
+            if (magicController.OnCastStart(castData))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public async UniTask<bool> OnCastEnd(CancellationToken token)
+    {
+        magicController.OnCastEnd();
+        await UniTask.Delay(endDelay, cancellationToken: token);
+        casting = false;
+        return true;
     }
 }
 
@@ -178,46 +251,86 @@ public class Goku : ICastable, ICastableDFS, IHotbarDisplayable
  */
 
 [Serializable]
-public class Norito : ICastable, INorito, IHotbarDisplayable
+public abstract class NoritoBase : ICastable, IHotbarDisplayable
 {
     [SerializeReference, SubclassSelector] public List<ICastable> castables = new List<ICastable>();
-    public GameObject worldModelPrefab;
-    public int totalKeCost = 0;
-    public int initialDelay = 0;
-    public int endDelay = 0;
-    public string noritoName;
-    public string noritoDescription;
-    public bool autoCast = true;
+    [SerializeField] protected GameObject worldModelPrefab;
+    [SerializeField] protected int totalKeCost = 0;
+    [SerializeField] protected int initialDelay = 0;
+    [SerializeField] protected int endDelay = 0;
+    [SerializeField] protected string noritoName;
+    [SerializeField] protected string noritoDescription;
 
-    [SerializeField] bool casting = false;
-    [SerializeField] bool finishedAtLeastOnce = false;
-    [SerializeField] int i;
+    [SerializeField] protected bool casting = false;
+    [SerializeField] protected int i;
 
-    bool keAlreadyCalculated = false;
+    protected bool keAlreadyCalculated = false;
+    protected bool finishedAtLeastOnce = false;
 
-    public string Name => noritoName;
-    public string Description => noritoDescription;
-    public int KeCost => totalKeCost;
-    public int InitialDelay => initialDelay;
-    public int EndDelay => endDelay;
-    public int ActualEndDelay => endDelay + castables.Last().EndDelay;
-    public GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
-    public bool Casting => casting;
+    public virtual string Name => noritoName;
+    public virtual string Description => noritoDescription;
+    public virtual int KeCost => totalKeCost;
+    public virtual int InitialDelay => initialDelay;
+    public virtual int EndDelay => endDelay;
+    public virtual int ActualEndDelay => endDelay + castables.Last().EndDelay;
+    public virtual GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
+    public virtual bool Casting => casting;
+    public virtual string HotbarName => Name;
+    public virtual string HotbarDescription => Description;
+    public virtual GameObject WorldModel => worldModelPrefab;
+
+    public abstract UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
+
+    protected void IncrementI()
+    {
+        if (i < castables.Count - 1)
+            i++;
+        else
+        {
+            i = 0;
+            finishedAtLeastOnce = true;
+        }
+    }
+
+    protected virtual void PreCast()
+    {
+        casting = true;
+    }
+
+    protected virtual void PostCast()
+    {
+        casting = false;
+    }
+
+    public virtual void CalculateKeCost()
+    {
+        totalKeCost = 0;
+        foreach (ICastable castable in castables)
+        {
+            castable.CalculateKeCost();
+            totalKeCost += castable.KeCost;
+        }
+        keAlreadyCalculated = true;
+    }
+}
+
+
+[Serializable]
+public class Norito : NoritoBase, INorito
+{
+    [SerializeField] bool autoCast = true;
+
     public bool AutoCast { get => autoCast; set => autoCast = value; }
     public bool CycleComplete => cycleComplete();
-    public bool OnLastCastable => false;
-    public string HotbarName => Name;
-    public string HotbarDescription => Description;
-    public GameObject WorldModel => worldModelPrefab;
-
     private bool cycleComplete()
     {
         return i == 0 && finishedAtLeastOnce;
     }
 
-    public async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
+    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
         if (casting) return false;
+        if (!castData.inputContext.canceled) return false;
 
         if (!keAlreadyCalculated)
             CalculateKeCost();
@@ -287,36 +400,34 @@ public class Norito : ICastable, INorito, IHotbarDisplayable
         IncrementI();
         return CycleComplete;               // Returns true if we've gone through the entire norito
     }
+}
 
-    private void IncrementI()
+[Serializable]
+public class NoritoChargable : NoritoBase, ICastableChargable
+{
+    public async UniTask<bool> OnCastStart(CastingData castData, CancellationToken token)
     {
-        if (i < castables.Count - 1)
-            i++;
-        else
+        foreach (ICastableChargable castable in castables)
         {
-            i = 0;
-            finishedAtLeastOnce = true;
+            if (!await castable.OnCastStart(castData, token))
+                return false;
         }
+        PreCast();
+        return true;
     }
 
-    private void PreCast()
+    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
-        casting = true;
-    }
-
-    public void PostCast()
-    {
-        casting = false;
-    }
-
-    public void CalculateKeCost()
-    {
-        totalKeCost = 0;
         foreach (ICastable castable in castables)
         {
-            castable.CalculateKeCost();
-            totalKeCost += castable.KeCost;
+           bool x = await castable.OnCastAsync(castData, this, token);
         }
-        keAlreadyCalculated = true;
+        PostCast();
+        return false;
+    }
+
+    public async UniTask<bool> OnCastEnd(CancellationToken token)
+    {
+        throw new NotImplementedException();
     }
 }
