@@ -8,6 +8,7 @@ public interface IMagicController
     public int KeCost { get; }
     public int Timeout { get; }
     public GameObject gameObject { get; }   // expose Unity's MonoBehaviour.gameObject
+    protected internal IMagicController Singleton { get; set;  }
     public void Init();
     public IMagicController Instantiate(CastingData data);
     public bool OnCastStart(CastingData data);
@@ -20,8 +21,11 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
 {
     [SerializeField] int keCost;
     [SerializeField] int timeoutInMilliseconds;
+    protected IMagicController singleton;
+
     public int KeCost => keCost;
     public int Timeout => timeoutInMilliseconds;
+    IMagicController IMagicController.Singleton { get => singleton; set => singleton = value; }
 
     public abstract void Init();
 
@@ -65,6 +69,7 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
 
     protected virtual void PostInstantiate(IMagicController instance, CastingData data)
     {
+        instance.Singleton = this;
         instance.Init();
     }
 }
