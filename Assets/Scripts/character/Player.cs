@@ -122,7 +122,7 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
     void FixedUpdate()
     {
         if (Time.frameCount % regenFrameInterval == 0)
-            if (!kegare)
+            if (!kegare && regenerateKe)
                 AddKe(math.max((int)math.round(harae * haraeMult), 1));
     }
 }

@@ -35,28 +35,31 @@ public interface IActor
     public void OnDeath(DeathData data);
 }
 
-public interface IHaveHKS
+public interface IHaveHKS : ICheckExclusives
 {
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public int HealthBaseRegen { get; set; }
     public float HealthRegenMult { get; set; }
+    public bool RegenerateHealth { get; set; }
     public bool Invulnerable { get; set; }
 
     public int Ke { get; set; }
     public int MaxKe { get; set; }
     public int Harae { get; set; }
     public float HaraeMult { get; set; }
+    public bool RegenerateKe { get; set; }
     public bool KamiMode { get; set; }
 
     public int Stamina { get; set; }
     public int MaxStamina { get; set; }
     public int StaminaBaseRegen { get; set; }
     public float StaminaRegenMult { get; set; }
+    public bool RegenerateStamina { get; set; }
     public bool InfiniteStamina { get; set; }
 }
 
-public interface IDamagableActor
+public interface IDamagableActor : IHaveHKS
 {
     public void AddDamage(HitData data);
     public void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false);

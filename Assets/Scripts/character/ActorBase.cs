@@ -16,6 +16,7 @@ public class ActorBase : AbstractActorBase
     public override int MaxHealth { get => maxHealth; set => maxHealth = value; }
     public override int HealthBaseRegen { get => healthBaseRegen; set => healthBaseRegen = value; }
     public override float HealthRegenMult { get => healthRegenMult; set => healthRegenMult = value; }
+    public override bool RegenerateHealth { get => regenerateHealth; set => regenerateHealth = value; }
     public override bool Invulnerable { get => invulnerable; set => invulnerable = value; }
 
     // Recall that Ke = mana
@@ -23,12 +24,14 @@ public class ActorBase : AbstractActorBase
     public override int MaxKe { get => maxKe; set => maxKe = value; }
     public override int Harae { get => harae; set => harae = value; }
     public override float HaraeMult { get => haraeMult; set => haraeMult = value; }
+    public override bool RegenerateKe { get => regenerateKe; set => regenerateKe = value; }
     public override bool KamiMode { get => kamiMode; set => kamiMode = value; }  // unlimited mana
 
     public override int Stamina { get => stamina; set => AddStamina(stamina + value); }
     public override int MaxStamina { get => maxStamina; set => maxStamina = value; }
     public override int StaminaBaseRegen { get => staminaBaseRegen; set => staminaBaseRegen = value; }
     public override float StaminaRegenMult { get => staminaRegenMult; set => staminaRegenMult = value; }
+    public override bool RegenerateStamina { get => regenerateStamina; set => regenerateStamina = value; }
     public override bool InfiniteStamina { get => infiniteStamina; set => infiniteStamina = value; }
 
     public override ActorFaction ActorFaction { get => actorFaction; set => actorFaction = value; }
@@ -108,7 +111,6 @@ public class ActorBase : AbstractActorBase
             barHealth.UpdateTarget(health, maxHealth);
         }
     }
-
 
     public override void Kill()
     {
