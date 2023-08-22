@@ -111,7 +111,7 @@ public class HandsController : MonoBehaviour
             direction = direction,
             directionFunction = CalculateFocalVector,
 
-            inputContext = inputContext
+            inputFlags = MathHelpers.BoolToFlag8(bit0: inputContext.started, bit1: inputContext.performed, bit2: inputContext.canceled)
         };
 
         if (!float.IsInfinity(hit.distance))
