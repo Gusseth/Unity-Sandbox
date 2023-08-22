@@ -56,6 +56,26 @@ public static class MathHelpers
         return (Int64)(flag & (x << index));
     }
 
+    public static bool FlagContains(byte inputFlags, byte filter)
+    {
+        return (inputFlags & filter) != 0;
+    }
+
+    public static bool FlagContains(Int16 inputFlags, Int16 filter)
+    {
+        return (inputFlags & filter) != 0;
+    }
+
+    public static bool FlagContains(Int32 inputFlags, Int32 filter)
+    {
+        return (inputFlags & filter) != 0;
+    }
+
+    public static bool FlagContains(Int64 inputFlags, Int64 filter)
+    {
+        return (inputFlags & filter) != 0;
+    }
+
     public static Enum FloatDirection(float x, Enum positiveDirection, Enum negativeDirection)
     {
         if (x < 0)
