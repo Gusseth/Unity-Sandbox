@@ -139,6 +139,16 @@ public class NoritoDFS : ICastable, INorito
             totalKeCost += node.KeCost;
         }
     }
+
+    public UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 [Serializable]
