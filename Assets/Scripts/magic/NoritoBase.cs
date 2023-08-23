@@ -4,8 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
-using Unity.Mathematics;
+
+// TODO: Clean up this shit!
 
 public interface ICastableData
 {
@@ -50,6 +52,7 @@ public interface ICastableData
 
 public interface ICastable : ICastableData
 {
+    public UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token);
     /// <summary>
     /// Casts this Goku or any of this Norito's children.  
     /// </summary>
@@ -59,12 +62,13 @@ public interface ICastable : ICastableData
     /// <param name="token">The cancellation token to watch</param>
     /// <returns><c>True</c> under normal operation, <c>False</c> if further execution must be stopped</returns>
     public UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
+    public UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token);
 }
 
 public interface ICastableChargable : ICastable
 {
-    public UniTask<bool> OnCastStart(CastingData castData, CancellationToken token);
-    public UniTask<bool> OnCastEnd(CancellationToken token);
+    public UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token);
+    public UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token);
 }
 
 public interface INorito : ICastableData
@@ -109,7 +113,9 @@ public abstract class GokuBase : ICastable, ICastableDFS, IHotbarDisplayable
 
     public abstract bool OnCast(CastingData castData, MonoBehaviour mono);
 
+    public abstract UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token);
     public abstract UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
+    public abstract UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token);
 
     public virtual void OnOrder(IList orderedList, INorito parent, bool first = false, bool last = false)
     {
@@ -170,11 +176,28 @@ public class Goku : GokuBase
         return false;
     }
 
+    public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        Debug.Log(Name);
+        return true;
+    }
+
     public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
-        if (!castData.inputContext.canceled) return false;
+        if (CastableHelpers.CheckFlag(castData, InputFlags.Cancelled))
+        {
+            return await OnCastEnd(castData, parent, token);
+        }
+        else if (CastableHelpers.CheckFlag(castData, InputFlags.Started))
+        {
+            return await OnCastStart(castData, parent, token);
+        }
+        return false;
+    }
+
+    public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
+    {
         await UniTask.Delay(initialDelay, cancellationToken: token);
-        Debug.Log(Name);
         Initialize();
         if (prefabMagicController.CheckRequirements(castData) && !token.IsCancellationRequested)
         {
@@ -203,31 +226,27 @@ public class GokuChargable : GokuBase, ICastableChargable
 
     public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
-        if (!casting && castData.inputContext.started)
+        if (!casting && CastableHelpers.CheckFlag(castData, InputFlags.Started))
         {
-            return await OnCastStart(castData, token);
+            return await OnCastStart(castData, parent, token);
         }
-        else if (castData.inputContext.canceled)
+        else if (CastableHelpers.CheckFlag(castData, InputFlags.Cancelled))
         {
-            return await OnCastEnd(token);
+            return await OnCastEnd(castData, parent, token);
         }
         else 
             return false;
     }
 
-    public async UniTask<bool> OnCastStart(CastingData castData, CancellationToken token)
+    public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
     {
         Debug.Log(Name);
         Initialize();
         if (prefabMagicController.CheckRequirements(castData) && !token.IsCancellationRequested)
         {
             casting = true;
-
             await UniTask.Delay(InitialDelay, cancellationToken: token);
-
-            GameObject casted = UnityEngine.Object.Instantiate(prefab, castData.owner.transform);
-            magicController = casted.GetComponent<IMagicController>();
-            magicController.Init();
+            magicController = prefabMagicController.Instantiate(castData);
             if (magicController.OnCastStart(castData))
             {
                 return true;
@@ -236,7 +255,7 @@ public class GokuChargable : GokuBase, ICastableChargable
         return false;
     }
 
-    public async UniTask<bool> OnCastEnd(CancellationToken token)
+    public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
     {
         magicController.OnCastEnd();
         await UniTask.Delay(endDelay, cancellationToken: token);
@@ -254,6 +273,7 @@ public class GokuChargable : GokuBase, ICastableChargable
 public abstract class NoritoBase : ICastable, IHotbarDisplayable
 {
     [SerializeReference, SubclassSelector] public List<ICastable> castables = new List<ICastable>();
+    [SerializeReference] protected ICastable current;
     [SerializeField] protected GameObject worldModelPrefab;
     [SerializeField] protected int totalKeCost = 0;
     [SerializeField] protected int initialDelay = 0;
@@ -279,7 +299,9 @@ public abstract class NoritoBase : ICastable, IHotbarDisplayable
     public virtual string HotbarDescription => Description;
     public virtual GameObject WorldModel => worldModelPrefab;
 
+    public abstract UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token);
     public abstract UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
+    public abstract UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token);
 
     protected void IncrementI()
     {
@@ -290,14 +312,15 @@ public abstract class NoritoBase : ICastable, IHotbarDisplayable
             i = 0;
             finishedAtLeastOnce = true;
         }
+        current = null;
     }
 
-    protected virtual void PreCast()
+    protected virtual void PreCast(CastingData castData)
     {
         casting = true;
     }
 
-    protected virtual void PostCast()
+    protected virtual void PostCast(CastingData castData)
     {
         casting = false;
     }
@@ -319,6 +342,7 @@ public abstract class NoritoBase : ICastable, IHotbarDisplayable
 public class Norito : NoritoBase, INorito
 {
     [SerializeField] bool autoCast = true;
+    [SerializeField] bool castStartCalled = false;
 
     public bool AutoCast { get => autoCast; set => autoCast = value; }
     public bool CycleComplete => cycleComplete();
@@ -327,15 +351,21 @@ public class Norito : NoritoBase, INorito
         return i == 0 && finishedAtLeastOnce;
     }
 
+    public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        if (casting) return false;
+        castStartCalled = true;
+        return await castables[i].OnCastStart(castData, this, token);
+    }
+
     public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
         if (casting) return false;
-        if (!castData.inputContext.canceled) return false;
 
         if (!keAlreadyCalculated)
             CalculateKeCost();
 
-        PreCast();
+        PreCast(castData);
         if (i == 0)
         {
             // Start of the norito
@@ -356,42 +386,74 @@ public class Norito : NoritoBase, INorito
             finishedAtLeastOnce = false;
         }
 
-        PostCast();
+        PostCast(castData);
         return result;
+    }
+
+    public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        if (!castStartCalled && !casting)
+        {
+            if (!await OnCastStart(castData, parent, token))
+                return false;
+        }
+        return await OnCastAsync(castData, parent, token);
     }
 
     private async UniTask<bool> OnAutoCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
         int startI = i;
-        for (int j = i; j < castables.Count; j++)
+    OnAutoCastAsync_Loop:
+        if (current == null)
         {
-            ICastable castable = castables[j];
-
-            // Prefent first shot from a sequential norito from firing
-            if (castable is INorito norito && 
-                !norito.AutoCast &&             // Check if child is a sequential norito
-                j != startI)                    // If it is, check if we're already processing it
-                                                // (if j != startI, we just found the first child of the norito)
-                return false;
-
-            bool result = await castable.OnCastAsync(castData, parent, token);
-
-            if (!result)
+            for (int j = i; j < castables.Count; j++)
             {
-                // A child either:  ran out of Ke or
-                //                  We're processing a sequential norito so we should not increment
-                //                  and we should terminate this thread to the root.
-                return false;
+                ICastable castable = current = castables[j];
+
+                // Prevent first shot from a sequential norito from firing
+                if (castable is INorito norito &&   // Check if child is a sequential norito
+                    !norito.AutoCast)               // If it is, check if it's sequential, then break early.
+                {
+                    return false;
+                }
+                if (j != startI && !await current.OnCastStart(castData, parent, token))
+                    return false;
+                if (!await CastCurrent(castData, parent, token))
+                {
+                    return false;
+                }
             }
-            IncrementI();
         }
+        else
+        {
+            // Recall that 'current' is only defined if we're processing a Norito.
+            if (await CastCurrent(castData, parent, token))
+            {
+                goto OnAutoCastAsync_Loop;  // This lets us take advantage of caching while automatically moving
+                                            // to the next castable if the previous Norito is sequential.
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private async UniTask<bool> CastCurrent(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        if (!await current.OnCastEnd(castData, parent, token))
+        {
+            // A child either:  ran out of Ke or
+            //                  We're processing a sequential norito so we should not increment
+            //                  and we should terminate this thread to the root.
+            return false;
+        }
+        IncrementI();
         return true;
     }
 
     private async UniTask<bool> OnSequentialCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
-        ICastable castable = castables[i];
-        bool result = await castable.OnCastAsync(castData, parent, token);
+        current ??= castables[i];
+        bool result = await current.OnCastEnd(castData, parent, token);
         if (!result &&                      // If we get the command to receive a break
             parent is INorito norito &&     // Check if the parent is a Norito
             !norito.CycleComplete)          // If it hasn't been completed yet (????), break
@@ -400,19 +462,29 @@ public class Norito : NoritoBase, INorito
         IncrementI();
         return CycleComplete;               // Returns true if we've gone through the entire norito
     }
+
+    protected override void PreCast(CastingData castData)
+    {
+        base.PreCast(castData);
+    }
+    protected override void PostCast(CastingData castData)
+    {
+        castStartCalled = false;
+        base.PostCast(castData);
+    }
 }
 
 [Serializable]
 public class NoritoChargable : NoritoBase, ICastableChargable
 {
-    public async UniTask<bool> OnCastStart(CastingData castData, CancellationToken token)
+    public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
     {
         foreach (ICastableChargable castable in castables)
         {
-            if (!await castable.OnCastStart(castData, token))
+            if (!await castable.OnCastStart(castData, this, token))
                 return false;
         }
-        PreCast();
+        PreCast(castData);
         return true;
     }
 
@@ -422,11 +494,11 @@ public class NoritoChargable : NoritoBase, ICastableChargable
         {
            bool x = await castable.OnCastAsync(castData, this, token);
         }
-        PostCast();
+        PostCast(castData);
         return false;
     }
 
-    public async UniTask<bool> OnCastEnd(CancellationToken token)
+    public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
     {
         throw new NotImplementedException();
     }

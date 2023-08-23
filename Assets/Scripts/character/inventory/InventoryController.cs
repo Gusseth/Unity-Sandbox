@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -132,11 +133,20 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
     {
         var equipped = equippedHotbar[i];
 
-        CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         if (equipped is ICastable castable)
         {
-            castable.OnCastAsync(castData, null, source.Token);
-            return true;
+            CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+            if (CastableHelpers.CheckFlag(castData, InputFlags.Started))
+            {
+                castable.OnCastStart(castData, null, source.Token);
+                return true;
+            }
+            else if (CastableHelpers.CheckFlag(castData, InputFlags.Cancelled)) 
+            {
+                castable.OnCastEnd(castData, null, source.Token);
+                return true;
+            }
+            source.Dispose();
         }
         return false;
     }
