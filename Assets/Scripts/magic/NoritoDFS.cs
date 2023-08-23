@@ -149,6 +149,11 @@ public class NoritoDFS : ICastable, INorito
     {
         throw new NotImplementedException();
     }
+
+    public void OnEquipOut()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 [Serializable]

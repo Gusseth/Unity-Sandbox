@@ -6,18 +6,9 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.VFX;
 
-// TODO: fix error when you run out of ke and the spell automatically un-casts, but the parent thread still calls OnCastEnd
-
-public class MagicalShieldController : AbstractMagicController
+public class MagicalShieldController : AbstractHoldableMagicController
 {
-    IDamagableActor owner;
     [SerializeField] VisualEffect vfx;
-    [SerializeField] bool active;
-
-    public override void Init()
-    {
-
-    }
 
     public override IMagicController Instantiate(CastingData data)
     {
@@ -26,17 +17,11 @@ public class MagicalShieldController : AbstractMagicController
         return instance;
     }
 
-    public override bool OnCastStart(CastingData data)
-    {
-        owner = data.ownerActor;
-        owner.AddExcludable(singleton);
-        active = true;
-        return true;
-    }
-
     public override bool OnCast(CastingData data)
     {
-        return true;
+        bool x = base.OnCast(data);
+        owner.AddExcludable(singleton);
+        return x;
     }
 
     public override bool OnCastEnd()
@@ -70,7 +55,7 @@ public class MagicalShieldController : AbstractMagicController
     // Update is called once per frame
     void Update()
     {
-        if (active)
+        if (active && !owner.KamiMode)
         {
             owner.AddKe(-KeCost * Time.deltaTime);
             if (owner.Ke == 0)

@@ -63,6 +63,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public GameObject SetEquipped(int i, Transform parent)
     {
+        UpdateAfterChangingI();
         if (i >= equippedHotbar.Count || i < 0)
             return null;
         this.i = i;
@@ -71,6 +72,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public GameObject GetNextEquipped(Transform parent)
     {
+        UpdateAfterChangingI();
         if (i == equippedHotbar.Count - 1)
             i = 0;
         else
@@ -80,6 +82,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public GameObject GetPrevEquipped(Transform parent)
     {
+        UpdateAfterChangingI();
         if (i == 0)
             i = equippedHotbar.Count - 1;
         else
@@ -110,6 +113,14 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
             itemBases[i] = items[i].itemBase;
         }
         return itemBases;
+    }
+
+    private void UpdateAfterChangingI()
+    {
+        if (equippedHotbar[i] is ICastable castable)
+        {
+            castable.OnEquipOut();
+        }
     }
 
     // Start is called before the first frame update
