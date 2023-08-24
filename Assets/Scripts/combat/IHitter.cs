@@ -154,7 +154,7 @@ public interface IHitResponse
     public void Response(HitData data);
 }
 
-public interface IBlocker : IGiveOwnerMetadata, ICheckHitLayer
+public interface IBlocker : IGiveOwnerMetadata, IHitCheck, IHitResponse, ICheckHitLayer
 {
     /// <summary>
     /// Returns true if the hitter is blocking their weapon

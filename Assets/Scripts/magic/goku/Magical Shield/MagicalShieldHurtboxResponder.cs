@@ -63,4 +63,17 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
     {
         
     }
+
+    public bool CheckHit(HitData data)
+    {
+        return true;
+    }
+
+    public void Response(HitData data)
+    {
+        if (data is Block block)
+        {
+            Debug.Log("test");
+        }
+    }
 }

@@ -2434,11 +2434,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Magical Shield
       objectReference: {fileID: 0}
-    - target: {fileID: 5793636676776537960, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3660,9 +3655,11 @@ MonoBehaviour:
   isParrying: 0
   isDirectional: 1
   rawDamage: 500
+  owner: {fileID: 0}
   hitterBox: {fileID: 1247619269}
   lookThreshold: 0.7853982
   testMode: 1
+  hitBoxLayer: 0
 --- !u!114 &1247619269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3837,6 +3834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 1
+  hitBoxLayer: -1
   hurtboxOwner: {fileID: 1625550452}
 --- !u!1 &1280358084
 GameObject:
@@ -3907,6 +3905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 1
+  hitBoxLayer: -1
   hurtboxOwner: {fileID: 1124450671}
 --- !u!1 &1328803633
 GameObject:
@@ -4499,8 +4498,8 @@ GameObject:
   - component: {fileID: 1501483128}
   - component: {fileID: 1501483127}
   - component: {fileID: 1501483126}
-  - component: {fileID: 1501483125}
   - component: {fileID: 1501483124}
+  - component: {fileID: 1501483125}
   m_Layer: 6
   m_Name: Fake Sword
   m_TagString: Untagged
@@ -4540,9 +4539,11 @@ MonoBehaviour:
   isParrying: 0
   isDirectional: 1
   rawDamage: 0
+  owner: {fileID: 0}
   hitterBox: {fileID: 1501483125}
   lookThreshold: 0.7853982
   testMode: 0
+  hitBoxLayer: 1
 --- !u!114 &1501483125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5698,6 +5699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 1
+  hitBoxLayer: -1
   hurtboxOwner: {fileID: 656438739}
 --- !u!1 &1910238706
 GameObject:

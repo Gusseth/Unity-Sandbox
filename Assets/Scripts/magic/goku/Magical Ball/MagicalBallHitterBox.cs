@@ -78,6 +78,8 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
                 else if (hitLayerObject is IBlocker blocker && blocker.Blocking)
                 {
                     hasHit = true;
+                    Block data = new(Hitter.Damage, point, normal, blocker.Parry, 0, this, blocker);
+                    OnBlockerHit(blocker, data);
                     break;
                 }
             }
@@ -98,6 +100,15 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
 
         if (hasHit)
             hitter.PostAttack();
+    }
+
+    private void OnBlockerHit(IBlocker blocker, Block data)
+    {
+        if (blocker.CheckHit(data))
+        {
+            data.attacker.Hitter.Response(data);
+            data.blocker.Response(data);
+        }
     }
 
     public void OnHurtBoxHit(IHurtBox hurtBox, HitData data)
