@@ -62,7 +62,7 @@ public class MagicalShieldController : AbstractHoldableMagicController
 
     public override bool CheckRequirements(CastingData data)
     {
-        return base.CheckRequirements(data) && !data.ownerActor.ExcludableExists(singleton);
+        return base.CheckRequirements(data) && !data.ownerActor.ExcludableExists(singleton ?? this);
     }
 
     private void Start()

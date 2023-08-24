@@ -158,10 +158,13 @@ public class GokuHoldable : GokuBase, ICastableHoldable
         {
             casting = true;
             await UniTask.Delay(InitialDelay, cancellationToken: token);
-            magicController = prefabMagicController.Instantiate(castData);
-            if (magicController.OnCast(castData))
+            if (prefabMagicController.CheckRequirements(castData) && !token.IsCancellationRequested)
             {
-                return true;
+                magicController = prefabMagicController.Instantiate(castData);
+                if (magicController.OnCast(castData))
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -176,9 +179,12 @@ public class GokuHoldable : GokuBase, ICastableHoldable
 
     public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
     {
-        magicController.OnCastEnd();
-        await UniTask.Delay(endDelay, cancellationToken: token);
-        casting = false;
+        if (magicController != null)
+        {
+            magicController.OnCastEnd();
+            await UniTask.Delay(endDelay, cancellationToken: token);
+            casting = false;
+        }
         return true;
     }
 
