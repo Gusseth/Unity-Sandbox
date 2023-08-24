@@ -51,6 +51,7 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
     {
         foreach (RaycastHit hit in hits)
         {
+            if (hit.collider == null) continue;
             // We're detecting ourselves lol
             if (hit.collider == collider) continue;
             if (alreadyHitColliders.Contains(hit.collider)) continue;
@@ -133,10 +134,10 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         collider ??= GetComponent<BoxCollider>();
-        alreadyHitColliders = new HashSet<Collider>();
+        alreadyHitColliders ??= new HashSet<Collider>();
         thickness = (collider.size * (float3)transform.lossyScale).y / verticalSubdivisions;
     }
 

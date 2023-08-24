@@ -351,7 +351,7 @@ public class NoritoHoldable : NoritoBase, ICastableHoldable
     {
         foreach (ICastableHoldable castable in castables)
         {
-            await castable.OnCastEnd(castData, this, token);
+            _ = await castable.OnCastEnd(castData, this, token);
         }
         PostCast(castData);
         return true;
@@ -359,6 +359,8 @@ public class NoritoHoldable : NoritoBase, ICastableHoldable
 
     public override void OnEquipOut()
     {
-        //throw new NotImplementedException();
+        foreach (ICastable castable in castables)
+            castable.OnEquipOut();
+        PostCast(null);
     }
 }
