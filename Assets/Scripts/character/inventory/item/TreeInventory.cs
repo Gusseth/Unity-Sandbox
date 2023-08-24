@@ -10,7 +10,7 @@ class TreeInventoryEntry : ItemStack
 }
 
 [Serializable]
-public class TreeInventory : IInventory
+public class TreeInventory : IItemInventory
 {
     [SerializeField] IDictionary<ItemID, TreeInventoryEntry> inventory;
 

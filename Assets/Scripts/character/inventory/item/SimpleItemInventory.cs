@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-/*  List-based inventory system.
+/*  List-based item inventory system.
  *  Very simple.
  */
 [Serializable]
-public class SimpleInventory : IInventory
+public class SimpleItemInventory : IItemInventory
 {
     [SerializeField] List<ItemStack> inventory;
 
-    public SimpleInventory() { 
+    public SimpleItemInventory() { 
         inventory = new List<ItemStack>();
     }
 

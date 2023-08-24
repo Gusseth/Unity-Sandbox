@@ -1,19 +1,26 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Progress;
 
-public class InventoryController : MonoBehaviour, IInventoryController
+public class InventoryController : MonoBehaviour, IInventoryController, INoritoInventoryController
 {
-    [SerializeField] List<ItemStack> equippedHotbar;
+    [SerializeReference, SubclassSelector] List<IHotbarDisplayable> equippedHotbar = new List<IHotbarDisplayable>();
     [SerializeField] int i = 0;
-    [SerializeField] SimpleInventory inventory;
+    [SerializeField] SimpleItemInventory inventory;
+    [SerializeField] SimpleNoritoInventory noritoInventory;
     [SerializeField] HotbarUI hotbarUI;
     [SerializeField] TextMeshProUGUI hotbarNameIndicator;
 
-    public IInventory Inventory => inventory;
+    public IItemInventory Inventory => inventory;
+
+    public INoritoInventory NoritoInventory => noritoInventory;
+
+    public IHotbarDisplayable CurrentEquipped => equippedHotbar[i];
 
     public bool AddItem(ItemBase itemBase)
     {
@@ -39,7 +46,7 @@ public class InventoryController : MonoBehaviour, IInventoryController
         return inventory.FindItems(id, data);
     }
 
-    public GameObject GetEquipped(Hand hand, Transform parent)
+    public GameObject GetCurrentEquipped(Transform parent)
     {
         return GetEquippedModel(parent);
     }
@@ -51,11 +58,21 @@ public class InventoryController : MonoBehaviour, IInventoryController
             hotbarUI.SetHotbar(equippedHotbar);
         }
         hotbarUI.SelectSlot(i);
-        return Instantiate(equippedHotbar[i].worldModelPrefab, parent);
+        return Instantiate(equippedHotbar[i].WorldModel, parent);
     }
 
-    public GameObject GetNextEquipped(Hand hand, Transform parent)
+    public GameObject SetEquipped(int i, Transform parent)
     {
+        UpdateAfterChangingI();
+        if (i >= equippedHotbar.Count || i < 0)
+            return null;
+        this.i = i;
+        return GetEquippedModel(parent);
+    }
+
+    public GameObject GetNextEquipped(Transform parent)
+    {
+        UpdateAfterChangingI();
         if (i == equippedHotbar.Count - 1)
             i = 0;
         else
@@ -63,8 +80,9 @@ public class InventoryController : MonoBehaviour, IInventoryController
         return GetEquippedModel(parent);
     }
 
-    public GameObject GetPrevEquipped(Hand hand, Transform parent)
+    public GameObject GetPrevEquipped(Transform parent)
     {
+        UpdateAfterChangingI();
         if (i == 0)
             i = equippedHotbar.Count - 1;
         else
@@ -97,15 +115,55 @@ public class InventoryController : MonoBehaviour, IInventoryController
         return itemBases;
     }
 
+    private void UpdateAfterChangingI()
+    {
+        if (equippedHotbar[i] is ICastable castable)
+        {
+            castable.OnEquipOut();
+        }
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
         hotbarUI.SetHotbar(equippedHotbar);
+        foreach(IHotbarDisplayable displayable in equippedHotbar)
+        {
+            if (displayable is ICastable castable)
+                castable.CalculateKeCost();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public bool OnCast(CastingData castData)
+    {
+        var equipped = equippedHotbar[i];
+
+        if (equipped is ICastable castable)
+        {
+            CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+            if (CastableHelpers.CheckFlag(castData, InputFlags.Started))
+            {
+                castable.OnCastStart(castData, null, source.Token);
+                return true;
+            }
+            else if (CastableHelpers.CheckFlag(castData, InputFlags.Cancelled)) 
+            {
+                castable.OnCastEnd(castData, null, source.Token);
+                return true;
+            }
+            source.Dispose();
+        }
+        return false;
+    }
+
+    void OnDestroy()
+    {
+
     }
 }

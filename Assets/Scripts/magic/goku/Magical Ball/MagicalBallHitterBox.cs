@@ -7,19 +7,22 @@ using UnityEngine;
 public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
 {
     [SerializeField] GameObject owner;
-    [SerializeField] AbstractActorBase gokuOwner;
+    [SerializeField] public AbstractActorBase gokuOwner;
     [SerializeField] SphereCollider actualCollider;
     [SerializeField] LayerMask layerMask;
+    [SerializeField] HitBoxLayer hitBoxLayer;
     [SerializeField] float forceStrength = 0;
 
     IHitter hitter;
     bool hasHit = false;
+    HitBoxFaction faction;
     ISet<Collider> alreadyHitColliders; // don't need to clear because this will get destroyed anyways
-    List<Tuple<float3, float3>> hit_points_gizmo;
 
     public IHitter Hitter { get => hitter; set => hitter = value; }
 
     public GameObject Owner => owner;
+
+    public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
     public void Attack()
     {
@@ -41,7 +44,6 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
             // We're detecting ourselves lol
             if (hit.collider == actualCollider) continue;
             if (alreadyHitColliders.Contains(hit.collider)) continue;
-            if (hit.collider.CompareTag("Player")) continue;
 
             // I fucking hate Unity for making colliders that overlap in the first
             // sweep return a hit.point of (0, 0, 0) and a hit.normal of -direction.
@@ -51,33 +53,45 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
 
             Root.Debug.DrawPointNormals(new Tuple<float3, float3>(point, normal));
 
-            if (hit.collider.TryGetComponent(out IHurtBox hurtBox))
+            if (hit.collider.TryGetComponent(out ICheckHitLayer hitLayerObject))
             {
-                if (!hurtBox.Active) continue;
+                if (!MathHelpers.FlagContains((byte)HitBoxLayer, (byte)hitLayerObject.HitBoxLayer))
+                    continue;
 
-                HitData data = new Hit(
-                    Hitter.Damage,
-                    point,
-                    normal,
-                    hurtBox,
-                    this
-                    );
+                if (hitLayerObject is IHurtBox hurtBox)
+                {
+                    if (!hurtBox.Active) continue;
+                    if (gokuOwner != null && hurtBox.Owner == gokuOwner.gameObject) continue;
+
+                    HitData data = new Hit(
+                        Hitter.Damage,
+                        point,
+                        normal,
+                        hurtBox,
+                        this
+                        );
 
 
-                OnHurtBoxHit(hurtBox, data);
-                hasHit = true;
+                    OnHurtBoxHit(hurtBox, data);
+                    hasHit = true;
+                }
+                else if (hitLayerObject is IBlocker blocker && blocker.Blocking)
+                {
+                    hasHit = true;
+                    Block data = new(Hitter.Damage, point, normal, blocker.Parry, 0, this, blocker);
+                    OnBlockerHit(blocker, data);
+                    break;
+                }
             }
-
-            if (hit.collider.TryGetComponent(out Rigidbody rb))
-            {
-                Vector3 explosiveForce = -normal * forceStrength;
-
-                rb.AddForceAtPosition(explosiveForce, point, ForceMode.Impulse);
-                hasHit = true;
-            }
-
             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Hitbox"))
             {
+                if (hit.collider.TryGetComponent(out Rigidbody rb))
+                {
+                    Vector3 explosiveForce = -normal * forceStrength;
+
+                    rb.AddForceAtPosition(explosiveForce, point, ForceMode.Impulse);
+                }
+
                 hasHit = true;
             }
 
@@ -86,6 +100,15 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
 
         if (hasHit)
             hitter.PostAttack();
+    }
+
+    private void OnBlockerHit(IBlocker blocker, Block data)
+    {
+        if (blocker.CheckHit(data))
+        {
+            data.attacker.Hitter.Response(data);
+            data.blocker.Response(data);
+        }
     }
 
     public void OnHurtBoxHit(IHurtBox hurtBox, HitData data)
@@ -98,11 +121,20 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
         }
     }
 
+    public void UpdateValues(AbstractActorBase actor)
+    {
+        if (actor != null)
+        {
+            gokuOwner = actor;
+            faction = AbstractActorBase.ActorToHitBoxFaction(actor.ActorFaction);
+        }
+        faction = HitBoxFaction.Neutral;
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
         alreadyHitColliders = new HashSet<Collider>();
-        hit_points_gizmo ??= new List<Tuple<float3, float3>>();
     }
 
     // Update is called once per frame

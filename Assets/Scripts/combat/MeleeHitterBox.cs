@@ -19,6 +19,8 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
 
     public GameObject Owner => owner;
 
+    public HitBoxLayer HitBoxLayer => Hitter.HitBoxLayer;
+
     public void Attack()
     {
         float3 size = collider.size * (float3)transform.lossyScale;
@@ -49,6 +51,7 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
     {
         foreach (RaycastHit hit in hits)
         {
+            if (hit.collider == null) continue;
             // We're detecting ourselves lol
             if (hit.collider == collider) continue;
             if (alreadyHitColliders.Contains(hit.collider)) continue;
@@ -63,49 +66,47 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
 
             Root.Debug.DrawPointNormals(new Tuple<float3, float3>(point, hit.normal));
             
-
-            // If it touches another hitterbox (you got blocked lmao)
-            if (hit.collider.TryGetComponent(out IHitterBox hitterBox))
+            if (hit.collider.TryGetComponent(out ICheckHitLayer hitLayerObject))
             {
-                IBlocker blocker = hitterBox.Hitter as IBlocker;
-                if (blocker == null) continue;
-
-                Block data = new Block(
-                    Hitter.Damage,
-                    point,
-                    hit.normal,
-                    blocker.Parry,
-                    0,
-                    this,
-                    hitterBox
-                    );
-
-
-                if (blocker.Blocking)
+                // This hitter and the thing that got hit isn't in the same layer!
+                if (!MathHelpers.FlagContains((byte)HitBoxLayer, (byte)hitLayerObject.HitBoxLayer))
                 {
+                    continue;
+                }
+
+                Debug.Log(hit.collider.gameObject.name);
+
+                // If it touches another hitterbox (you got blocked lmao)
+                if (hitLayerObject is IBlocker blocker)
+                {
+                    if (!blocker.Blocking) continue;
+
+                    Block data = new Block(
+                        Hitter.Damage,
+                        point,
+                        hit.normal,
+                        blocker.Parry,
+                        0,
+                        this,
+                        blocker
+                        );
                     OnBlocked(data);
+                    break;
                 }
-                else if (blocker.Parry)
+                // If it touches a hurtbox (someone gets hurt!)
+                else if (hitLayerObject is IHurtBox hurtBox)
                 {
-                    OnParried(data);
+                    if (!hurtBox.Active) continue;
+
+                    HitData data = new Hit(
+                        Hitter.Damage,
+                        point,
+                        hit.normal,
+                        hurtBox,
+                        this
+                        );
+                    OnHurtBoxHit(hurtBox, data);
                 }
-                break;
-            }
-            // If it touches a hurtbox (someone gets hurt!)
-            else if (hit.collider.TryGetComponent(out IHurtBox hurtBox))
-            {
-                if (!hurtBox.Active) continue;
-
-                HitData data = new Hit(
-                    Hitter.Damage,
-                    point,
-                    hit.normal,
-                    hurtBox,
-                    this
-                    );
-
-
-                OnHurtBoxHit(hurtBox, data);
             }
         }
     }
@@ -113,6 +114,9 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
     void OnBlocked(Block blockData)
     {
         // TODO: Add a melee cancel here
+        if (blockData.parry)
+            OnParried(blockData);
+
         Hitter.Attacking = false;
         Debug.Log("I hit a HitterBox, meaning I got blocked :(");
         GameObject s = Instantiate(spark);
@@ -127,14 +131,13 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
     void OnParried(Block blockData)
     {
         Debug.Log("Massive L");
-        OnBlocked(blockData);
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         collider ??= GetComponent<BoxCollider>();
-        alreadyHitColliders = new HashSet<Collider>();
+        alreadyHitColliders ??= new HashSet<Collider>();
         thickness = (collider.size * (float3)transform.lossyScale).y / verticalSubdivisions;
     }
 

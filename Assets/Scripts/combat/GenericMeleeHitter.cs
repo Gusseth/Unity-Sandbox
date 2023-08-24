@@ -4,21 +4,26 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class GenericMeleeHitter : MonoBehaviour, IMeleeHitter
+public class GenericMeleeHitter : MonoBehaviour, IMeleeHitter, IBlocker
 {
     [SerializeField] bool isAttacking;
     [SerializeField] bool isBlocking;
     [SerializeField] bool isParrying;
     [SerializeField] bool isDirectional;
     [SerializeField] int rawDamage;
+    [SerializeField] GameObject owner;
     [SerializeField] MeleeHitterBox hitterBox;
     [SerializeField] float lookThreshold = 0.0125f;
     [SerializeField] bool testMode;
+    [SerializeField] HitBoxLayer hitBoxLayer;
     public int Damage { get => rawDamage; }
     public bool Blocking { get => isBlocking; set => isBlocking = value; }
     public bool Parry { get => isParrying; set => isParrying = value; }
     public bool Attacking { get => isAttacking; set => isAttacking = value; }
     public bool IsDirectional { get => isDirectional; set => isDirectional = value; }
+    public GameObject Owner => owner;
+
+    public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
     BasicHitDirection lastAttackDirection = BasicHitDirection.Right;
 
@@ -29,6 +34,7 @@ public class GenericMeleeHitter : MonoBehaviour, IMeleeHitter
 
     public bool PreAttack(float3 direction, AbstractActorBase actor)
     {
+        owner ??= actor.gameObject;
         BasicHitDirection attackDirection = GetAttackDirection(direction);
         Debug.Log($"Attacking from: {attackDirection}");
         Attacking = true;

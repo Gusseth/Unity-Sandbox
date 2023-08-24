@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum Hand
 {
@@ -10,30 +6,27 @@ public enum Hand
     Right = 1
 }
 
+public interface IHotbarDisplayable
+{
+    public string HotbarName { get; }
+    public string HotbarDescription { get; }
+    public GameObject WorldModel { get; }
+}
+
 public interface IInventoryController
 {
-    public IInventory Inventory { get; }
+    public IItemInventory Inventory { get; }
+    public IHotbarDisplayable CurrentEquipped { get; }
     public bool AddItem(ItemBase itemBase);
     public bool AddItem(ItemBase itemBase, uint amount);
     public bool AddItem(ItemStack item);
     public bool RemoveItem(ItemBase itemBase);
     public bool RemoveItem(ItemBase itemBase, uint amount);
     public void TickInventory(Time deltaTime, IActor actor);
-    public GameObject GetEquipped(Hand hand, Transform parent);
-    public GameObject GetNextEquipped(Hand hand, Transform parent);
-    public GameObject GetPrevEquipped(Hand hand, Transform parent);
+    public GameObject GetCurrentEquipped(Transform parent);
+    public GameObject SetEquipped(int i, Transform parent);
+    public GameObject GetNextEquipped(Transform parent);
+    public GameObject GetPrevEquipped(Transform parent);
     public ItemStack[] FindItems(ItemBase itemBase);
     public ItemStack[] FindItems(ItemID id, ItemData data = null);
-}
-
-public interface IInventory
-{
-    public bool AddItem(ItemBase itemBase, uint amount);
-    public bool AddItem(ItemStack item);
-    public bool RemoveItem(ItemBase item, uint amount);
-    public ItemStack[] FindItems(ItemBase itemBase);
-    public ItemStack[] FindItems(ItemID id, ItemData data = null);
-    public ItemStack[] FindItems(System.Func<ItemStack, bool> filter);
-    public ItemStack[] GetAllItems();
-    public void RemoveAllItems(bool exceptImportant = true);
 }

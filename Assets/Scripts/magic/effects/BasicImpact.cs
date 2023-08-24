@@ -2,37 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BasicImpact : MonoBehaviour
 {
-    [SerializeField] bool active;
+    [SerializeField] bool armed;
     [SerializeField] bool impactHasForce;
+    [SerializeField] bool isExplosive;
     [SerializeField] bool ignorePlayer;
     [SerializeField] float forceStrength;
-    // Start is called before the first frame update
 
     void OnHit(Collision collision)
     {
-        if (active)
+        if (armed)
         {
-            if (!ignorePlayer && collision.gameObject.tag == "Player")
-                return;
-
             if (impactHasForce)
             {
+
                 ContactPoint contact = collision.contacts[0];
+                Vector3 position = contact.point;
                 float explosiveDistance = Mathf.Sqrt(forceStrength);
 
-                contact.otherCollider.TryGetComponent(out Rigidbody rb);
-
-                if (rb)
+                if (isExplosive)
                 {
-                    Vector3 position = contact.point;
-                    Vector3 explosiveForce = -contact.normal * forceStrength;
+                    Collider[] colliders = Physics.OverlapSphere(position, explosiveDistance);
+                    Debug.Log("Hit");
 
-                    rb.AddForceAtPosition(explosiveForce * forceStrength, position, ForceMode.Impulse);
+                    foreach (Collider collider in colliders)
+                    {
+                        if (ignorePlayer && collider.gameObject.tag == "Player")
+                            continue;
+
+                        if (collider.gameObject.tag == "Projectile")
+                            continue;
+
+                        collider.TryGetComponent(out Rigidbody rb);
+
+                        if (rb)
+                        {
+                            rb.AddExplosionForce(forceStrength, position, explosiveDistance, 0.0f, ForceMode.Impulse);
+                        }
+                    }
                 }
-                //Physics.OverlapSphere(position, )
+                else
+                {
+                    contact.otherCollider.TryGetComponent(out Rigidbody rb);
+                    if (rb)
+                    {
+                        Vector3 explosiveForce = -contact.normal * forceStrength;
+                        rb.AddForceAtPosition(explosiveForce, position, ForceMode.Impulse);
+                    }
+                }
             }
 
             Destroy(gameObject);
