@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class MagicalBallHitter : MonoBehaviour, IHitter
 {
@@ -9,10 +10,13 @@ public class MagicalBallHitter : MonoBehaviour, IHitter
     [SerializeField] bool isAttacking = true;
     [SerializeField] bool isDirectional = false;
     [SerializeField] MagicalBallHitterBox hitterBox;
+    [SerializeField] HitBoxLayer hitBoxLayer;
     public int Damage => damage;
 
     public bool Attacking { get => isAttacking; set => isAttacking = value; }
     public bool IsDirectional { get => isDirectional; set => isDirectional = value; }
+
+    public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
     public bool CheckHit(HitData data)
     {
@@ -26,6 +30,7 @@ public class MagicalBallHitter : MonoBehaviour, IHitter
 
     public bool PreAttack(float3 direction, AbstractActorBase actor)
     {
+        hitterBox.UpdateValues(actor);
         return true;
     }
 

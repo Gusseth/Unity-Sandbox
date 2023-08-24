@@ -60,9 +60,9 @@ public class Block : HitData
     public bool parry;
     public float force;
     public IHitterBox attacker;
-    public IHitterBox blocker;
+    public IBlocker blocker;
 
-    public Block(int damage, float3 point, float3 normal, bool parry, float force, IHitterBox attacker, IHitterBox blocker)
+    public Block(int damage, float3 point, float3 normal, bool parry, float force, IHitterBox attacker, IBlocker blocker)
     {
         this.damage = damage;
         this.point = point;
@@ -90,6 +90,14 @@ public enum HitBoxFaction
     Allies  =   0b10,
     Neutral =  0b100,
     Enemies = 0b1000
+}
+
+[System.Flags]
+public enum HitBoxLayer
+{
+    Physical    =     0b1,
+    Magical     =    0b10,
+    Divine      =   0b100
 }
 
 public enum HitBoxType
@@ -128,6 +136,11 @@ public interface IHitCheck
     public bool CheckHit(HitData data);
 }
 
+public interface ICheckHitLayer
+{
+    public HitBoxLayer HitBoxLayer { get; }
+}
+
 /// <summary>
 /// Used to implement what happens after a successful hit
 /// </summary>
@@ -141,7 +154,7 @@ public interface IHitResponse
     public void Response(HitData data);
 }
 
-public interface IBlocker
+public interface IBlocker : IGiveOwnerMetadata, ICheckHitLayer
 {
     /// <summary>
     /// Returns true if the hitter is blocking their weapon
@@ -159,13 +172,12 @@ public interface IBlocker
     /// Called after the hitter returns to non-blocking state
     /// </summary>
     public void PostBlock();
-
 }
 
 /// <summary>
 /// Interface that must be implemented by GameObjects that detects hurtboxes
 /// </summary>
-public interface IHitter : IHitCheck, IHitResponse
+public interface IHitter : IHitCheck, IHitResponse, ICheckHitLayer
 {
     /// <summary>
     /// Raw damage dealt by the weapon
@@ -207,7 +219,7 @@ public interface IMeleeHitter : IHitter, IBlocker {
 /// Interface that must be implemented by individual hitboxes.
 /// Yes, this includes the hitbox for your sword.
 /// </summary>
-public interface IHitterBox : IGiveOwnerMetadata
+public interface IHitterBox : IGiveOwnerMetadata, ICheckHitLayer
 {
     /// <summary>
     /// The hitter linked with this hitbox
@@ -232,7 +244,7 @@ public interface IGotHit : IHitCheck, IHitResponse
 /// <summary>
 /// Interface that must be implemented by individual hurtboxes
 /// </summary>
-public interface IHurtBox : IHitCheck, IGiveOwnerMetadata
+public interface IHurtBox : IHitCheck, IGiveOwnerMetadata, ICheckHitLayer
 {
     /// <summary>
     /// Is this hurtbox active for detection right now

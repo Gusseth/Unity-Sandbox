@@ -3,12 +3,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.VFX;
 
 public class MagicalShieldController : AbstractHoldableMagicController
 {
     [SerializeField] VisualEffect vfx;
+    [SerializeField] MagicalShieldHurtboxResponder hurtBox;
+
+    [SerializeField] float3 size;
+    float3 Size { get => size; set => SetSize(value); }
+
+    const int vfx_size_id = 2;
+
+    void SetSize(float3 size)
+    {
+        this.size = size;
+        vfx.SetVector3(vfx_size_id, size);
+        hurtBox.SetSize(size);
+    }
 
     public override IMagicController Instantiate(CastingData data)
     {
@@ -20,7 +34,9 @@ public class MagicalShieldController : AbstractHoldableMagicController
     public override bool OnCast(CastingData data)
     {
         bool x = base.OnCast(data);
-        owner.AddExcludable(singleton);
+        if (owner != null)
+            owner.AddExcludable(singleton);
+        hurtBox.PreBlock(MathHelpers.NaN3);
         return x;
     }
 
@@ -29,8 +45,10 @@ public class MagicalShieldController : AbstractHoldableMagicController
         if (active)
         {
             vfx.Stop();
-            owner.DeleteExcludable(singleton);
+            if (owner != null)
+                owner.DeleteExcludable(singleton);
             transform.parent = null;
+            hurtBox.PostBlock();
             active = false;
             _ = TimeHelpers.WaitUntilNoParticles(vfx, this.GetCancellationTokenOnDestroy(), DestroyCastable);
         }
@@ -55,7 +73,7 @@ public class MagicalShieldController : AbstractHoldableMagicController
     // Update is called once per frame
     void Update()
     {
-        if (active && !owner.KamiMode)
+        if (active && owner != null && !owner.KamiMode)
         {
             owner.AddKe(-KeCost * Time.deltaTime);
             if (owner.Ke == 0)

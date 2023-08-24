@@ -5,13 +5,15 @@ using UnityEngine;
 public class HurtBox : MonoBehaviour, IHurtBox
 {
     [SerializeField] bool isActive;
-
+    [SerializeField] HitBoxLayer hitBoxLayer;
     [SerializeField] GameObject hurtboxOwner;
 
     public bool Active { get => isActive; }
     public GameObject Owner { get => hurtboxOwner; }
 
     public IGotHit HurtResponder { get; set; }
+
+    public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
     public bool CheckHit(HitData data)
     {

@@ -672,7 +672,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!45 &371842494
 Skybox:
   m_ObjectHideFlags: 0
@@ -1154,7 +1154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 50, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &515970288
@@ -3105,7 +3105,7 @@ MonoBehaviour:
   haraeMult: 1
   maxKe: 1000
   regenerateKe: 1
-  kamiMode: 0
+  kamiMode: 1
   stamina: 1000
   maxStamina: 1000
   staminaBaseRegen: 0
@@ -3138,7 +3138,7 @@ MonoBehaviour:
   - rid: 4372000348050030597
   - rid: 4372000348050030613
   - rid: 4372000697533333505
-  - rid: 4372000697533333509
+  - rid: 4372000723353993216
   i: 0
   inventory:
     inventory:
@@ -3462,15 +3462,15 @@ MonoBehaviour:
         keCost: 0
         initialDelay: 0
         endDelay: 0
-    - rid: 4372000697533333509
-      type: {class: GokuChargable, ns: , asm: Assembly-CSharp}
+    - rid: 4372000723353993216
+      type: {class: GokuHoldable, ns: , asm: Assembly-CSharp}
       data:
         prefab: {fileID: 4648921838101146168, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
           type: 3}
         worldModel: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
           type: 3}
         gokuName: Magical Shield
-        gokuDescription: Casts a wall of magic.
+        gokuDescription: A magical shield. Blocks spells.
         keCost: 0
         initialDelay: 0
         endDelay: 0
@@ -5305,6 +5305,83 @@ MonoBehaviour:
   downIndicator: {fileID: 1025173248}
   leftIndicator: {fileID: 770583917}
   rightIndicator: {fileID: 505755562}
+--- !u!1 &1747251303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1747251306}
+  - component: {fileID: 1747251305}
+  - component: {fileID: 1747251304}
+  m_Layer: 0
+  m_Name: Dummy Caster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1747251304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747251303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba99f03977657f646bf16812523862aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  castables:
+  - rid: 4372000723353993217
+  references:
+    version: 2
+    RefIds:
+    - rid: 4372000723353993217
+      type: {class: Goku, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
+          type: 3}
+        worldModel: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
+          type: 3}
+        gokuName: 
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
+--- !u!114 &1747251305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747251303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93d24d70da0fab14589c0035f1124de3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delayInMilliseconds: 1000
+  castableSpeed: 5
+  rotateCastablesAfterCast: 0
+--- !u!4 &1747251306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747251303}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 9, y: 1.5, z: -8.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &1747935588
 GameObject:
   m_ObjectHideFlags: 0
