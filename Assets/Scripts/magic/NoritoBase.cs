@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public interface ICastableData
@@ -50,14 +51,41 @@ public interface ICastableData
 public interface ICastable : ICastableData
 {
     /// <summary>
-    /// Casts this Goku or any of this Norito's children.  
+    /// Called when the player has pressed-down the button to cast.
+    /// </summary>
+    /// <param name="castData">Data that is passed to the child</param>
+    /// <param name="parent">The parent castable, if there is any</param>
+    /// <param name="token">The cancellation token to watch</param>
+    /// <returns>><c>True</c> under normal operation, <c>False</c> if a check went wrong and further execution must be stopped</returns>
+    public UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token);
+    /// <summary>
+    /// Casts this Goku or any of this Norito's children.
     /// </summary>
     /// <remarks><u><b>DO NOT AWAIT IN THE MAIN THREAD!</b></u></remarks>
     /// <param name="castData">Data that is passed to the child</param>
     /// <param name="parent">The parent castable, if there is any</param>
     /// <param name="token">The cancellation token to watch</param>
-    /// <returns><c>True</c> under normal operation, <c>False</c> if further execution must be stopped</returns>
+    /// <returns><c>True</c> under normal operation, <c>False</c> if a check went wrong and further execution must be stopped</returns>
     public UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
+    /// <summary>
+    /// Called when the player has pressed-up the button to cast.
+    /// </summary>
+    /// <remarks><u><b>DO NOT AWAIT IN THE MAIN THREAD!</b></u></remarks>
+    /// <param name="castData">Data that is passed to the child</param>
+    /// <param name="parent">The parent castable, if there is any</param>
+    /// <param name="token">The cancellation token to watch</param>
+    /// <returns><c>True</c> under normal operation, <c>False</c> if a check went wrong and further execution must be st
+    public UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token);
+
+    /// <summary>
+    /// Called if the player switches to a different equippable mid-cast
+    /// </summary>
+    public void OnEquipOut();
+}
+
+public interface ICastableHoldable : ICastable
+{
+    
 }
 
 public interface INorito : ICastableData
@@ -72,157 +100,111 @@ public interface INorito : ICastableData
     public bool CycleComplete { get; }
 }
 
-[Serializable]
-public class Goku : ICastable, ICastableDFS, IHotbarDisplayable
-{
-    public GameObject prefab;
-    public GameObject worldModel;
-    public string gokuName;
-    public string gokuDescription;
-    public int keCost = 0;
-    public int initialDelay = 0;
-    public int endDelay = 0;
-    int accumulatedInitialDelay;
-    int accumulatedEndDelay;
-    bool casting;
-
-    IMagicController prefabMagicController;
-
-    public string Name => gokuName;
-    public string Description => gokuDescription;
-    public int KeCost => keCost;
-    public int InitialDelay => initialDelay + accumulatedInitialDelay;
-    public int EndDelay => endDelay + accumulatedEndDelay;
-    public int ActualEndDelay => endDelay + accumulatedEndDelay;  // deprecated
-    public GameObject Model { get => prefab; set => prefab = value; }
-    public bool Casting => casting;
-    public string HotbarName => Name;
-    public string HotbarDescription => Description;
-    public GameObject WorldModel => worldModel;
-
-    public bool OnCast(CastingData castData, MonoBehaviour mono)
-    {
-        Debug.Log(Name);
-        Initialize();
-        if (prefabMagicController.CheckRequirements(castData))
-        {
-            GameObject casted = UnityEngine.Object.Instantiate(prefab);
-            IMagicController magicController = casted.GetComponent<IMagicController>();
-            magicController.Init();
-            return magicController.OnCast(castData);
-        }
-        return false;
-    }
-
-    public async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
-    {
-        await UniTask.Delay(initialDelay, cancellationToken: token);
-        Debug.Log(Name);
-        Initialize();
-        if (prefabMagicController.CheckRequirements(castData) && !token.IsCancellationRequested)
-        {
-            casting = true;
-            GameObject casted = UnityEngine.Object.Instantiate(prefab);
-            IMagicController magicController = casted.GetComponent<IMagicController>();
-            magicController.Init();
-            if (magicController.OnCast(castData))
-            {
-                await UniTask.Delay(endDelay, cancellationToken: token);
-                casting = false;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void PostCast()
-    {
-
-    }
-
-    public void OnOrder(IList orderedList, INorito parent, bool first = false, bool last = false)
-    {
-        if (first || last)
-            SetDelays(parent, first);
-        orderedList.Add(this);
-        Initialize();
-    }
-
-    private void SetDelays(INorito parent, bool first)
-    {
-        if (first)
-        {
-            accumulatedInitialDelay = parent.InitialDelay;
-        }
-        else
-        {
-            accumulatedEndDelay = parent.EndDelay;
-        }
-    }
-
-    private void Initialize()
-    {
-        prefabMagicController ??= prefab.GetComponent<IMagicController>();
-    }
-
-    public void CalculateKeCost()
-    {
-        Initialize();
-        keCost = prefabMagicController.KeCost;
-    }
-}
-
 /*
  * Issues with SubclassSelector? Download the package here:
  * https://github.com/mackysoft/Unity-SerializeReferenceExtensions
  */
 
 [Serializable]
-public class Norito : ICastable, INorito, IHotbarDisplayable
+public abstract class NoritoBase : ICastable, IHotbarDisplayable
 {
     [SerializeReference, SubclassSelector] public List<ICastable> castables = new List<ICastable>();
-    public GameObject worldModelPrefab;
-    public int totalKeCost = 0;
-    public int initialDelay = 0;
-    public int endDelay = 0;
-    public string noritoName;
-    public string noritoDescription;
-    public bool autoCast = true;
+    [SerializeReference] protected ICastable current;
+    [SerializeField] protected GameObject worldModelPrefab;
+    [SerializeField] protected int totalKeCost = 0;
+    [SerializeField] protected int initialDelay = 0;
+    [SerializeField] protected int endDelay = 0;
+    [SerializeField] protected string noritoName;
+    [SerializeField] protected string noritoDescription;
 
-    [SerializeField] bool casting = false;
-    [SerializeField] bool finishedAtLeastOnce = false;
-    [SerializeField] int i;
+    [SerializeField] protected bool casting = false;
+    [SerializeField] protected int i;
 
-    bool keAlreadyCalculated = false;
+    protected bool keAlreadyCalculated = false;
+    protected bool finishedAtLeastOnce = false;
 
-    public string Name => noritoName;
-    public string Description => noritoDescription;
-    public int KeCost => totalKeCost;
-    public int InitialDelay => initialDelay;
-    public int EndDelay => endDelay;
-    public int ActualEndDelay => endDelay + castables.Last().EndDelay;
-    public GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
-    public bool Casting => casting;
+    public virtual string Name => noritoName;
+    public virtual string Description => noritoDescription;
+    public virtual int KeCost => totalKeCost;
+    public virtual int InitialDelay => initialDelay;
+    public virtual int EndDelay => endDelay;
+    public virtual int ActualEndDelay => endDelay + castables.Last().EndDelay;
+    public virtual GameObject Model { get => worldModelPrefab; set => worldModelPrefab = value; }
+    public virtual bool Casting => casting;
+    public virtual string HotbarName => Name;
+    public virtual string HotbarDescription => Description;
+    public virtual GameObject WorldModel => worldModelPrefab;
+
+    public abstract UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token);
+    public abstract UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token);
+    public abstract UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token);
+
+    public abstract void OnEquipOut();
+
+    protected void IncrementI()
+    {
+        if (i < castables.Count - 1)
+            i++;
+        else
+        {
+            i = 0;
+            finishedAtLeastOnce = true;
+        }
+        current = null;
+    }
+
+    protected virtual void PreCast(CastingData castData)
+    {
+        casting = true;
+    }
+
+    protected virtual void PostCast(CastingData castData)
+    {
+        casting = false;
+    }
+
+    public virtual void CalculateKeCost()
+    {
+        totalKeCost = 0;
+        foreach (ICastable castable in castables)
+        {
+            castable.CalculateKeCost();
+            totalKeCost += castable.KeCost;
+        }
+        keAlreadyCalculated = true;
+    }
+}
+
+
+[Serializable]
+public class Norito : NoritoBase, INorito
+{
+    [SerializeField] protected bool autoCast = true;
+    protected bool castStartCalled = false;
+
     public bool AutoCast { get => autoCast; set => autoCast = value; }
     public bool CycleComplete => cycleComplete();
-    public bool OnLastCastable => false;
-    public string HotbarName => Name;
-    public string HotbarDescription => Description;
-    public GameObject WorldModel => worldModelPrefab;
-
     private bool cycleComplete()
     {
         return i == 0 && finishedAtLeastOnce;
     }
 
-    public async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
+    public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        if (casting) return false;
+        castStartCalled = true;
+        ICastable cur = current ?? castables[i];
+        return await cur.OnCastStart(castData, this, token);
+    }
+
+    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
         if (casting) return false;
 
         if (!keAlreadyCalculated)
             CalculateKeCost();
 
-        PreCast();
+        PreCast(castData);
         if (i == 0)
         {
             // Start of the norito
@@ -232,9 +214,9 @@ public class Norito : ICastable, INorito, IHotbarDisplayable
         bool result;
 
         if (autoCast)
-            result = await OnAutoCastAsync(castData, this, token);
+            result = await AutoCastAsync(castData, this, token);
         else
-            result = await OnSequentialCastAsync(castData, this, token);
+            result = await SequentialCastAsync(castData, this, token);
 
         if (finishedAtLeastOnce)
         {
@@ -243,42 +225,77 @@ public class Norito : ICastable, INorito, IHotbarDisplayable
             finishedAtLeastOnce = false;
         }
 
-        PostCast();
+        PostCast(castData);
         return result;
     }
 
-    private async UniTask<bool> OnAutoCastAsync(CastingData castData, ICastable parent, CancellationToken token)
+    public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        if (!castStartCalled && !casting)
+        {
+            // If the player holds the attack button at the end of a Norito,
+            // the button-up input is registered as a button-down input so
+            // the controls feel more fluid and responsive
+            if (!await OnCastStart(castData, parent, token))
+                return false;
+        }
+        return await OnCastAsync(castData, parent, token);
+    }
+
+    private async UniTask<bool> AutoCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
         int startI = i;
-        for (int j = i; j < castables.Count; j++)
+    OnAutoCastAsync_Loop:
+        if (current == null)
         {
-            ICastable castable = castables[j];
-
-            // Prefent first shot from a sequential norito from firing
-            if (castable is INorito norito && 
-                !norito.AutoCast &&             // Check if child is a sequential norito
-                j != startI)                    // If it is, check if we're already processing it
-                                                // (if j != startI, we just found the first child of the norito)
-                return false;
-
-            bool result = await castable.OnCastAsync(castData, parent, token);
-
-            if (!result)
+            for (int j = i; j < castables.Count; j++)
             {
-                // A child either:  ran out of Ke or
-                //                  We're processing a sequential norito so we should not increment
-                //                  and we should terminate this thread to the root.
-                return false;
+                ICastable castable = current = castables[j];
+
+                // Prevent first shot from a sequential norito from firing
+                if (castable is INorito norito &&   // Check if child is a sequential norito
+                    !norito.AutoCast)               // If it is, check if it's sequential, then break early.
+                {
+                    return false;
+                }
+                if (j != startI && !await current.OnCastStart(castData, parent, token))
+                    return false;
+                if (!await CastCurrent(castData, parent, token))
+                {
+                    return false;
+                }
             }
-            IncrementI();
+        }
+        else
+        {
+            // Recall that 'current' is only defined if we're processing a Norito.
+            if (await CastCurrent(castData, parent, token))
+            {
+                goto OnAutoCastAsync_Loop;  // This lets us take advantage of caching while automatically moving
+                                            // to the next castable if the previous Norito is sequential.
+            }
+            return false;
         }
         return true;
     }
 
-    private async UniTask<bool> OnSequentialCastAsync(CastingData castData, ICastable parent, CancellationToken token)
+    private async UniTask<bool> CastCurrent(CastingData castData, ICastable parent, CancellationToken token)
     {
-        ICastable castable = castables[i];
-        bool result = await castable.OnCastAsync(castData, parent, token);
+        if (!await current.OnCastEnd(castData, parent, token))
+        {
+            // A child either:  ran out of Ke or
+            //                  We're processing a sequential norito so we should not increment
+            //                  and we should terminate this thread to the root.
+            return false;
+        }
+        IncrementI();
+        return true;
+    }
+
+    private async UniTask<bool> SequentialCastAsync(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        current ??= castables[i];
+        bool result = await current.OnCastEnd(castData, parent, token);
         if (!result &&                      // If we get the command to receive a break
             parent is INorito norito &&     // Check if the parent is a Norito
             !norito.CycleComplete)          // If it hasn't been completed yet (????), break
@@ -288,35 +305,62 @@ public class Norito : ICastable, INorito, IHotbarDisplayable
         return CycleComplete;               // Returns true if we've gone through the entire norito
     }
 
-    private void IncrementI()
+    public override void OnEquipOut()
     {
-        if (i < castables.Count - 1)
-            i++;
-        else
-        {
-            i = 0;
-            finishedAtLeastOnce = true;
+        if (current != null) 
+        { 
+            current.OnEquipOut(); 
         }
     }
 
-    private void PreCast()
+    protected override void PreCast(CastingData castData)
     {
-        casting = true;
+        base.PreCast(castData);
+    }
+    protected override void PostCast(CastingData castData)
+    {
+        castStartCalled = false;
+        base.PostCast(castData);
+    }
+}
+
+// TODO: Implement hodable Norito
+[Serializable]
+public class NoritoHoldable : NoritoBase, ICastableHoldable
+{
+    public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
+    {
+        await UniTask.Delay(initialDelay, cancellationToken: token);
+        return await OnCastAsync(castData, parent, token);
     }
 
-    public void PostCast()
+    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
     {
-        casting = false;
+        if (!casting)
+        {
+            foreach (ICastableHoldable castable in castables)
+            {
+                _ = castable.OnCastStart(castData, this, token);
+            }
+            PreCast(castData);
+        }
+        return true;
     }
 
-    public void CalculateKeCost()
+    public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)
     {
-        totalKeCost = 0;
+        foreach (ICastableHoldable castable in castables)
+        {
+            _ = await castable.OnCastEnd(castData, this, token);
+        }
+        PostCast(castData);
+        return true;
+    }
+
+    public override void OnEquipOut()
+    {
         foreach (ICastable castable in castables)
-        {
-            castable.CalculateKeCost();
-            totalKeCost += castable.KeCost;
-        }
-        keAlreadyCalculated = true;
+            castable.OnEquipOut();
+        PostCast(null);
     }
 }

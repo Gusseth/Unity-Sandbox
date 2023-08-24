@@ -16,6 +16,7 @@ public interface IHotbarDisplayable
 public interface IInventoryController
 {
     public IItemInventory Inventory { get; }
+    public IHotbarDisplayable CurrentEquipped { get; }
     public bool AddItem(ItemBase itemBase);
     public bool AddItem(ItemBase itemBase, uint amount);
     public bool AddItem(ItemStack item);

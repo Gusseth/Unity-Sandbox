@@ -9,4 +9,8 @@ public interface INoritoInventoryController
 {
     public INoritoInventory NoritoInventory { get; }
     public bool OnCast(CastingData castData);
+    public GameObject GetCurrentEquipped(Transform parent);
+    public GameObject SetEquipped(int i, Transform parent);
+    public GameObject GetNextEquipped(Transform parent);
+    public GameObject GetPrevEquipped(Transform parent);
 }

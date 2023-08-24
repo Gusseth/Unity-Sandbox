@@ -157,6 +157,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 65
+  hitBoxLayer: 2
   forceStrength: 1
 --- !u!135 &4629886861958289374
 SphereCollider:

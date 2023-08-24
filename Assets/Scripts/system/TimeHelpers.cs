@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public static class TimeHelpers
 {
@@ -170,5 +171,50 @@ public static class TimeHelpers
             return;
         }
         invoked();
+    }
+
+    /// <summary>
+    /// Invokes an awaitable function after a set amount of time in milliseconds
+    /// </summary>
+    /// <param name="invoked">The async function to be called after a delay</param>
+    /// <param name="milliseconds">The time of the delay in milliseconds</param>
+    /// <param name="token">Optional cancellation token, thread is stopped if triggered</param>
+    /// <param name="useScaledTime">The time waited should respect the timescale</param>
+    /// <returns></returns>
+    public static async void InvokeAsync(Func<UniTask> invoked, int milliseconds, CancellationToken token = default, bool useScaledTime = true)
+    {
+        try
+        {
+            await UniTask.Delay(milliseconds, useScaledTime, cancellationToken: token);
+        }
+        catch (OperationCanceledException)
+        {
+            // We need this or else an error occurs
+            return;
+        }
+        await invoked();
+    }
+
+    /// <summary>
+    /// Calls a function after a Visual Effect kills each one of its particles
+    /// </summary>
+    /// <param name="vfx">The visual effect to observe</param>
+    /// <param name="token">Cancellation token from the linked MonoBehaviour, thread is stopped if triggered</param>
+    /// <param name="callback">The function that will be called after the visual effect is finished</param>
+    /// <returns></returns>
+    public static async UniTask WaitUntilNoParticles(VisualEffect vfx, CancellationToken token, Action callback)
+    {
+        if (vfx.aliveParticleCount == 0 && !token.IsCancellationRequested)
+        {
+            callback();
+            return;
+        }
+
+        while (!token.IsCancellationRequested && vfx.aliveParticleCount > 0)
+        {
+            await UniTask.WaitUntilValueChanged(vfx, x => x.aliveParticleCount);
+        }
+        if (!token.IsCancellationRequested)
+            callback();
     }
 }

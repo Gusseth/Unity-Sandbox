@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 
@@ -17,6 +19,8 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
     public IItemInventory Inventory => inventory;
 
     public INoritoInventory NoritoInventory => noritoInventory;
+
+    public IHotbarDisplayable CurrentEquipped => equippedHotbar[i];
 
     public bool AddItem(ItemBase itemBase)
     {
@@ -59,6 +63,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public GameObject SetEquipped(int i, Transform parent)
     {
+        UpdateAfterChangingI();
         if (i >= equippedHotbar.Count || i < 0)
             return null;
         this.i = i;
@@ -67,6 +72,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public GameObject GetNextEquipped(Transform parent)
     {
+        UpdateAfterChangingI();
         if (i == equippedHotbar.Count - 1)
             i = 0;
         else
@@ -76,6 +82,7 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public GameObject GetPrevEquipped(Transform parent)
     {
+        UpdateAfterChangingI();
         if (i == 0)
             i = equippedHotbar.Count - 1;
         else
@@ -108,6 +115,14 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
         return itemBases;
     }
 
+    private void UpdateAfterChangingI()
+    {
+        if (equippedHotbar[i] is ICastable castable)
+        {
+            castable.OnEquipOut();
+        }
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -127,11 +142,28 @@ public class InventoryController : MonoBehaviour, IInventoryController, INoritoI
 
     public bool OnCast(CastingData castData)
     {
-        if (equippedHotbar[i] is ICastable castable)
+        var equipped = equippedHotbar[i];
+
+        if (equipped is ICastable castable)
         {
-            castable.OnCastAsync(castData, null, this.GetCancellationTokenOnDestroy());
-            return true;
+            CancellationTokenSource source = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+            if (CastableHelpers.CheckFlag(castData, InputFlags.Started))
+            {
+                castable.OnCastStart(castData, null, source.Token);
+                return true;
+            }
+            else if (CastableHelpers.CheckFlag(castData, InputFlags.Cancelled)) 
+            {
+                castable.OnCastEnd(castData, null, source.Token);
+                return true;
+            }
+            source.Dispose();
         }
         return false;
+    }
+
+    void OnDestroy()
+    {
+
     }
 }
