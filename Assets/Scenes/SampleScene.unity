@@ -3134,6 +3134,7 @@ MonoBehaviour:
   - rid: 4372000348050030613
   - rid: 4372000697533333505
   - rid: 4372000723353993216
+  - rid: 4372000743709474816
   i: 0
   inventory:
     inventory:
@@ -3469,6 +3470,46 @@ MonoBehaviour:
         keCost: 0
         initialDelay: 0
         endDelay: 0
+    - rid: 4372000743709474816
+      type: {class: NoritoHoldable, ns: , asm: Assembly-CSharp}
+      data:
+        castables:
+        - rid: 4372000743709474817
+        - rid: 4372000743709474818
+        current:
+          rid: -2
+        worldModelPrefab: {fileID: 0}
+        totalKeCost: 0
+        initialDelay: 0
+        endDelay: 0
+        noritoName: Combined Shield
+        noritoDescription: Demonstrates how holdable spells can be combined.
+        casting: 0
+        i: 0
+    - rid: 4372000743709474817
+      type: {class: GokuHoldable, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 4648921838101146168, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+          type: 3}
+        worldModel: {fileID: 206542582376986133, guid: e2971d83cf9713941b19e70a55a1f1b2,
+          type: 3}
+        gokuName: 1
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
+    - rid: 4372000743709474818
+      type: {class: GokuHoldable, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 4648921838101146168, guid: e5e35477ad38f8a428190863b87736c4,
+          type: 3}
+        worldModel: {fileID: 206542582376986133, guid: 4e907f2827454b140b9bc08f5262c495,
+          type: 3}
+        gokuName: 2
+        gokuDescription: 
+        keCost: 0
+        initialDelay: 0
+        endDelay: 0
 --- !u!114 &1124450686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3659,7 +3700,7 @@ MonoBehaviour:
   hitterBox: {fileID: 1247619269}
   lookThreshold: 0.7853982
   testMode: 1
-  hitBoxLayer: 0
+  hitBoxLayer: 1
 --- !u!114 &1247619269
 MonoBehaviour:
   m_ObjectHideFlags: 0
