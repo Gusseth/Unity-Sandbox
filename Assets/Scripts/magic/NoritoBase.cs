@@ -331,6 +331,11 @@ public class NoritoHoldable : NoritoBase, ICastableHoldable
     public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
     {
         await UniTask.Delay(initialDelay, cancellationToken: token);
+        return await OnCastAsync(castData, parent, token);
+    }
+
+    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
+    {
         if (!casting)
         {
             foreach (ICastableHoldable castable in castables)
@@ -340,16 +345,6 @@ public class NoritoHoldable : NoritoBase, ICastableHoldable
             PreCast(castData);
         }
         return true;
-    }
-
-    public override async UniTask<bool> OnCastAsync(CastingData castData, ICastable parent, CancellationToken token)
-    {
-        foreach (ICastable castable in castables)
-        {
-           bool x = await castable.OnCastAsync(castData, this, token);
-        }
-        PostCast(castData);
-        return false;
     }
 
     public override async UniTask<bool> OnCastEnd(CastingData castData, ICastable parent, CancellationToken token)

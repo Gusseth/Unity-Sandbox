@@ -120,10 +120,10 @@ public class Goku : GokuBase
             if (magicController.OnCast(castData))
             {
                 await UniTask.Delay(endDelay, cancellationToken: token);
-                casting = false;
                 return true;
             }
         }
+        casting = false;
         return false;
     }
 
