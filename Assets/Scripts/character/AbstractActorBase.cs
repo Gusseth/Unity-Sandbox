@@ -95,4 +95,17 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
         if (excludables == null) return false;
         return excludables.Contains(excludable);
     }
+
+    public static HitBoxFaction ActorToHitBoxFaction(ActorFaction faction)
+    {
+        switch (faction)
+        {
+            case ActorFaction.Player:
+                return HitBoxFaction.Player;
+            case ActorFaction.Neutral:
+                return HitBoxFaction.Neutral;
+            default:
+                return HitBoxFaction.Enemies;
+        }
+    }
 }
