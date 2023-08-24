@@ -96,7 +96,7 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
         if (Timeout >= 0)
             TimeHelpers.InvokeAsync(DestroyCastable, Timeout, this.GetCancellationTokenOnDestroy());
         gameObject.transform.position = data.origin.position;
-        if (!data.ownerActor.KamiMode)
+        if (data.ownerActor != null && !data.ownerActor.KamiMode)
             data.ownerActor.AddKe(-keCost);
         return true;
     }
@@ -114,7 +114,9 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
     public virtual bool CheckRequirements(CastingData data)
     {
         AbstractActorBase caster = data.ownerActor;
-        return data.ownerActor.Ke != 0 || caster.KamiMode;
+        if (caster != null)
+            return data.ownerActor.Ke != 0 || caster.KamiMode;
+        return true;
     }
 
     public virtual void OnEquipOut() { }
