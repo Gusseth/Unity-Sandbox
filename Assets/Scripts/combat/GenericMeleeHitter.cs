@@ -103,4 +103,14 @@ public class GenericMeleeHitter : MonoBehaviour, IMeleeHitter, IBlocker
     {
         indicator.UpdateTarget(FilterThreshold(direction, BasicHitDirection.None));
     }
+
+    public void OnBlock(Block data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnParry(Block data)
+    {
+        throw new System.NotImplementedException();
+    }
 }

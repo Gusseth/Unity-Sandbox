@@ -172,6 +172,17 @@ public interface IBlocker : IGiveOwnerMetadata, IHitCheck, IHitResponse, ICheckH
     /// Called after the hitter returns to non-blocking state
     /// </summary>
     public void PostBlock();
+    /// <summary>
+    /// Called if this blocker has successfully hit a hitterbox
+    /// </summary>
+    /// <param name="data">Contains information about the block</param>
+    public void OnBlock(Block data);
+
+    /// <summary>
+    /// Called if this blocker has successfully parried a hitterbox
+    /// </summary>
+    /// <param name="data">Contains information about the block</param>
+    public void OnParry(Block data);
 }
 
 /// <summary>
@@ -229,6 +240,10 @@ public interface IHitterBox : IGiveOwnerMetadata, ICheckHitLayer
     /// Called when the hitbox receives an attack signal from the Hitter
     /// </summary>
     public void Attack();
+
+    public void PreAttack(IHitter hitter);
+    public void PostAttack(IHitter hitter);
+
     //public void OnHitterBoxHit(IHitterBox hitterBox, HitData data);
     //public void OnHurtBoxHit(IHurtBox hurtBox, HitData data);
 }

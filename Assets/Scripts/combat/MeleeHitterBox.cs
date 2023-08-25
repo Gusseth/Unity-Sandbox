@@ -11,6 +11,7 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
     [SerializeField] LayerMask layerMask;
     [SerializeField] int verticalSubdivisions = 8;  // Works best with powers of 2
     [SerializeField] GameObject spark;
+    HitBoxLayer hitboxLayer;
     public ISet<Collider> alreadyHitColliders { get; private set; }
 
     private float thickness = 0.025f;   // internal var, do not touch
@@ -19,7 +20,7 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
 
     public GameObject Owner => owner;
 
-    public HitBoxLayer HitBoxLayer => Hitter.HitBoxLayer;
+    public HitBoxLayer HitBoxLayer => hitboxLayer;
 
     public void Attack()
     {
@@ -161,5 +162,16 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
             hitData.hitterBox.Hitter.Response(data);
             hitData.hurtBox.HurtResponder.Response(data);
         }
+    }
+
+    public void PreAttack(IHitter hitter)
+    {
+        hitboxLayer = hitter.HitBoxLayer;
+
+    }
+
+    public void PostAttack(IHitter hitter)
+    {
+        alreadyHitColliders.Clear();
     }
 }

@@ -76,4 +76,14 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
             Debug.Log("test");
         }
     }
+
+    public void OnBlock(Block data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnParry(Block data)
+    {
+        throw new System.NotImplementedException();
+    }
 }

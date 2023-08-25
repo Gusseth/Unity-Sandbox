@@ -147,4 +147,14 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
     {
         
     }
+
+    public void PreAttack(IHitter hitter)
+    {
+        
+    }
+
+    public void PostAttack(IHitter hitter)
+    {
+        
+    }
 }

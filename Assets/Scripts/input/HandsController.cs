@@ -124,7 +124,27 @@ public class HandsController : MonoBehaviour
 
     public void OnLeftHand(InputAction.CallbackContext context)
     {
-
+        float3 attackDirection = GetAttackDirection();
+        if (context.started)
+        {
+            if (equipped.EquippableType == EquippableType.weaponMelee)
+            {
+                if (hitter is AbstractMeleeHitter meleeHitter)
+                {
+                    meleeHitter.PreBlock(attackDirection);
+                }
+            }
+        }
+        else if (context.canceled)
+        {
+            if (equipped.EquippableType == EquippableType.weaponMelee)
+            {
+                if (hitter is AbstractMeleeHitter meleeHitter)
+                {
+                    meleeHitter.PostBlock();
+                }
+            }
+        }
     }
 
     public void OnSwitchEquipped(InputAction.CallbackContext context)
