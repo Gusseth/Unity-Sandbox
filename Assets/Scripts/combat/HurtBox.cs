@@ -11,7 +11,7 @@ public class HurtBox : MonoBehaviour, IHurtBox
     public bool Active { get => isActive; }
     public GameObject Owner { get => hurtboxOwner; }
 
-    public IGotHit HurtResponder { get; set; }
+    public IHitResponder HurtResponder { get; set; }
 
     public HitBoxLayer HitBoxLayer => hitBoxLayer;
 

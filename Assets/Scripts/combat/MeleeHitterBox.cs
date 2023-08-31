@@ -67,15 +67,10 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
 
             Root.Debug.DrawPointNormals(new Tuple<float3, float3>(point, hit.normal));
             
-            if (hit.collider.TryGetComponent(out ICheckHitLayer hitLayerObject))
+            if (hit.collider.TryGetComponent(out IHitLayerObject hitLayerObject))
             {
                 // This hitter and the thing that got hit isn't in the same layer!
-                if (!MathHelpers.FlagContains((byte)HitBoxLayer, (byte)hitLayerObject.HitBoxLayer))
-                {
-                    continue;
-                }
-
-                Debug.Log(hit.collider.gameObject.name);
+                if (!MathHelpers.FlagContains((byte)HitBoxLayer, (byte)hitLayerObject.HitBoxLayer)) continue;
 
                 // If it touches another hitterbox (you got blocked lmao)
                 if (hitLayerObject is IBlocker blocker)
@@ -94,7 +89,7 @@ public class MeleeHitterBox : MonoBehaviour, IHitterBox
                     OnBlocked(data);
                     break;
                 }
-                // If it touches a hurtbox (someone gets hurt!)
+                // If it touches a hurtbox (someone gets hurt)
                 else if (hitLayerObject is IHurtBox hurtBox)
                 {
                     if (!hurtBox.Active) continue;

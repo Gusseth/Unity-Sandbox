@@ -13,7 +13,7 @@ public class MagicalBallHitter : MonoBehaviour, IHitter
     public int Damage => damage;
 
     public bool Attacking { get => isAttacking; set => isAttacking = value; }
-    public bool IsDirectional { get => isDirectional; set => isDirectional = value; }
+    public GameObject Owner => gameObject;
 
     public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
@@ -34,11 +34,6 @@ public class MagicalBallHitter : MonoBehaviour, IHitter
     }
 
     public void Response(HitData data)
-    {
-        return;
-    }
-
-    public void UpdateDirectionalIndicator(float3 deltaVelocity, IAttackDirectionalUI indicator)
     {
         return;
     }

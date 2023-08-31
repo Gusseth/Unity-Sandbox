@@ -54,9 +54,9 @@ public class HandsController : MonoBehaviour
 
     private void Update()
     {
-        if (hitter != null && hitter.IsDirectional)
+        if (hitter != null && hitter is IDirectionalHitter directionalHitter)
         {
-            hitter.UpdateDirectionalIndicator(GetAttackDirection(), directionIndicator);
+            directionalHitter.UpdateDirectionalIndicator(GetAttackDirection(), directionIndicator);
         }
     }
 
@@ -165,7 +165,7 @@ public class HandsController : MonoBehaviour
             temp = inventoryController.GetPrevEquipped(RightHand.transform);
         }
         hitter = temp.GetComponent<IHitter>();
-        if (hitter == null || !hitter.IsDirectional)
+        if (hitter == null || hitter is IDirectionalHitter)
         {
             directionIndicator.UpdateTarget(BasicHitDirection.None);
         }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenericHurtBoxResponder : MonoBehaviour, IGotHit
+public class GenericHurtBoxResponder : MonoBehaviour, IHitResponder
 {
     [SerializeField] ActorBase actor;
     List<IHurtBox> hurtBoxes;

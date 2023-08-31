@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class GenericMeleeHitter : MonoBehaviour, IMeleeHitter, IBlocker
+public class GenericMeleeHitter : MonoBehaviour, IHitter, IBlocker
 {
     [SerializeField] bool isAttacking;
     [SerializeField] bool isBlocking;
@@ -110,6 +110,21 @@ public class GenericMeleeHitter : MonoBehaviour, IMeleeHitter, IBlocker
     }
 
     public void OnParry(Block data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnBlocked(Block data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnParried(Block data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnHit(Hit data)
     {
         throw new System.NotImplementedException();
     }
