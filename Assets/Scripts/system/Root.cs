@@ -9,17 +9,40 @@ public class Root : MonoBehaviour
 {
     [SerializeField] static Root root;
     [SerializeField] static DebugInstance debug;
+    [SerializeField] static ConstantsInstance constants;
+    static bool isPaused;
+
     public static Root Instance { get => root; }
     public static DebugInstance Debug { get => debug; }
+    public static ConstantsInstance Constants { get => constants; }
+    public static bool isGamePaused { get => isPaused; }
 
-    public class DebugInstance
+    void OnApplicationPause()
+    {
+        isPaused = true;
+    }
+
+    public class ConstantsInstance
+    {
+        int hitboxMaskIndex;
+        public int HitboxLayerMaskIndex { get => hitboxMaskIndex; }
+
+        public ConstantsInstance() {
+            hitboxMaskIndex = LayerMask.NameToLayer("Hitbox");
+        }
+
+    }
+
+    public sealed class DebugInstance
     {
         ICollection<Tuple<float3, float3>> hit_points_gizmo;
+        ICollection<Tuple<float3, float3>> hit_points_gizmo_temp;
         ICollection<float3> lights;
 
         public DebugInstance()
         {
             hit_points_gizmo = new List<Tuple<float3, float3>>();
+            hit_points_gizmo_temp = new List<Tuple<float3, float3>>();
             lights = new List<float3>();
         }
 
@@ -28,9 +51,17 @@ public class Root : MonoBehaviour
             hit_points_gizmo.AddRange(point_normal_list);
         }
 
-        public void DrawPointNormals(Tuple<float3, float3> point_normal)
+        public void DrawPointNormals(Tuple<float3, float3> point_normal, bool persistent = true)
         {
-            hit_points_gizmo.Add(point_normal);
+            if (persistent)
+                hit_points_gizmo.Add(point_normal);
+            else
+                hit_points_gizmo_temp.Add(point_normal);
+        }
+
+        public void DrawPointNormals(float3 point, float3 normal, bool persistent = true)
+        {
+            DrawPointNormals(new Tuple<float3, float3>(point, normal), persistent);
         }
 
         public void DrawLight(ICollection<float3> position_list)
@@ -43,11 +74,13 @@ public class Root : MonoBehaviour
             lights.Add(lightPosition);
         }
 
-        private void DrawPointAndNormalGizmo(Tuple<float3, float3> pointNormal)
+
+
+        private void DrawPointAndNormalGizmo(Tuple<float3, float3> pointNormal, Color color1, Color color2)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = color1;
             Gizmos.DrawSphere(pointNormal.Item1, 0.025f);
-            Gizmos.color = Color.blue;
+            Gizmos.color = color2;
             Gizmos.DrawRay(pointNormal.Item1, pointNormal.Item2);
         }
 
@@ -61,13 +94,24 @@ public class Root : MonoBehaviour
         {
             foreach (var points in hit_points_gizmo)
             {
-                DrawPointAndNormalGizmo(points);
+                DrawPointAndNormalGizmo(points, Color.red, Color.blue);
+            }
+
+            foreach (var points in hit_points_gizmo_temp)
+            {
+                DrawPointAndNormalGizmo(points, Color.yellow, Color.blue);
+            }
+
+            if (!Root.isPaused)
+            {
+                hit_points_gizmo_temp.Clear();
             }
 
             foreach (var light in lights)
             {
                 DrawLightGizmo(light);
             }
+
         }
 
         public void Clear()
@@ -80,6 +124,7 @@ public class Root : MonoBehaviour
     {
         root = this;
         debug = new DebugInstance();
+        constants = new ConstantsInstance();
     }
 
     // Start is called before the first frame update
