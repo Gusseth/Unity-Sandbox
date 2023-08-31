@@ -7,14 +7,12 @@ public abstract class AbstractHitter : MonoBehaviour, IHitter, IGiveOwnerMetadat
 {
     [SerializeField] protected int damage;
     [SerializeField] protected bool attacking;
-    [SerializeField] protected bool isDirectional;
     [SerializeField] protected HitBoxLayer layer;
     [SerializeField] protected IHitterBox hitterBox;
     [SerializeField] protected GameObject owner;
 
     public virtual int Damage => damage;
     public virtual bool Attacking { get => attacking; set => attacking = value; }
-    public virtual bool IsDirectional { get => isDirectional; set => isDirectional = value; }
     public virtual HitBoxLayer HitBoxLayer => layer;
     public virtual GameObject Owner => owner;
 
@@ -25,7 +23,8 @@ public abstract class AbstractHitter : MonoBehaviour, IHitter, IGiveOwnerMetadat
 
     public virtual bool PreAttack(float3 direction, AbstractActorBase actor)
     {
-        owner = actor.gameObject;
+        if (actor != null)
+            owner = actor.gameObject;
         Attacking = true;
         hitterBox.PreAttack(this);
         return true;
@@ -59,11 +58,6 @@ public abstract class AbstractHitter : MonoBehaviour, IHitter, IGiveOwnerMetadat
     public abstract void OnBlocked(Block data);
     public abstract void OnParried(Block data);
     public abstract void OnHit(Hit data);
-
-    public virtual void UpdateDirectionalIndicator(float3 deltaVelocity, IAttackDirectionalUI indicator)
-    {
-        throw new System.NotImplementedException();
-    }
 
     // Start is called before the first frame update
     protected virtual void Awake()
