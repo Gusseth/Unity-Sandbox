@@ -109,4 +109,6 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
                 return HitBoxFaction.Enemies;
         }
     }
+
+    public override string ToString() => Name;
 }
