@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4732063515761059845}
   - component: {fileID: 9166589196181753699}
   - component: {fileID: -7631297491238783402}
-  - component: {fileID: 3628233028402725924}
+  - component: {fileID: -6157899995577375408}
   - component: {fileID: 2705891912838945515}
   m_Layer: 6
   m_Name: Test Sword
@@ -122,14 +122,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 35
   attacking: 0
-  isDirectional: 0
+  isDirectional: 1
   layer: 1
   owner: {fileID: 0}
   blocking: 0
   parrying: 0
-  parryTime: 2000
+  parryTime: 1000
   lookThreshold: 0.0125
---- !u!114 &3628233028402725924
+--- !u!114 &-6157899995577375408
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,15 +138,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4956219157749515013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18a2b4860fcc8494f98eb7d83ce640d1, type: 3}
+  m_Script: {fileID: 11500000, guid: a863c36c8a3b25f46ab72ec57ecd0b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
-  collider: {fileID: 9166589196181753699}
   layerMask:
     serializedVersion: 2
     m_Bits: 64
+  preventMultipleHits: 1
   verticalSubdivisions: 8
+  boxCollider: {fileID: 9166589196181753699}
   spark: {fileID: 4310323674851973908, guid: 6c528c4175b67e44c9fb047af8cfb129, type: 3}
 --- !u!114 &2705891912838945515
 MonoBehaviour:
