@@ -25,7 +25,9 @@ public class Root : MonoBehaviour
     public class ConstantsInstance
     {
         int hitboxMaskIndex;
+        uint raycastBufferSize = 32;    // Unity's engine limit is 128
         public int HitboxLayerMaskIndex { get => hitboxMaskIndex; }
+        public uint RaycastBufferSize { get => raycastBufferSize; }
 
         public ConstantsInstance() {
             hitboxMaskIndex = LayerMask.NameToLayer("Hitbox");
