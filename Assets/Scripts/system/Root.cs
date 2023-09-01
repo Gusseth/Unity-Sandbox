@@ -10,7 +10,7 @@ public class Root : MonoBehaviour
     [SerializeField] static Root root;
     [SerializeField] static DebugInstance debug;
     [SerializeField] static ConstantsInstance constants;
-    [SerializeReference, SubclassSelector] Difficulty difficulty; 
+    [SerializeReference, SubclassSelector] Difficulty difficulty;
     static bool isPaused;
 
     public static Root Instance { get => root; }
@@ -18,6 +18,13 @@ public class Root : MonoBehaviour
     public static ConstantsInstance Constants { get => constants; }
     public Difficulty Difficulty { get => difficulty; }
     public static bool isGamePaused { get => isPaused; }
+
+    /// <summary>
+    /// Invoked when the difficulty has changed.
+    /// </summary>
+    /// <remarks>You <b>MUST</b> check <b>THEN</b> subscribe in OnEnable, <u>unsubscribe</u> in OnDisable. </remarks>
+    public static event OnDifficultyChange DifficultyChangeEvent;
+    public delegate void OnDifficultyChange(in Difficulty difficulty);
 
     void OnApplicationPause(bool paused)
     {
@@ -123,6 +130,13 @@ public class Root : MonoBehaviour
         }
     }
 
+    public void ChangeDifficulty(Difficulty difficulty)
+    {
+        this.difficulty = difficulty;
+        UnityEngine.Debug.Log($"You are playing in the {difficulty.Name} difficulty.");
+        DifficultyChangeEvent?.Invoke(difficulty);
+    }
+
     void Awake()
     {
         root = this;
@@ -135,7 +149,12 @@ public class Root : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
+    }
+
+    void Ok()
+    {
+        ChangeDifficulty( new Easy() );
     }
 
     // Update is called once per frame

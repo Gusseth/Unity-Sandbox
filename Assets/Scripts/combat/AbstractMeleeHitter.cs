@@ -64,6 +64,22 @@ public abstract class AbstractMeleeHitter : AbstractHitter, IBlocker
 
     }
 
+    protected virtual void OnDifficultyChange(in Difficulty difficulty)
+    {
+        parryTime = difficulty.ParryTime;
+    }
+
+    protected virtual void OnEnable()
+    {
+        parryTime = Root.Instance.Difficulty.ParryTime;
+        Root.DifficultyChangeEvent += OnDifficultyChange;
+    }
+
+    protected virtual void OnDisable()
+    {
+        Root.DifficultyChangeEvent -= OnDifficultyChange;
+    }
+
     protected override void ChooseBlockFunction(Block data)
     {
         if (ReferenceEquals(data.blocker, this))
@@ -118,7 +134,6 @@ public abstract class AbstractMeleeHitter : AbstractHitter, IBlocker
     protected override void Awake()
     {
         base.Awake();
-        parryTime = Root.Instance.Difficulty.ParryTime;
         destroyToken = this.GetCancellationTokenOnDestroy();
     }
 }

@@ -1672,12 +1672,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   difficulty:
-    rid: 3536828770806661120
+    rid: 3536828770806661125
   references:
     version: 2
     RefIds:
-    - rid: 3536828770806661120
-      type: {class: Lunatic, ns: , asm: Assembly-CSharp}
+    - rid: 3536828770806661125
+      type: {class: LunaticOneCC, ns: , asm: Assembly-CSharp}
 --- !u!1 &770583917
 GameObject:
   m_ObjectHideFlags: 0

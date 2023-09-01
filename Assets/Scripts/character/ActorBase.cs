@@ -57,7 +57,8 @@ public class ActorBase : AbstractActorBase
         }
         else if (alive)
         {
-            if (damage > health)
+            if ((instantDeath && damage > 0) || 
+                damage > health)
             {
                 health = 0;
 

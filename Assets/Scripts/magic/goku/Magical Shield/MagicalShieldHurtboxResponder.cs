@@ -93,4 +93,23 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
     {
         Debug.Log($"Parried \"{data.attacker.Hitter.Name}\"");
     }
+
+    void OnDifficultyChange(in Difficulty difficulty)
+    {
+        if (Blocking)
+        {
+            parryTime = difficulty.ParryTime;
+        }
+    }
+
+    void OnEnable()
+    {
+        parryTime = Root.Instance.Difficulty.ParryTime;
+        Root.DifficultyChangeEvent += OnDifficultyChange;
+    }
+
+    void OnDisable()
+    {
+        Root.DifficultyChangeEvent -= OnDifficultyChange;
+    }
 }

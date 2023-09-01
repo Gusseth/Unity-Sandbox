@@ -36,6 +36,7 @@ public abstract class AbstractActorBase : MonoBehaviour, IActor, IHaveHKS, IDama
     [SerializeField] protected float reach = 2;
 
     protected ISet<object> excludables;
+    protected bool instantDeath = false;
 
     public abstract string Name { get; set; }
     public abstract bool Alive { get; set; }

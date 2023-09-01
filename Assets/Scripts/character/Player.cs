@@ -125,4 +125,20 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
             if (!kegare && regenerateKe)
                 AddKe(math.max((int)math.round(harae * haraeMult), 1));
     }
+
+    void OnDifficultyChange(in Difficulty difficulty)
+    {
+        instantDeath = difficulty.InstantDeath;
+    }
+
+    void OnEnable()
+    {
+        instantDeath = Root.Instance.Difficulty.InstantDeath;
+        Root.DifficultyChangeEvent += OnDifficultyChange;
+    }
+
+    void OnDisable()
+    {
+        Root.DifficultyChangeEvent -= OnDifficultyChange;
+    }
 }
