@@ -1,89 +1,107 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Collections;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
 {
-    [SerializeField] GameObject owner;
-    [SerializeField] public AbstractActorBase gokuOwner;
     [SerializeField] SphereCollider actualCollider;
     [SerializeField] LayerMask layerMask;
     [SerializeField] HitBoxLayer hitBoxLayer;
     [SerializeField] float forceStrength = 0;
-
     IHitter hitter;
-    bool hasHit = false;
+    float3 lastPosition;
     HitBoxFaction faction;
     ISet<Collider> alreadyHitColliders; // don't need to clear because this will get destroyed anyways
+    RaycastHit[] hitBuffer;             // We buffer the sweep hits or else we generate garbage for GC to collect
+    float radius;
+    bool hasHit;
 
     public IHitter Hitter { get => hitter; set => hitter = value; }
 
-    public GameObject Owner => owner;
+    public GameObject Owner => Hitter.Owner;
 
     public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
     public void Attack()
     {
-        //float distance = distance_gizmo = size.y;
-        float radius = actualCollider.radius * math.cmax(math.abs(transform.lossyScale));
-        float3 direction = transform.forward;
-        float3 origin = math.transform(transform.localToWorldMatrix, actualCollider.center);
-        //float3 halfExtents = size_gizmo = size / 2;
+        float3 origin;
+        int nHits;
+        SweepHitterBox(out origin, out nHits);
 
-        RaycastHit[] hits = Physics.SphereCastAll(origin, radius, direction, 0, layerMask);
-
-        ProcessHits(hits, origin);
+        // Refactor later for flexibility. This only calls ProcessHits if we actually hit something else other than ourselves.
+        if (nHits > 1)
+        {
+            //Array.Sort(hits, Algorithms.RaycastHitDistanceComparer);
+            Algorithms.SortArray(ref hitBuffer, 0, nHits, Algorithms.RaycastHitDistanceComparer);
+            ProcessHits(origin, nHits);
+        }
     }
 
-    private void ProcessHits(RaycastHit[] hits, float3 origin)
+    private void SweepHitterBox(out float3 origin, out int nHits)
     {
-        foreach (RaycastHit hit in hits)
+        origin = lastPosition;
+        float3 newPos = transform.position;
+        float3 direction = newPos - origin;
+        float length = math.length(direction);
+
+        nHits = Physics.SphereCastNonAlloc(origin, radius, math.normalize(direction), hitBuffer, length, layerMask);
+        lastPosition = newPos;
+    }
+
+    private void ProcessHits(float3 origin, in int nHits)
+    {
+        for (int i = 0; i < nHits; i++)
         {
+            RaycastHit hit = hitBuffer[i];
             // We're detecting ourselves lol
             if (hit.collider == actualCollider) continue;
             if (alreadyHitColliders.Contains(hit.collider)) continue;
 
+            alreadyHitColliders.Add(hit.collider);
+
             // I fucking hate Unity for making colliders that overlap in the first
             // sweep return a hit.point of (0, 0, 0) and a hit.normal of -direction.
-            float3 point = hit.collider.ClosestPoint(origin);
-            float3 normal = new float3(origin - point);
-            normal = math.normalize(normal);
+            float3 point = hit.point;
+            float3 normal = hit.normal;
+
+            if (hit.point.Equals(float3.zero))
+            {
+                point = hit.collider.ClosestPoint(origin);
+                normal = math.normalize(new float3(origin - point));
+            }
 
             Root.Debug.DrawPointNormals(new Tuple<float3, float3>(point, normal));
 
-            if (hit.collider.TryGetComponent(out ICheckHitLayer hitLayerObject))
+            if (hit.collider.TryGetComponent(out IHitLayerObject hitLayerObject))
             {
                 if (!MathHelpers.FlagContains((byte)HitBoxLayer, (byte)hitLayerObject.HitBoxLayer))
                     continue;
+                if (Hitter.Actor != null && hitLayerObject.Owner == Hitter.Actor.gameObject) continue;
 
-                if (hitLayerObject is IHurtBox hurtBox)
+                if (hitLayerObject is IBlocker blocker && blocker.Blocking)
+                {
+                    hasHit = true;
+                    Block data = new(point, normal, 0, this, blocker);
+                    OnBlockerHit(blocker, data);
+                    break;
+                }
+                else if (hitLayerObject is IHurtBox hurtBox)
                 {
                     if (!hurtBox.Active) continue;
-                    if (gokuOwner != null && hurtBox.Owner == gokuOwner.gameObject) continue;
 
-                    HitData data = new Hit(
-                        Hitter.Damage,
-                        point,
-                        normal,
-                        hurtBox,
-                        this
-                        );
-
+                    Hit data = new(point, normal, this, hurtBox);
 
                     OnHurtBoxHit(hurtBox, data);
                     hasHit = true;
                 }
-                else if (hitLayerObject is IBlocker blocker && blocker.Blocking)
-                {
-                    hasHit = true;
-                    Block data = new(Hitter.Damage, point, normal, blocker.Parry, 0, this, blocker);
-                    OnBlockerHit(blocker, data);
-                    break;
-                }
+
             }
-            if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Hitbox"))
+            if (hit.collider.gameObject.layer != Root.Constants.HitboxLayerMaskIndex)
             {
                 if (hit.collider.TryGetComponent(out Rigidbody rb))
                 {
@@ -121,40 +139,29 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
         }
     }
 
-    public void UpdateValues(AbstractActorBase actor)
+    public void PreAttack(IHitter hitter)
     {
-        if (actor != null)
-        {
-            gokuOwner = actor;
-            faction = AbstractActorBase.ActorToHitBoxFaction(actor.ActorFaction);
-        }
+        lastPosition = transform.position;
+        radius = actualCollider.radius * math.cmax(math.abs(transform.lossyScale));
         faction = HitBoxFaction.Neutral;
-    }
-
-    // Start is called before the first frame update
-    void Awake()
-    {
+        if (hitter.Actor != null)
+        {
+            faction = AbstractActorBase.ActorToHitBoxFaction(hitter.Actor.ActorFaction);
+        }
         alreadyHitColliders = new HashSet<Collider>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PreAttack(IHitter hitter, AbstractActorBase actor)
     {
-        
-    }
-
-    void OnDrawGizmos()
-    {
-        
-    }
-
-    public void PreAttack(IHitter hitter)
-    {
-        
     }
 
     public void PostAttack(IHitter hitter)
     {
         
+    }
+
+    void Awake()
+    {
+        hitBuffer = new RaycastHit[Root.Constants.RaycastBufferSize];
     }
 }

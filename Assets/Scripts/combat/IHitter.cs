@@ -191,7 +191,7 @@ public interface IBlocker : IGiveOwnerMetadata, IHitCheck, IHitResponse, IHitLay
     /// <summary>
     /// Called immediately after the hitter receives a request to block
     /// </summary>
-    public void PreBlock(float3 direction);
+    public void PreBlock(float3 direction, AbstractActorBase actor);
     /// <summary>
     /// Called after the hitter returns to non-blocking state
     /// </summary>
@@ -222,6 +222,10 @@ public interface IHitter : IHitCheck, IHitResponse, IHitLayerObject, IGiveOwnerM
     /// Returns true if the hitter is in the attacking state
     /// </summary>
     public bool Attacking { get; set; }
+    /// <summary>
+    /// The actor associated with this hitter
+    /// </summary>
+    public AbstractActorBase Actor { get; }
     /// <summary>
     /// Called immediately after the hitter receives a request to attack
     /// </summary>
@@ -290,11 +294,13 @@ public interface IHurtBox : IHitCheck, IGiveOwnerMetadata, IHitLayerObject
 public interface IGiveOwnerMetadata
 {
     /// <summary>
-    /// The root entity of this hurtbox
+    /// The GameObject that created/is linked to this HitBox object (the one that implements AbstractActorBase)
     /// </summary>
+    /// <remarks>This is null if the caster does not implement AbstractActorBase.</remarks>
     public GameObject Owner { get; }
     /// <summary>
     /// The hurtbox's transform component
     /// </summary>
     public Transform transform { get; } // blame unity naming scheme
+    public GameObject gameObject { get; }
 }

@@ -11,18 +11,20 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
     [SerializeField] bool parrying;
     [SerializeField] HitBoxLayer hitBoxLayer;
     [SerializeField] int parryTime = 1000;
+    [SerializeField] AbstractActorBase gokuOwner;
     CancellationToken token;
+    
     public bool Blocking { get => blocking; set => SetBlock(value); }
     public bool Parry { get => parrying; set => parrying = value; }
 
-    public GameObject Owner => transform.parent.gameObject;
+    public GameObject Owner => gokuOwner ? gokuOwner.gameObject : null;
 
     public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
     void SetBlock(bool value)
     {
         if (value)
-            PreBlock(MathHelpers.NaN3);
+            PreBlock(MathHelpers.NaN3, gokuOwner);
         else
         {
             PostBlock();
@@ -40,10 +42,11 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
         blocking = false;
     }
 
-    public void PreBlock(float3 direction)
+    public void PreBlock(float3 direction, AbstractActorBase actor)
     {
         blocking = true;
         parrying = true;
+        gokuOwner = actor;
         TimeHelpers.InvokeAsync(ParryingTimeout, parryTime, token);
     }
 
@@ -73,17 +76,20 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
     {
         if (data is Block block)
         {
-            Debug.Log("test");
+            if (block.parry)
+                OnParry(block);
+            else
+                OnBlock(block);
         }
     }
 
     public void OnBlock(Block data)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"Blocked {data.attacker.Hitter.gameObject}");
     }
 
     public void OnParry(Block data)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"Parried {data.attacker.Hitter.gameObject}");
     }
 }

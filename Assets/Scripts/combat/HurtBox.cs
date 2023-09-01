@@ -19,7 +19,7 @@ public class HurtBox : MonoBehaviour, IHurtBox
     {
         if (HurtResponder == null)
             Debug.Log("No responder");
-        return true;
+        return HurtResponder.CheckHit(data);
     }
 
     // Start is called before the first frame update

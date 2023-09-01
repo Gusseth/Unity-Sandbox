@@ -39,9 +39,10 @@ public abstract class AbstractMeleeHitter : AbstractHitter, IBlocker
         OnBlock(data);
     }
 
-    public virtual void PreBlock(float3 direction)
+    public virtual void PreBlock(float3 direction, AbstractActorBase actor)
     {
         Debug.Log("Started blocking");
+        user = actor;
         blocking = parrying = true;
         DisposeToken();
         token = CancellationTokenSource.CreateLinkedTokenSource(destroyToken);
@@ -69,16 +70,16 @@ public abstract class AbstractMeleeHitter : AbstractHitter, IBlocker
         {
             // If we are the one who blocked
             if (data.parry)
-                OnBlock(data);
-            else
                 OnParry(data);
+            else
+                OnBlock(data);
         }
         else
         {
             if (data.parry)
-                OnBlocked(data);
-            else
                 OnParried(data);
+            else
+                OnBlocked(data);
         }
     }
 

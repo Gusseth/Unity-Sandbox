@@ -9,12 +9,13 @@ public abstract class AbstractHitter : MonoBehaviour, IHitter, IGiveOwnerMetadat
     [SerializeField] protected bool attacking;
     [SerializeField] protected HitBoxLayer layer;
     [SerializeField] protected IHitterBox hitterBox;
-    [SerializeField] protected GameObject owner;
+    [SerializeField] protected AbstractActorBase user;
 
     public virtual int Damage => damage;
     public virtual bool Attacking { get => attacking; set => attacking = value; }
     public virtual HitBoxLayer HitBoxLayer => layer;
-    public virtual GameObject Owner => owner;
+    public virtual GameObject Owner => user ? user.gameObject : null;
+    public virtual AbstractActorBase Actor => user;
 
     public virtual bool CheckHit(HitData data)
     {
@@ -23,8 +24,7 @@ public abstract class AbstractHitter : MonoBehaviour, IHitter, IGiveOwnerMetadat
 
     public virtual bool PreAttack(float3 direction, AbstractActorBase actor)
     {
-        if (actor != null)
-            owner = actor.gameObject;
+        user = actor;
         Attacking = true;
         hitterBox.PreAttack(this);
         return true;

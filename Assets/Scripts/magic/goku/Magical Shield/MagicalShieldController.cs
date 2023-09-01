@@ -36,7 +36,7 @@ public class MagicalShieldController : AbstractHoldableMagicController
         bool x = base.OnCast(data);
         if (owner != null)
             owner.AddExcludable(singleton);
-        hurtBox.PreBlock(MathHelpers.NaN3);
+        hurtBox.PreBlock(MathHelpers.NaN3, data.ownerActor);
         return x;
     }
 

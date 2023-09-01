@@ -131,7 +131,7 @@ public class HandsController : MonoBehaviour
             {
                 if (hitter is AbstractMeleeHitter meleeHitter)
                 {
-                    meleeHitter.PreBlock(attackDirection);
+                    meleeHitter.PreBlock(attackDirection, actor);
                 }
             }
         }

@@ -10,12 +10,14 @@ public class MagicalBallHitter : MonoBehaviour, IHitter
     [SerializeField] bool isDirectional = false;
     [SerializeField] MagicalBallHitterBox hitterBox;
     [SerializeField] HitBoxLayer hitBoxLayer;
+    [SerializeField] AbstractActorBase gokuOwner;
+
     public int Damage => damage;
 
     public bool Attacking { get => isAttacking; set => isAttacking = value; }
-    public GameObject Owner => gameObject;
-
+    public GameObject Owner => gokuOwner ? gokuOwner.gameObject : gameObject;
     public HitBoxLayer HitBoxLayer => hitBoxLayer;
+    public AbstractActorBase Actor => gokuOwner;
 
     public bool CheckHit(HitData data)
     {
@@ -29,7 +31,8 @@ public class MagicalBallHitter : MonoBehaviour, IHitter
 
     public bool PreAttack(float3 direction, AbstractActorBase actor)
     {
-        hitterBox.UpdateValues(actor);
+        gokuOwner = actor;
+        hitterBox.PreAttack(this);
         return true;
     }
 
