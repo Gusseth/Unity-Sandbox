@@ -54,9 +54,9 @@ public class HandsController : MonoBehaviour
 
     private void Update()
     {
-        if (hitter != null && hitter.IsDirectional)
+        if (hitter != null && hitter is IDirectionalHitter directionalHitter)
         {
-            hitter.UpdateDirectionalIndicator(GetAttackDirection(), directionIndicator);
+            directionalHitter.UpdateDirectionalIndicator(GetAttackDirection(), directionIndicator);
         }
     }
 
@@ -101,6 +101,7 @@ public class HandsController : MonoBehaviour
         {
             owner = actor.gameObject,
             ownerActor = actor,
+            castable = noritoController.CurrentEquipped as ICastable,
 
             point = hit.point,
             distance = hit.distance,
@@ -124,7 +125,27 @@ public class HandsController : MonoBehaviour
 
     public void OnLeftHand(InputAction.CallbackContext context)
     {
-
+        float3 attackDirection = GetAttackDirection();
+        if (context.started)
+        {
+            if (equipped.EquippableType == EquippableType.weaponMelee)
+            {
+                if (hitter is AbstractMeleeHitter meleeHitter)
+                {
+                    meleeHitter.PreBlock(attackDirection, actor);
+                }
+            }
+        }
+        else if (context.canceled)
+        {
+            if (equipped.EquippableType == EquippableType.weaponMelee)
+            {
+                if (hitter is AbstractMeleeHitter meleeHitter)
+                {
+                    meleeHitter.PostBlock();
+                }
+            }
+        }
     }
 
     public void OnSwitchEquipped(InputAction.CallbackContext context)
@@ -145,7 +166,7 @@ public class HandsController : MonoBehaviour
             temp = inventoryController.GetPrevEquipped(RightHand.transform);
         }
         hitter = temp.GetComponent<IHitter>();
-        if (hitter == null || !hitter.IsDirectional)
+        if (hitter == null || hitter is IDirectionalHitter)
         {
             directionIndicator.UpdateTarget(BasicHitDirection.None);
         }

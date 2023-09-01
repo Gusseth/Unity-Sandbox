@@ -33,6 +33,7 @@ public class DummyCaster : MonoBehaviour
         {
             origin = transform,
             owner = gameObject,
+            castable = inventoryController.CurrentEquipped as ICastable,
 
             speed = castableSpeed,
             direction = transform.forward

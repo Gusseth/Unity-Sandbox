@@ -68,8 +68,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blocking: 0
   parrying: 0
-  hitBoxLayer: 2
-  parryTime: 1000
+  parryTime: 450
+  layer: 2
+  user: {fileID: 0}
+  shieldCollider: {fileID: 7917579927712280719}
 --- !u!1 &4648921838101146168
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1257791468040692980}
   - component: {fileID: 4629886861958289374}
   - component: {fileID: -7341430013551631519}
-  - component: {fileID: 182464381002892810}
+  - component: {fileID: 1943731175688009406}
   m_Layer: 6
   m_Name: Glowing Ball
   m_TagString: Magical Projectile
@@ -136,9 +136,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  isAttacking: 1
-  isDirectional: 0
-  hitterBox: {fileID: 1257791468040692980}
+  attacking: 0
+  layer: 2
+  user: {fileID: 0}
 --- !u!114 &1257791468040692980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,13 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd435d7f9c1114479074f17e962eeed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 1269550995656528655}
-  gokuOwner: {fileID: 0}
-  actualCollider: {fileID: 4629886861958289374}
   layerMask:
     serializedVersion: 2
     m_Bits: 65
-  hitBoxLayer: 2
+  preventMultipleHits: 0
+  actualCollider: {fileID: 4629886861958289374}
   forceStrength: 1
 --- !u!135 &4629886861958289374
 SphereCollider:
@@ -193,7 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equippableType: 1
---- !u!54 &182464381002892810
+--- !u!54 &1943731175688009406
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -201,7 +199,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269550995656528655}
   serializedVersion: 4
-  m_Mass: 0.0000001
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -218,7 +216,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &4181739090078968283
 GameObject:

@@ -11,7 +11,7 @@ public class HurtBox : MonoBehaviour, IHurtBox
     public bool Active { get => isActive; }
     public GameObject Owner { get => hurtboxOwner; }
 
-    public IGotHit HurtResponder { get; set; }
+    public IHitResponder HurtResponder { get; set; }
 
     public HitBoxLayer HitBoxLayer => hitBoxLayer;
 
@@ -19,7 +19,7 @@ public class HurtBox : MonoBehaviour, IHurtBox
     {
         if (HurtResponder == null)
             Debug.Log("No responder");
-        return true;
+        return HurtResponder.CheckHit(data);
     }
 
     // Start is called before the first frame update

@@ -2,18 +2,26 @@ using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public interface IMagicController
 {
     public int KeCost { get; }
     public int Timeout { get; }
     public GameObject gameObject { get; }   // expose Unity's MonoBehaviour.gameObject
+    public string Name { get; }
     protected internal IMagicController Singleton { get; set; }
-    public void Init();
 
     /// <summary>
-    /// Controls how the a new isntance of this spell is casted. This is called in place of Instantiate() in the casting code.
+    /// Initializes a new instance of this class.
+    /// </summary>
+    /// <remarks>
+    /// This is called from the instantiated GameObject. Do whatever you wish.
+    /// </remarks>
+    /// <param name="data">Data concerning who, what, where, and how this spell is casted</param>
+    public void Init(CastingData data);
+
+    /// <summary>
+    /// Controls how the a new instance of this spell is casted. This is called in place of Instantiate() in the casting code.
     /// </summary>
     /// <remarks>
     /// This is called from the <u>singleton</u> (script in the prefab). Do not assume that this is run through any arbitrary instance!
@@ -72,12 +80,16 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
     [SerializeField] int keCost;
     [SerializeField] int timeoutInMilliseconds;
     protected IMagicController singleton;
+    [SerializeField] protected ICastable castable;
 
     public int KeCost => keCost;
     public int Timeout => timeoutInMilliseconds;
     IMagicController IMagicController.Singleton { get => singleton; set => singleton = value; }
+    public string Name => castable?.Name ?? gameObject.name; 
 
-    public virtual void Init() { }
+    public virtual void Init(CastingData data) {
+        castable = data.castable;
+    }
 
     public virtual IMagicController Instantiate(CastingData data)
     {
@@ -124,7 +136,7 @@ public abstract class AbstractMagicController : MonoBehaviour, IMagicController
     protected virtual void PostInstantiate(IMagicController instance, CastingData data)
     {
         instance.Singleton = this;
-        instance.Init();
+        instance.Init(data);
     }
 }
 

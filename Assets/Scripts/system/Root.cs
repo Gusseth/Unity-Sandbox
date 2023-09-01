@@ -9,17 +9,50 @@ public class Root : MonoBehaviour
 {
     [SerializeField] static Root root;
     [SerializeField] static DebugInstance debug;
+    [SerializeField] static ConstantsInstance constants;
+    [SerializeReference, SubclassSelector] Difficulty difficulty;
+    static bool isPaused;
+
     public static Root Instance { get => root; }
     public static DebugInstance Debug { get => debug; }
+    public static ConstantsInstance Constants { get => constants; }
+    public Difficulty Difficulty { get => difficulty; }
+    public static bool isGamePaused { get => isPaused; }
 
-    public class DebugInstance
+    /// <summary>
+    /// Invoked when the difficulty has changed.
+    /// </summary>
+    /// <remarks>You <b>MUST</b> check <b>THEN</b> subscribe in OnEnable, <u>unsubscribe</u> in OnDisable. </remarks>
+    public static event OnDifficultyChange DifficultyChangeEvent;
+    public delegate void OnDifficultyChange(in Difficulty difficulty);
+
+    void OnApplicationPause(bool paused)
+    {
+        isPaused = paused;
+    }
+
+    public class ConstantsInstance
+    {
+        int hitboxMaskIndex;
+        uint raycastBufferSize = 32;    // Unity's engine limit is 128
+        public int HitboxLayerMaskIndex { get => hitboxMaskIndex; }
+        public uint RaycastBufferSize { get => raycastBufferSize; }
+
+        public ConstantsInstance() {
+            hitboxMaskIndex = LayerMask.NameToLayer("Hitbox");
+        }
+    }
+
+    public sealed class DebugInstance
     {
         ICollection<Tuple<float3, float3>> hit_points_gizmo;
+        ICollection<Tuple<float3, float3>> hit_points_gizmo_temp;
         ICollection<float3> lights;
 
         public DebugInstance()
         {
             hit_points_gizmo = new List<Tuple<float3, float3>>();
+            hit_points_gizmo_temp = new List<Tuple<float3, float3>>();
             lights = new List<float3>();
         }
 
@@ -28,9 +61,17 @@ public class Root : MonoBehaviour
             hit_points_gizmo.AddRange(point_normal_list);
         }
 
-        public void DrawPointNormals(Tuple<float3, float3> point_normal)
+        public void DrawPointNormals(Tuple<float3, float3> point_normal, bool persistent = true)
         {
-            hit_points_gizmo.Add(point_normal);
+            if (persistent)
+                hit_points_gizmo.Add(point_normal);
+            else
+                hit_points_gizmo_temp.Add(point_normal);
+        }
+
+        public void DrawPointNormals(float3 point, float3 normal, bool persistent = true)
+        {
+            DrawPointNormals(new Tuple<float3, float3>(point, normal), persistent);
         }
 
         public void DrawLight(ICollection<float3> position_list)
@@ -43,11 +84,13 @@ public class Root : MonoBehaviour
             lights.Add(lightPosition);
         }
 
-        private void DrawPointAndNormalGizmo(Tuple<float3, float3> pointNormal)
+
+
+        private void DrawPointAndNormalGizmo(Tuple<float3, float3> pointNormal, Color color1, Color color2)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = color1;
             Gizmos.DrawSphere(pointNormal.Item1, 0.025f);
-            Gizmos.color = Color.blue;
+            Gizmos.color = color2;
             Gizmos.DrawRay(pointNormal.Item1, pointNormal.Item2);
         }
 
@@ -61,13 +104,24 @@ public class Root : MonoBehaviour
         {
             foreach (var points in hit_points_gizmo)
             {
-                DrawPointAndNormalGizmo(points);
+                DrawPointAndNormalGizmo(points, Color.red, Color.blue);
+            }
+
+            foreach (var points in hit_points_gizmo_temp)
+            {
+                DrawPointAndNormalGizmo(points, Color.yellow, Color.blue);
+            }
+
+            if (!Root.isPaused)
+            {
+                hit_points_gizmo_temp.Clear();
             }
 
             foreach (var light in lights)
             {
                 DrawLightGizmo(light);
             }
+
         }
 
         public void Clear()
@@ -76,16 +130,31 @@ public class Root : MonoBehaviour
         }
     }
 
+    public void ChangeDifficulty(Difficulty difficulty)
+    {
+        this.difficulty = difficulty;
+        UnityEngine.Debug.Log($"You are playing in the {difficulty.Name} difficulty.");
+        DifficultyChangeEvent?.Invoke(difficulty);
+    }
+
     void Awake()
     {
         root = this;
         debug = new DebugInstance();
+        constants = new ConstantsInstance();
+        difficulty ??= new Normal();
+        UnityEngine.Debug.Log($"You are playing in the {difficulty.Name} difficulty.");
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
+    }
+
+    void Ok()
+    {
+        ChangeDifficulty( new Easy() );
     }
 
     // Update is called once per frame

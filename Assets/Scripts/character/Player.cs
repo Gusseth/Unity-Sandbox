@@ -29,6 +29,45 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
         Factions.Add(faction);
     }
 
+    public override void AddDamage(HitData data)
+    {
+        int damage = data.damage;
+
+        if (invulnerable)
+        {
+
+        }
+        else if (alive)
+        {
+            if (damage >= health ||
+                Kegare ||
+                (instantDeath && damage > 0))
+            {
+                health = 0;
+
+                IActor killer = null;
+                if (data.aggressor != null)
+                    data.aggressor.GetComponent<IActor>();
+
+                DeathData deathData = new DeathData
+                {
+                    deathMessage = "died",
+                    victim = this,
+                    killer = killer,
+                    hitData = data
+                };
+
+                OnDeath(deathData);
+            }
+            else
+            {
+                health = math.min(health - damage, maxHealth);
+            }
+        }
+
+        UpdateHKSBars();
+    }
+
     public override void AddKe(int ke, bool showDecrease = true, bool bypassKegare = false)
     {
         if (ke >= 0)
@@ -100,7 +139,7 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
             Debug.Log("Your soul has been purified.");
             kegareStack = 0;
             haraeMult = actualHarae;
-        } 
+        }
         else
         {
             Debug.Log("Your soul still remains weak but your will lets you fight.");
@@ -124,5 +163,26 @@ public class Player : ActorBase, IKegareAbleActor, IFactionable, IHaveInventory
         if (Time.frameCount % regenFrameInterval == 0)
             if (!kegare && regenerateKe)
                 AddKe(math.max((int)math.round(harae * haraeMult), 1));
+    }
+
+    void OnDifficultyChange(in Difficulty difficulty)
+    {
+        instantDeath = difficulty.InstantDeath;
+        kegareTimeout = difficulty.KegareTimeout;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        Difficulty difficulty = Root.Instance.Difficulty;
+        instantDeath = difficulty.InstantDeath;
+        kegareTimeout = difficulty.KegareTimeout;
+        Root.DifficultyChangeEvent += OnDifficultyChange;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        Root.DifficultyChangeEvent -= OnDifficultyChange;
     }
 }

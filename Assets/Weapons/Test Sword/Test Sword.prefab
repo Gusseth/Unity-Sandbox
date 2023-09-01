@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1107436354253850923}
   - component: {fileID: 4732063515761059845}
   - component: {fileID: 9166589196181753699}
-  - component: {fileID: 698734080219227999}
-  - component: {fileID: 3628233028402725924}
+  - component: {fileID: -7631297491238783402}
+  - component: {fileID: -6157899995577375408}
   - component: {fileID: 2705891912838945515}
   m_Layer: 6
   m_Name: Test Sword
@@ -108,7 +108,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &698734080219227999
+--- !u!114 &-7631297491238783402
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,18 +117,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4956219157749515013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5b8f40f1d6ebd478a1c6845eb1b15f, type: 3}
+  m_Script: {fileID: 11500000, guid: da5e5df7fab18ae41b19e81eb0729535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAttacking: 1
-  isBlocking: 0
-  isParrying: 0
+  damage: 35
+  attacking: 0
   isDirectional: 1
-  rawDamage: 35
-  hitterBox: {fileID: 3628233028402725924}
+  layer: 1
+  owner: {fileID: 0}
+  blocking: 0
+  parrying: 0
+  parryTime: 1000
   lookThreshold: 0.0125
-  testMode: 0
---- !u!114 &3628233028402725924
+--- !u!114 &-6157899995577375408
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,17 +138,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 4956219157749515013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18a2b4860fcc8494f98eb7d83ce640d1, type: 3}
+  m_Script: {fileID: 11500000, guid: a863c36c8a3b25f46ab72ec57ecd0b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
-  collider: {fileID: 9166589196181753699}
   layerMask:
     serializedVersion: 2
     m_Bits: 64
+  preventMultipleHits: 1
   verticalSubdivisions: 8
+  boxCollider: {fileID: 9166589196181753699}
   spark: {fileID: 4310323674851973908, guid: 6c528c4175b67e44c9fb047af8cfb129, type: 3}
-  allowMultipleHits: 0
 --- !u!114 &2705891912838945515
 MonoBehaviour:
   m_ObjectHideFlags: 0

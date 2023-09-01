@@ -1154,7 +1154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &515970288
@@ -1375,7 +1375,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc8225ff5d989246953054572790992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  iframesLength: 500
+  actor: {fileID: 656438744}
 --- !u!23 &656438741
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1670,6 +1671,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a89f3cdd870386946b94dc5916ea6adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  difficulty:
+    rid: 3536828770806661125
+  references:
+    version: 2
+    RefIds:
+    - rid: 3536828770806661125
+      type: {class: LunaticOneCC, ns: , asm: Assembly-CSharp}
 --- !u!1 &770583917
 GameObject:
   m_ObjectHideFlags: 0
@@ -2387,12 +2395,12 @@ PrefabInstance:
     - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.75
+      value: -14.5
       objectReference: {fileID: 0}
     - target: {fileID: 3835336597893927234, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
         type: 3}
@@ -2433,6 +2441,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Magical Shield
+      objectReference: {fileID: 0}
+    - target: {fileID: 5507420149959844084, guid: d3ad19bc0b7ab7740bb841fb8a6f4693,
+        type: 3}
+      propertyPath: blocking
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2740,8 +2753,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1124450671}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -11.03}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 1.5, z: -16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2751,7 +2764,7 @@ Transform:
   - {fileID: 1280358085}
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!136 &1124450673
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3128,12 +3141,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equippedHotbar:
+  - rid: 4372000723353993216
   - rid: 4372000348050030592
   - rid: 4372000348050030593
   - rid: 4372000348050030597
   - rid: 4372000348050030613
   - rid: 4372000697533333505
-  - rid: 4372000723353993216
   - rid: 4372000743709474816
   i: 0
   inventory:
@@ -3478,7 +3491,8 @@ MonoBehaviour:
         - rid: 4372000743709474818
         current:
           rid: -2
-        worldModelPrefab: {fileID: 0}
+        worldModelPrefab: {fileID: 206542582376986133, guid: 4e907f2827454b140b9bc08f5262c495,
+          type: 3}
         totalKeCost: 0
         initialDelay: 0
         endDelay: 0
@@ -3542,6 +3556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc8225ff5d989246953054572790992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iframesLength: 500
   actor: {fileID: 1124450684}
 --- !u!1 &1192605370
 GameObject:
@@ -3670,8 +3685,9 @@ GameObject:
   - component: {fileID: 1247619272}
   - component: {fileID: 1247619271}
   - component: {fileID: 1247619270}
+  - component: {fileID: 1247619275}
+  - component: {fileID: 1247619274}
   - component: {fileID: 1247619269}
-  - component: {fileID: 1247619268}
   m_Layer: 6
   m_Name: Sword that hurts you
   m_TagString: Untagged
@@ -3679,28 +3695,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1247619268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1247619267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5b8f40f1d6ebd478a1c6845eb1b15f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isAttacking: 1
-  isBlocking: 0
-  isParrying: 0
-  isDirectional: 1
-  rawDamage: 500
-  owner: {fileID: 0}
-  hitterBox: {fileID: 1247619269}
-  lookThreshold: 0.7853982
-  testMode: 1
-  hitBoxLayer: 1
 --- !u!114 &1247619269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3713,7 +3707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a2b4860fcc8494f98eb7d83ce640d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 656438739}
+  owner: {fileID: 1247619267}
   collider: {fileID: 1247619270}
   layerMask:
     serializedVersion: 2
@@ -3806,6 +3800,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: -55.166, y: 90, z: 0}
+--- !u!114 &1247619274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247619267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5e5df7fab18ae41b19e81eb0729535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 500
+  attacking: 0
+  layer: 1
+  user: {fileID: 0}
+  blocking: 0
+  parrying: 0
+  parryTime: 0
+  lookThreshold: 0.0125
+--- !u!114 &1247619275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247619267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64bbeb6eb0e6f2c4486b1b3ebd98efa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1269566354
 GameObject:
   m_ObjectHideFlags: 0
@@ -4539,7 +4565,7 @@ GameObject:
   - component: {fileID: 1501483128}
   - component: {fileID: 1501483127}
   - component: {fileID: 1501483126}
-  - component: {fileID: 1501483124}
+  - component: {fileID: 1501483129}
   - component: {fileID: 1501483125}
   m_Layer: 6
   m_Name: Fake Sword
@@ -4563,28 +4589,6 @@ Transform:
   m_Father: {fileID: 656438743}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -55.166, y: 0, z: 0}
---- !u!114 &1501483124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1501483122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5b8f40f1d6ebd478a1c6845eb1b15f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isAttacking: 0
-  isBlocking: 1
-  isParrying: 0
-  isDirectional: 1
-  rawDamage: 0
-  owner: {fileID: 0}
-  hitterBox: {fileID: 1501483125}
-  lookThreshold: 0.7853982
-  testMode: 0
-  hitBoxLayer: 1
 --- !u!114 &1501483125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4675,6 +4679,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1501483122}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1501483129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501483122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5e5df7fab18ae41b19e81eb0729535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
+  attacking: 0
+  layer: 1
+  user: {fileID: 0}
+  blocking: 1
+  parrying: 0
+  parryTime: 0
+  lookThreshold: 0.0125
 --- !u!1 &1617483403
 GameObject:
   m_ObjectHideFlags: 0
@@ -4790,7 +4814,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc8225ff5d989246953054572790992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  iframesLength: 1000
+  actor: {fileID: 1625550457}
 --- !u!23 &1625550454
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5389,7 +5414,7 @@ MonoBehaviour:
           type: 3}
         worldModel: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
           type: 3}
-        gokuName: 
+        gokuName: Glowing Ball Lmao
         gokuDescription: 
         keCost: 0
         initialDelay: 0
@@ -5407,7 +5432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delayInMilliseconds: 1000
-  castableSpeed: 5
+  castableSpeed: 50
   rotateCastablesAfterCast: 0
 --- !u!4 &1747251306
 Transform:

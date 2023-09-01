@@ -96,7 +96,7 @@ public class Goku : GokuBase
         {
             GameObject casted = UnityEngine.Object.Instantiate(prefab);
             IMagicController magicController = casted.GetComponent<IMagicController>();
-            magicController.Init();
+            magicController.Init(castData);
             return magicController.OnCast(castData);
         }
         return false;
@@ -104,7 +104,7 @@ public class Goku : GokuBase
 
     public override async UniTask<bool> OnCastStart(CastingData castData, ICastable parent, CancellationToken token)
     {
-        Debug.Log(Name);
+        //Debug.Log(Name);
         castStartCalled = true;
         return prefabMagicController.OnCastStart(castData);
     }
@@ -158,12 +158,15 @@ public class GokuHoldable : GokuBase, ICastableHoldable
         {
             casting = true;
             await UniTask.Delay(InitialDelay, cancellationToken: token);
-            if (prefabMagicController.CheckRequirements(castData) && !token.IsCancellationRequested && parent.Casting)
+            if (!token.IsCancellationRequested && prefabMagicController.CheckRequirements(castData))
             {
-                magicController = prefabMagicController.Instantiate(castData);
-                if (magicController.OnCast(castData))
+                if (parent == null || (parent != null && parent.Casting))
                 {
-                    return true;
+                    magicController = prefabMagicController.Instantiate(castData);
+                    if (magicController.OnCast(castData))
+                    {
+                        return true;
+                    }
                 }
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Localization;
 
 /// <summary>
 /// Basic implementation of AbstractActorBase
@@ -40,6 +41,7 @@ public class ActorBase : AbstractActorBase
 
     [DoNotSerialize]
     private UIBarScript barHealth;
+    private IList<object> death_generic_arguments;
 
     protected override void AddDamage(int damage)
     {
@@ -57,7 +59,8 @@ public class ActorBase : AbstractActorBase
         }
         else if (alive)
         {
-            if (damage > health)
+            if (damage >= health ||
+                (instantDeath && damage > 0))
             {
                 health = 0;
 
@@ -129,5 +132,15 @@ public class ActorBase : AbstractActorBase
         {
             barHealth.UpdateTarget(health, maxHealth);
         }
+    }
+
+    protected virtual void OnEnable()
+    {
+
+    }
+
+    protected virtual void OnDisable()
+    {
+        
     }
 }

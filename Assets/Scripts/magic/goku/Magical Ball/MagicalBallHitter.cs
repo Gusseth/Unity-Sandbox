@@ -3,58 +3,35 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class MagicalBallHitter : MonoBehaviour, IHitter
+public class MagicalBallHitter : AbstractHitter
 {
-    [SerializeField] int damage;
-    [SerializeField] bool isAttacking = true;
-    [SerializeField] bool isDirectional = false;
-    [SerializeField] MagicalBallHitterBox hitterBox;
-    [SerializeField] HitBoxLayer hitBoxLayer;
-    public int Damage => damage;
+    public IMagicController controller;
+    public override string Name { get => controller.Name; set => _ = value; }
 
-    public bool Attacking { get => isAttacking; set => isAttacking = value; }
-    public bool IsDirectional { get => isDirectional; set => isDirectional = value; }
-
-    public HitBoxLayer HitBoxLayer => hitBoxLayer;
-
-    public bool CheckHit(HitData data)
+    public override void OnBlocked(Block data)
     {
-        return true;
+        return;
     }
 
-    public void PostAttack()
+    public override void OnHit(Hit data)
     {
+        return;
+    }
+
+    public override void OnParried(Block data)
+    {
+        return;
+    }
+
+    public override void PostAttack()
+    {
+        base.PostAttack();
         Destroy(gameObject);
     }
 
-    public bool PreAttack(float3 direction, AbstractActorBase actor)
+    protected override void Awake()
     {
-        hitterBox.UpdateValues(actor);
-        return true;
-    }
-
-    public void Response(HitData data)
-    {
-        return;
-    }
-
-    public void UpdateDirectionalIndicator(float3 deltaVelocity, IAttackDirectionalUI indicator)
-    {
-        return;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        hitterBox.Hitter = this;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (isAttacking)
-        {
-            hitterBox.Attack();
-        }
+        base.Awake();
+        controller ??= GetComponent<IMagicController>();
     }
 }
