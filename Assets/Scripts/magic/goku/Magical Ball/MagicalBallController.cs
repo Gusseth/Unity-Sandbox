@@ -8,8 +8,9 @@ public class MagicalBallController : AbstractMagicController
     [SerializeField] RayMovement movement;
     [SerializeField] MagicalBallHitter hitter;
 
-    public override void Init()
+    public override void Init(CastingData data)
     {
+        base.Init(data);
         Awake();
     }
 
@@ -41,5 +42,6 @@ public class MagicalBallController : AbstractMagicController
     {
         movement ??= GetComponent<RayMovement>();
         hitter ??= GetComponent<MagicalBallHitter>();
+        hitter.controller = this;
     }
 }

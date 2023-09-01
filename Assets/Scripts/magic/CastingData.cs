@@ -22,6 +22,7 @@ public record CastingData
     public GameObject owner;
     public AbstractActorBase ownerActor;
     public GameObject target;
+    public ICastable castable;
 
     public float3 point;
     public float3 distance;

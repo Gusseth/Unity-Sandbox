@@ -8,6 +8,7 @@ using UnityEngine;
 public interface INoritoInventoryController
 {
     public INoritoInventory NoritoInventory { get; }
+    public IHotbarDisplayable CurrentEquipped { get; }
     public bool OnCast(CastingData castData);
     public GameObject GetCurrentEquipped(Transform parent);
     public GameObject SetEquipped(int i, Transform parent);

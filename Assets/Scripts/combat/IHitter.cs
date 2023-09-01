@@ -223,6 +223,10 @@ public interface IHitter : IHitCheck, IHitResponse, IHitLayerObject, IGiveOwnerM
     /// </summary>
     public bool Attacking { get; set; }
     /// <summary>
+    /// The name of this Hitter. 
+    /// </summary>
+    public string Name { get; set; }
+    /// <summary>
     /// The actor associated with this hitter
     /// </summary>
     public AbstractActorBase Actor { get; }

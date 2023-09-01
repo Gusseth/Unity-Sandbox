@@ -16,6 +16,8 @@ public class SimpleNoritoInventoryController : MonoBehaviour, INoritoInventoryCo
     int i;
     INoritoInventory INoritoInventoryController.NoritoInventory => null;
 
+    public IHotbarDisplayable CurrentEquipped => current as IHotbarDisplayable;
+
     public GameObject GetCurrentEquipped(Transform parent)
     {
         return null;

@@ -101,6 +101,7 @@ public class HandsController : MonoBehaviour
         {
             owner = actor.gameObject,
             ownerActor = actor,
+            castable = noritoController.CurrentEquipped as ICastable,
 
             point = hit.point,
             distance = hit.distance,

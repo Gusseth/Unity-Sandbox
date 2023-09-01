@@ -16,6 +16,7 @@ public abstract class AbstractHitter : MonoBehaviour, IHitter, IGiveOwnerMetadat
     public virtual HitBoxLayer HitBoxLayer => layer;
     public virtual GameObject Owner => user ? user.gameObject : null;
     public virtual AbstractActorBase Actor => user;
+    public virtual string Name { get => gameObject.name; set => gameObject.name = value; }
 
     public virtual bool CheckHit(HitData data)
     {

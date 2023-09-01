@@ -3,56 +3,35 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class MagicalBallHitter : MonoBehaviour, IHitter
+public class MagicalBallHitter : AbstractHitter
 {
-    [SerializeField] int damage;
-    [SerializeField] bool isAttacking = true;
-    [SerializeField] bool isDirectional = false;
-    [SerializeField] MagicalBallHitterBox hitterBox;
-    [SerializeField] HitBoxLayer hitBoxLayer;
-    [SerializeField] AbstractActorBase gokuOwner;
+    public IMagicController controller;
+    public override string Name { get => controller.Name; set => _ = value; }
 
-    public int Damage => damage;
-
-    public bool Attacking { get => isAttacking; set => isAttacking = value; }
-    public GameObject Owner => gokuOwner ? gokuOwner.gameObject : gameObject;
-    public HitBoxLayer HitBoxLayer => hitBoxLayer;
-    public AbstractActorBase Actor => gokuOwner;
-
-    public bool CheckHit(HitData data)
-    {
-        return true;
-    }
-
-    public void PostAttack()
-    {
-        Destroy(gameObject);
-    }
-
-    public bool PreAttack(float3 direction, AbstractActorBase actor)
-    {
-        gokuOwner = actor;
-        hitterBox.PreAttack(this);
-        return true;
-    }
-
-    public void Response(HitData data)
+    public override void OnBlocked(Block data)
     {
         return;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public override void OnHit(Hit data)
     {
-        hitterBox.Hitter = this;
+        return;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnParried(Block data)
     {
-        if (isAttacking)
-        {
-            hitterBox.Attack();
-        }
+        return;
+    }
+
+    public override void PostAttack()
+    {
+        base.PostAttack();
+        Destroy(gameObject);
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        controller ??= GetComponent<IMagicController>();
     }
 }

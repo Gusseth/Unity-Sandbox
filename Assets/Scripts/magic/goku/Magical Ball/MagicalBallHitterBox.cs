@@ -7,42 +7,15 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
+public class MagicalBallHitterBox : AbstractHitterBox
 {
     [SerializeField] SphereCollider actualCollider;
-    [SerializeField] LayerMask layerMask;
-    [SerializeField] HitBoxLayer hitBoxLayer;
     [SerializeField] float forceStrength = 0;
-    IHitter hitter;
     float3 lastPosition;
-    HitBoxFaction faction;
-    ISet<Collider> alreadyHitColliders; // don't need to clear because this will get destroyed anyways
-    RaycastHit[] hitBuffer;             // We buffer the sweep hits or else we generate garbage for GC to collect
     float radius;
     bool hasHit;
 
-    public IHitter Hitter { get => hitter; set => hitter = value; }
-
-    public GameObject Owner => Hitter.Owner;
-
-    public HitBoxLayer HitBoxLayer => hitBoxLayer;
-
-    public void Attack()
-    {
-        float3 origin;
-        int nHits;
-        SweepHitterBox(out origin, out nHits);
-
-        // Refactor later for flexibility. This only calls ProcessHits if we actually hit something else other than ourselves.
-        if (nHits > 1)
-        {
-            //Array.Sort(hits, Algorithms.RaycastHitDistanceComparer);
-            Algorithms.SortArray(ref hitBuffer, 0, nHits, Algorithms.RaycastHitDistanceComparer);
-            ProcessHits(origin, nHits);
-        }
-    }
-
-    private void SweepHitterBox(out float3 origin, out int nHits)
+    protected override void CastHitterBox(out float3 origin, out int nHits)
     {
         origin = lastPosition;
         float3 newPos = transform.position;
@@ -53,7 +26,7 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
         lastPosition = newPos;
     }
 
-    private void ProcessHits(float3 origin, in int nHits)
+    protected override void ProcessHits(in float3 origin, in int nHits)
     {
         for (int i = 0; i < nHits; i++)
         {
@@ -87,7 +60,7 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
                 {
                     hasHit = true;
                     Block data = new(point, normal, 0, this, blocker);
-                    OnBlockerHit(blocker, data);
+                    OnBlockerHit(data);
                     break;
                 }
                 else if (hitLayerObject is IHurtBox hurtBox)
@@ -96,7 +69,7 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
 
                     Hit data = new(point, normal, this, hurtBox);
 
-                    OnHurtBoxHit(hurtBox, data);
+                    OnHurtBoxHit(data);
                     hasHit = true;
                 }
 
@@ -120,48 +93,39 @@ public class MagicalBallHitterBox : MonoBehaviour, IHitterBox
             hitter.PostAttack();
     }
 
-    private void OnBlockerHit(IBlocker blocker, Block data)
+    protected override void OnBlockerHit(Block data)
     {
-        if (blocker.CheckHit(data))
+        if (data.blocker.CheckHit(data))
         {
             data.attacker.Hitter.Response(data);
             data.blocker.Response(data);
         }
     }
 
-    public void OnHurtBoxHit(IHurtBox hurtBox, HitData data)
+    protected override void OnHurtBoxHit(Hit data)
     {
-        Hit hitData = (Hit)data;
-        if (hurtBox.CheckHit(hitData))
+        if (data.hurtBox.CheckHit(data))
         {
-            hitData.hitterBox.Hitter.Response(data);
-            hitData.hurtBox.HurtResponder.Response(data);
+            data.hitterBox.Hitter.Response(data);
+            data.hurtBox.HurtResponder.Response(data);
         }
     }
 
-    public void PreAttack(IHitter hitter)
+    public override void PreAttack(IHitter hitter, HitBoxLayer hitBoxLayer)
     {
+        base.PreAttack(hitter, hitBoxLayer);
         lastPosition = transform.position;
         radius = actualCollider.radius * math.cmax(math.abs(transform.lossyScale));
-        faction = HitBoxFaction.Neutral;
-        if (hitter.Actor != null)
-        {
-            faction = AbstractActorBase.ActorToHitBoxFaction(hitter.Actor.ActorFaction);
-        }
-        alreadyHitColliders = new HashSet<Collider>();
     }
 
-    public void PreAttack(IHitter hitter, AbstractActorBase actor)
+    protected override void OnHitterBoxHit(HitData hitData)
     {
+        return;
     }
 
-    public void PostAttack(IHitter hitter)
+    protected override void Awake()
     {
-        
-    }
-
-    void Awake()
-    {
-        hitBuffer = new RaycastHit[Root.Constants.RaycastBufferSize];
+        base.Awake();
+        preventMultipleHits = true;
     }
 }

@@ -118,6 +118,7 @@ public abstract class AbstractMeleeHitter : AbstractHitter, IBlocker
     protected override void Awake()
     {
         base.Awake();
+        parryTime = Root.Instance.Difficulty.ParryTime;
         destroyToken = this.GetCancellationTokenOnDestroy();
     }
 }

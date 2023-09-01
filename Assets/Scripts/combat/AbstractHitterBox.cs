@@ -12,8 +12,9 @@ public abstract class AbstractHitterBox : MonoBehaviour, IHitterBox
     [SerializeField] protected bool preventMultipleHits;
     protected IHitter hitter;
     protected HitBoxLayer hitBoxLayer;
+    protected HitBoxFaction faction;
     protected ISet<Collider> alreadyHitColliders;
-    protected RaycastHit[] hitBuffer;
+    protected RaycastHit[] hitBuffer;               // We buffer the sweep hits or else we generate garbage for GC to collect
 
     public IHitter Hitter { get => hitter; set => hitter = value; }
 
@@ -55,6 +56,11 @@ public abstract class AbstractHitterBox : MonoBehaviour, IHitterBox
         if (preventMultipleHits)
         {
             alreadyHitColliders ??= new HashSet<Collider>();
+        }
+        faction = HitBoxFaction.Neutral;
+        if (hitter.Actor != null)
+        {
+            faction = AbstractActorBase.ActorToHitBoxFaction(hitter.Actor.ActorFaction);
         }
     }
 

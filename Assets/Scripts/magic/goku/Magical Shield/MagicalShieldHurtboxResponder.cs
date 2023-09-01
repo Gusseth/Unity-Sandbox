@@ -10,7 +10,7 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
     [SerializeField] bool blocking;
     [SerializeField] bool parrying;
     [SerializeField] HitBoxLayer hitBoxLayer;
-    [SerializeField] int parryTime = 1000;
+    [SerializeField] int parryTime;
     [SerializeField] AbstractActorBase gokuOwner;
     CancellationToken token;
     
@@ -58,6 +58,7 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
     // Start is called before the first frame update
     void Awake()
     {
+        parryTime = Root.Instance.Difficulty.ParryTime;
         token = this.GetCancellationTokenOnDestroy();
     }
 
@@ -85,11 +86,11 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
 
     public void OnBlock(Block data)
     {
-        Debug.Log($"Blocked {data.attacker.Hitter.gameObject}");
+        Debug.Log($"Blocked \"{data.attacker.Hitter.Name}\"");
     }
 
     public void OnParry(Block data)
     {
-        Debug.Log($"Parried {data.attacker.Hitter.gameObject}");
+        Debug.Log($"Parried \"{data.attacker.Hitter.Name}\"");
     }
 }

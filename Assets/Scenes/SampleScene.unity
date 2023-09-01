@@ -1154,7 +1154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &515970288
@@ -1671,6 +1671,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a89f3cdd870386946b94dc5916ea6adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  difficulty:
+    rid: 3536828770806661120
+  references:
+    version: 2
+    RefIds:
+    - rid: 3536828770806661120
+      type: {class: Lunatic, ns: , asm: Assembly-CSharp}
 --- !u!1 &770583917
 GameObject:
   m_ObjectHideFlags: 0
@@ -5407,7 +5414,7 @@ MonoBehaviour:
           type: 3}
         worldModel: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
           type: 3}
-        gokuName: 
+        gokuName: Glowing Ball Lmao
         gokuDescription: 
         keCost: 0
         initialDelay: 0

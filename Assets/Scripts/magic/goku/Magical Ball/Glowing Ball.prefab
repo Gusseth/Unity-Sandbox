@@ -136,10 +136,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  isAttacking: 1
-  isDirectional: 0
-  hitterBox: {fileID: 1257791468040692980}
-  hitBoxLayer: 2
+  attacking: 0
+  layer: 2
+  user: {fileID: 0}
 --- !u!114 &1257791468040692980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,13 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd435d7f9c1114479074f17e962eeed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 1269550995656528655}
-  gokuOwner: {fileID: 0}
-  actualCollider: {fileID: 4629886861958289374}
   layerMask:
     serializedVersion: 2
     m_Bits: 65
-  hitBoxLayer: 2
+  preventMultipleHits: 0
+  actualCollider: {fileID: 4629886861958289374}
   forceStrength: 1
 --- !u!135 &4629886861958289374
 SphereCollider:
