@@ -10,16 +10,18 @@ public class Root : MonoBehaviour
     [SerializeField] static Root root;
     [SerializeField] static DebugInstance debug;
     [SerializeField] static ConstantsInstance constants;
+    [SerializeReference, SubclassSelector] Difficulty difficulty; 
     static bool isPaused;
 
     public static Root Instance { get => root; }
     public static DebugInstance Debug { get => debug; }
     public static ConstantsInstance Constants { get => constants; }
+    public Difficulty Difficulty { get => difficulty; }
     public static bool isGamePaused { get => isPaused; }
 
-    void OnApplicationPause()
+    void OnApplicationPause(bool paused)
     {
-        isPaused = true;
+        isPaused = paused;
     }
 
     public class ConstantsInstance
@@ -32,7 +34,6 @@ public class Root : MonoBehaviour
         public ConstantsInstance() {
             hitboxMaskIndex = LayerMask.NameToLayer("Hitbox");
         }
-
     }
 
     public sealed class DebugInstance
@@ -127,6 +128,8 @@ public class Root : MonoBehaviour
         root = this;
         debug = new DebugInstance();
         constants = new ConstantsInstance();
+        difficulty ??= new Normal();
+        UnityEngine.Debug.Log($"You are playing in the {difficulty.Name} difficulty.");
     }
 
     // Start is called before the first frame update
