@@ -47,6 +47,7 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
         blocking = true;
         parrying = true;
         gokuOwner = actor;
+        parryTime = Root.Instance.Difficulty.ParryTime;
         TimeHelpers.InvokeAsync(ParryingTimeout, parryTime, token);
     }
 
@@ -58,7 +59,6 @@ public class MagicalShieldHurtboxResponder : MonoBehaviour, IBlocker
     // Start is called before the first frame update
     void Awake()
     {
-        parryTime = Root.Instance.Difficulty.ParryTime;
         token = this.GetCancellationTokenOnDestroy();
     }
 

@@ -18,7 +18,6 @@ public class DummySword : MonoBehaviour
         if (!hitter.Attacking)
         {
             hitter.PreAttack(Vector3.zero, null);
-            waiting = true;
             TimeHelpers.InvokeCoroutine(this, () => hitter.PostAttack(), 1);
         }
     }
