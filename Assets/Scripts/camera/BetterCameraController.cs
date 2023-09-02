@@ -6,14 +6,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-public class BetterCameraController : MonoBehaviour
+public class BetterCameraController : MonoBehaviour, ICameraController
 {
     [SerializeField] float sensitivity = 5.0f;
     [SerializeField] float deltaSensitivity = 0.125f;
     [SerializeField] InputActionReference look;
     [SerializeField] float3 acceleration;
 
-    public float3 deltaVelocity { get; private set; }
+    public float3 DeltaVelocity { get => deltaVelocity; }
+
+    float3 deltaVelocity;
     float3 velocity;
     float3 rot;
 
@@ -27,7 +29,8 @@ public class BetterCameraController : MonoBehaviour
     void Update()
     {
         float2 rawInput = look.action.ReadValue<Vector2>();
-        float3 input = new float3(math.radians(rawInput), 0);
+        float3 input = 0;
+        input.xy = math.radians(rawInput);
 
         input.y *= -1;
         input *= sensitivity;

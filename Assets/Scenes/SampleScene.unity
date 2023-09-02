@@ -2730,7 +2730,7 @@ GameObject:
   - component: {fileID: 1124450679}
   - component: {fileID: 1124450685}
   - component: {fileID: 1124450681}
-  - component: {fileID: 1124450683}
+  - component: {fileID: 1124450688}
   - component: {fileID: 1124450684}
   - component: {fileID: 1124450686}
   - component: {fileID: 1124450687}
@@ -2753,7 +2753,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1124450671}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: -16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2764,7 +2764,7 @@ Transform:
   - {fileID: 1280358085}
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1124450673
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2902,7 +2902,6 @@ MonoBehaviour:
   RightHand: {fileID: 1959474854}
   Ball: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9, type: 3}
   camera: {fileID: 330585545}
-  cameraController: {fileID: 1124450683}
   maxRayDistance: 100
   ballSpeed: 6
   directionIndicator: {fileID: 1738882468}
@@ -3069,25 +3068,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 330585545}
---- !u!114 &1124450683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1124450671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b58e74eabf94324b829821e0d386c52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sensitivity: 12
-  deltaSensitivity: 0.125
-  look: {fileID: -7372235469314065637, guid: 503ef5cf6f93ae54d8624f123993102d, type: 3}
-  acceleration:
-    x: 32
-    y: 32
-    z: 0
 --- !u!114 &1124450684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3558,6 +3538,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iframesLength: 500
   actor: {fileID: 1124450684}
+--- !u!114 &1124450688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124450671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37f718a0bdbce4499595dab9c94dfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensitivity: 12
+  deltaSensitivity: 0.125
+  look: {fileID: -7372235469314065637, guid: 503ef5cf6f93ae54d8624f123993102d, type: 3}
+  acceleration:
+    x: 32
+    y: 32
+    z: 0
 --- !u!1 &1192605370
 GameObject:
   m_ObjectHideFlags: 0
@@ -5403,18 +5402,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   castables:
-  - rid: 4372000723353993217
+  - rid: 3536828777821634576
   references:
     version: 2
     RefIds:
-    - rid: 4372000723353993217
+    - rid: 3536828777821634576
       type: {class: Goku, ns: , asm: Assembly-CSharp}
       data:
         prefab: {fileID: 1269550995656528655, guid: 121e6156321b3e647ac71e9ccd8140a9,
           type: 3}
         worldModel: {fileID: 1269550995656528655, guid: 89a37ae9c6d7fc04ea6bfcc41ab66375,
           type: 3}
-        gokuName: Glowing Ball Lmao
+        gokuName: Rapid fire ball
         gokuDescription: 
         keCost: 0
         initialDelay: 0
@@ -5431,8 +5430,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d24d70da0fab14589c0035f1124de3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delayInMilliseconds: 1000
-  castableSpeed: 50
+  delayInMilliseconds: 300
+  castableSpeed: 500
   rotateCastablesAfterCast: 0
 --- !u!4 &1747251306
 Transform:

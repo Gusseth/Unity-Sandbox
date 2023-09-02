@@ -14,7 +14,7 @@ public class HandsController : MonoBehaviour
     //[SerializeField] List<GameObject> Hands;
     [SerializeField] GameObject Ball;
     [SerializeField] new Camera camera;
-    [SerializeField] BetterCameraController cameraController;
+    [SerializeField] ICameraController cameraController;
     [SerializeField] uint maxRayDistance;
     [SerializeField] float ballSpeed;
     [SerializeField] IEquipMetadata equipped;
@@ -37,7 +37,7 @@ public class HandsController : MonoBehaviour
 
     void Start()
     {
-        cameraController ??= GetComponent<BetterCameraController>();
+        cameraController ??= GetComponent<ICameraController>();
         inventoryController ??= GetComponent<IInventoryController>();
         actor ??= GetComponent<AbstractActorBase>();
 
@@ -254,7 +254,7 @@ public class HandsController : MonoBehaviour
 
     private float3 GetAttackDirection()
     {
-        return cameraController.deltaVelocity;
+        return cameraController.DeltaVelocity;
     }
 
     private void OnDrawGizmos()

@@ -4,18 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal class DifficultyChangeEventArg : EventArgs
-{
-    public Difficulty difficulty { get; protected set; }
-
-    public DifficultyChangeEventArg() { }
-
-    public DifficultyChangeEventArg(Difficulty difficulty)
-    {
-        this.difficulty = difficulty;
-    }
-}
-
 [Serializable]
 public abstract class Difficulty
 {
